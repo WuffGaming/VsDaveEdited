@@ -345,7 +345,7 @@ class TitleState extends MusicBeatState
 			case 2:
 				addMoreText('MoldyGH\nMissingTextureMan101\nRapparep LOL');
 			case 3:
-				addMoreText('TheBuilderXD\nCyndaquilDAC\nErizur');
+				addMoreText('TheBuilderXD\nErizur');
 			case 4:
 				addMoreText('and our wonderful contributors!');
 			case 5:
@@ -366,9 +366,9 @@ class TitleState extends MusicBeatState
 			case 12:
 				addMoreText("Friday Night Funkin'");
 			case 13:
-				addMoreText('VS. Dave and Bambi');
+				addMoreText('VS. Dave and Bambi:');
 			case 14:
-				addMoreText('Mod');
+				addMoreText('Edited');
 			case 15:
 				deleteCoolText();
 			case 16:

@@ -2312,7 +2312,7 @@ class PlayState extends MusicBeatState
 
 			storyPlaylist.remove(storyPlaylist[0]);
 
-			if (storyPlaylist.length <= 0)
+			if (storyPlaylist.length <= 0) // end dialogue shit
 			{
 				switch (curSong.toLowerCase())
 				{
