@@ -693,11 +693,11 @@ class PlayState extends MusicBeatState
 		scoreTxt.borderSize = 1.5;
 		add(scoreTxt);
 
-		iconP1 = new HealthIcon((formoverride == "none" || formoverride == "bf") ? SONG.player1 : formoverride, true);
+		iconP1 = new HealthIcon(boyfriend.icon, true);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
 		add(iconP1);
 
-		iconP2 = new HealthIcon(SONG.player2 == "bambi" ? "bambi-stupid" : SONG.player2, false);
+		iconP2 = new HealthIcon(dad.icon, false);
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
 
@@ -1697,12 +1697,12 @@ class PlayState extends MusicBeatState
 						dad.visible = false;
 						dadmirror.visible = true;
 						curbg.visible = true;
-						iconP2.animation.play(dadmirror.curCharacter);
+						iconP2.changeIcon(dadmirror.icon);
 					case 664 | 684:
 						dad.visible = true;
 						dadmirror.visible = false;
 						curbg.visible = false;
-						iconP2.animation.play(dad.curCharacter);
+						iconP2.changeIcon(dad.icon);
 					case 1176:
 						FlxG.sound.play(Paths.sound('static'), 0.1);
 						dad.visible = false;
@@ -1710,11 +1710,11 @@ class PlayState extends MusicBeatState
 						curbg.loadGraphic(Paths.image('dave/redsky'));
 						curbg.alpha = 1;
 						curbg.visible = true;
-						iconP2.animation.play(dadmirror.curCharacter);
+						iconP2.changeIcon(dadmirror.icon);
 					case 1180:
 						dad.visible = true;
 						dadmirror.visible = false;
-						iconP2.animation.play(dad.curCharacter);
+						iconP2.changeIcon(dad.icon);
 						dad.canDance = false;
 						dad.animation.play('scared', true);
 				}
@@ -1796,25 +1796,22 @@ class PlayState extends MusicBeatState
 		if (health > 2)
 			health = 2;
 
-		if (healthBar.percent < 20)
-			iconP1.animation.curAnim.curFrame = 1;
-		else
-			iconP1.animation.curAnim.curFrame = 0;
-
-		if (healthBar.percent > 80)
-			iconP2.animation.curAnim.curFrame = 1;
-		else
-			iconP2.animation.curAnim.curFrame = 0;
-
-		/* if (FlxG.keys.justPressed.NINE)
-			FlxG.switchState(new Charting()); */
-
-		if (FlxG.keys.justPressed.EIGHT)
-			FlxG.switchState(new AnimationDebug(dad.curCharacter));
-		if (FlxG.keys.justPressed.TWO)
-			FlxG.switchState(new AnimationDebug(boyfriend.curCharacter));
-		if (FlxG.keys.justPressed.THREE)
-			FlxG.switchState(new AnimationDebug(gf.curCharacter));
+		if (iconP1.animatedIcon != true)
+		{
+			healthBar.percent < 20 ? {iconP1.animation.curAnim.curFrame = 1; iconP1.losing = true;} : {iconP1.animation.curAnim.curFrame = 0; iconP1.losing = false;};
+		}
+		if (iconP2.animatedIcon != true)
+		{
+			healthBar.percent > 80 ? {iconP2.animation.curAnim.curFrame = 1; iconP2.losing = true;} : {iconP2.animation.curAnim.curFrame = 0; iconP2.losing = false;};
+		}
+		if (iconP1.animatedIcon == true)
+		{
+			healthBar.percent < 20 ? iconP1.losing = true : iconP1.losing = false;
+		}
+		if (iconP2.animatedIcon != true)
+		{
+			healthBar.percent > 80 ? iconP2.losing = true : iconP2.losing = false;
+		}
 		if (startingSong)
 		{
 			if (startedCountdown)
@@ -3292,6 +3289,24 @@ class PlayState extends MusicBeatState
 			if (!shakeCam)
 			{
 				gf.dance();
+			}
+		}
+		// hi im taking icon code from gapple:e
+		if (curBeat % 4 == 0)
+		{
+			if (iconP1.animatedIcon)
+			{
+				if (iconP1.losing && !iconP1.singleIcon)
+					iconP1.animation.play('losing', true);
+				else
+					iconP1.animation.play('normal', true);
+			}
+			if (iconP2.animatedIcon)
+			{
+				if (iconP2.losing && !iconP2.singleIcon)
+					iconP2.animation.play('losing', true);
+				else
+					iconP2.animation.play('normal', true);
 			}
 		}
 

@@ -3,81 +3,147 @@ package;
 import flixel.FlxSprite;
 import flixel.math.FlxMath;
 
+typedef IconData =
+{
+	var size:Null<Int>;
+
+	var scale:Array<Float>;
+
+	var solo:Null<Bool>;
+
+	var antialiasing:Null<Bool>;
+
+	var flip:Null<Bool>;
+
+	var animations:Array<IconAnimationData>;
+}
+
+typedef IconAnimationData = // taken from character.hx
+{
+	var name:String; // Name of animation. Should be something like "Normal" or "Losing"
+	var prefix:String; // Name of animation in XML
+
+	/**
+	 * Whether this animation is looped.
+	 * @default false
+	 */
+	var ?looped:Bool;
+
+	/**
+	 * The frame rate of this animation.
+	 * @default 24
+	 */
+	var ?frameRate:Int; // Framerate of this specific animation.
+
+	var ?frameIndices:Array<Int>; // If using indices, specify said indices. Plays full animation if null.
+}
+
 class HealthIcon extends FlxSprite
 {
 	/**
-	 * Used for FreeplayState! If you use it elsewhere, prob gonna annoying
+	 * Used to represent character icons & the color on the healthbar.
 	 */
 	public var sprTracker:FlxSprite;
 
-	public var noAaChars:Array<String> = [
-		'dave-angey',
-		'dave-annoyed-3d',
-		'bambi-3d',
-		'senpai',
-		'senpai-angry',
-		'spirit',
-		'bf-pixel',
-		'gf-pixel',
-		'bambi-unfair'
-	];
+	public var isPlayer:Bool = false;
 
-	public function new(char:String = 'bf', isPlayer:Bool = false)
+	public var curIcon:String = 'face';
+
+	public var animatedIcon:Bool = false;
+
+	public var losing:Bool = false;
+
+	public var singleIcon:Bool = false;
+
+	public var iconScale:Array<Float> = [1, 1];
+
+	public function new(char:String = 'face', isPlayer:Bool = false)
 	{
 		super();
-		loadGraphic(Paths.image('iconGrid'), true, 150, 150);
 
-		antialiasing = true;
-		animation.add('bf', [0, 1], 0, false, isPlayer);
-		animation.add('bf-christmas', [0, 1], 0, false, isPlayer);
-		animation.add('bf-pixel', [2, 2], 0, false, isPlayer);
-		animation.add('bf-old', [3, 4], 0, false, isPlayer);
-		animation.add('face', [5, 6], 0, false, isPlayer);
-		animation.add('gf', [7], 0, false, isPlayer);
-		animation.add('dave', [8, 9], 0, false, isPlayer);
-		animation.add('dave-annoyed', [8, 9], 0, false, isPlayer);
-		animation.add('dave-angey', [10, 11], 0, false, isPlayer);
-		animation.add('dave-splitathon', [8, 9], 0, false, isPlayer);
-		animation.add('dave-3d-standing-bruh-what', [28, 29], 0, false, isPlayer);
-		animation.add('dave-annoyed-3d', [38, 39], 0, false, isPlayer);
-		animation.add('dave-old', [36, 37], 0, false, isPlayer);
-		animation.add('marcello-dave', [8, 9], 0, false, isPlayer);
+		this.isPlayer = isPlayer;
 
-		animation.add('bambi', [12, 13], 0, false, isPlayer);
-		animation.add('bambi-splitathon', [12, 13], 0, false, isPlayer);
-		animation.add('bambi-new', [12, 13], 0, false, isPlayer);
-		animation.add('bambi-farmer-beta', [12, 13], 0, false, isPlayer);
+		changeIcon(char);
 
-		animation.add('bambi-loser', [13, 13], 0, false, isPlayer);
-
-		animation.add('bambi-stupid', [18, 19], 0, false, isPlayer);
-		animation.add('bambi-3d', [20, 21], 0, false, isPlayer);
-		animation.add('bambi-unfair', [40, 41], 0, false, isPlayer);
-		animation.add('bambi-old', [18, 19], 0, false, isPlayer);
-		animation.add('bambi-angey', [24, 25], 0, false, isPlayer);
-		animation.add('bambi-bevel', [30, 31], 0, false, isPlayer);
-
-		animation.add('tristan', [14, 15], 0, false, isPlayer);
-		animation.add('tristan-golden', [22, 23], 0, false, isPlayer);
-		animation.add('tristan-beta', [34, 35], 0, false, isPlayer);
-
-		animation.add('the-duo', [16, 17], 0, false, isPlayer);
-		animation.add('what-lmao', [18, 19], 0, false, isPlayer);
-		animation.play(char);
-		if (noAaChars.contains(char))
-		{
-			antialiasing = false;
-		}
 		scrollFactor.set();
+	}
+
+	function addIcon(char:String, startFrame:Int, singleIcon:Bool = false, flip:Bool = false)
+	{
+		animation.add(char, !singleIcon ? [startFrame, startFrame + 1] : [startFrame], 0, false, flip ? !isPlayer : isPlayer);
+	}
+
+	public function changeIcon(char:String = 'face')
+	{
+		var iconPath = 'icons/';
+		curIcon = char;
+		if (Paths.image(iconPath + char) != null)
+			curIcon = char;
+
+		if (Assets.exists(Paths.jsonImg('icons/${char}')))
+		{
+			var jsonData:IconData = Paths.loadJSONImg('icons/${curIcon}');
+			var data:IconData = cast jsonData;
+			var size:Int = data.size == null ? 150 : data.size;
+			var solo:Bool = data.solo == null ? false : data.solo;
+			var flip:Bool = data.flip == null ? false : data.flip;
+			iconScale = data.scale == null ? [1, 1] : [data.scale[0], data.scale[1]];
+
+			if (solo == true)
+				singleIcon = true;
+
+			antialiasing = data.antialiasing == null ? true : data.antialiasing;
+
+			if (data.animations != null)
+			{
+				trace('${curIcon} is an animated icon! Wow!');
+				animatedIcon = true;
+				frames = Paths.getSparrowAtlas(iconPath + curIcon);
+				for (anim in data.animations)
+				{
+					var frameRate = anim.frameRate == null ? 24 : anim.frameRate;
+					var looped = anim.looped == null ? false : anim.looped;
+
+					if (anim.frameIndices != null)
+					{
+						animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", frameRate, looped, isPlayer);
+					}
+					else
+					{
+						animation.addByPrefix(anim.name, anim.prefix, frameRate, looped, isPlayer);
+					}
+				}
+				animation.play('normal', true);
+			}
+			else
+			{
+				loadGraphic(Paths.image(iconPath + curIcon), true, size, size);
+				addIcon(curIcon, 0, solo, flip);
+			}
+		}
+		else
+		{
+			loadGraphic(Paths.image(iconPath + curIcon), true, 150, 150);
+
+			addIcon(curIcon, 0);
+		}
+
+		setGraphicSize(width * iconScale[0], height * iconScale[1]);
+		updateHitbox();
+
+		animation.play(curIcon);
 	}
 
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		offset.set(Std.int(FlxMath.bound(width - 150,0)),Std.int(FlxMath.bound(height - 150,0)));
 
+		var xOffsetPenis:Float = 0;
+		var yOffsetPenis:Float = 0;
 
 		if (sprTracker != null)
 			setPosition(sprTracker.x + sprTracker.width + 10, sprTracker.y - 30);
+
+		offset.set(Std.int(FlxMath.bound(width - (150 * scale.x),0)) + xOffsetPenis,Std.int(FlxMath.bound(height - (150 * scale.y),0)) + yOffsetPenis);
 	}
 }

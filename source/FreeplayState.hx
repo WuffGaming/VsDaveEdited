@@ -39,13 +39,13 @@ class FreeplayState extends MusicBeatState
 
 	private var InMainFreeplayState:Bool = false;
 
-	private var CurrentSongIcon:FlxSprite;
+	private var curIcon:FlxSprite;
 
-	private var AllPossibleSongs:Array<String> = ["Dave", "Joke", "Extra", 'Base'];
+	private var categoryList:Array<String> = ["Dave", "Joke", "Extra", 'Base'];
 
-	private var CurrentPack:Int = 0;
+	private var curCategory:Int = 0;
 
-	private var NameAlpha:Alphabet;
+	private var nameAlpha:Alphabet;
 
 	var loadingPack:Bool = false;
 
@@ -74,45 +74,43 @@ class FreeplayState extends MusicBeatState
 		bg.color = 0xFF4965FF;
 		add(bg);
 
-		CurrentSongIcon = new FlxSprite(0,0).loadGraphic(Paths.image('week_icons_' + (AllPossibleSongs[CurrentPack].toLowerCase())));
+		curIcon = new FlxSprite(0,0).loadGraphic(Paths.image('week_icons_' + (categoryList[curCategory].toLowerCase())));
 
-		CurrentSongIcon.centerOffsets(false);
-		CurrentSongIcon.x = (FlxG.width / 2) - 256;
-		CurrentSongIcon.y = (FlxG.height / 2) - 256;
-		CurrentSongIcon.antialiasing = true;
+		curIcon.centerOffsets(false);
+		curIcon.x = (FlxG.width / 2) - 256;
+		curIcon.y = (FlxG.height / 2) - 256;
+		curIcon.antialiasing = true;
 
-		NameAlpha = new Alphabet(40,(FlxG.height / 2) - 282,AllPossibleSongs[CurrentPack],true,false);
-		NameAlpha.screenCenter(X);
+		nameAlpha = new Alphabet(40,(FlxG.height / 2) - 282,categoryList[curCategory],true,false);
+		nameAlpha.screenCenter(X);
 		Highscore.load();
-		add(NameAlpha);
+		add(nameAlpha);
 
-		add(CurrentSongIcon);
+		add(curIcon);
 
 		super.create();
 	}
 
 	public function LoadProperPack()
 	{
-		switch (AllPossibleSongs[CurrentPack].toLowerCase())
+		switch (categoryList[curCategory].toLowerCase())
 		{
 			case 'base':
 				addWeek(['Tutorial'], 0, ['gf']);
 			case 'dave':
-				addWeek(['House', 'Insanity', 'Polygonized'], 1, ['dave', 'dave', 'dave-angey']);
+				addWeek(['House', 'Insanity', 'Polygonized'], 1, ['dave', 'dave', 'dave-33d']);
 				addWeek(['Bonus-Song'], 1,['dave']);
 				addWeek(['Blocked','Corn-Theft','Maze',], 2, ['bambi']);
-				addWeek(['Splitathon'], 3,['the-duo']);
+				addWeek(['Splitathon'], 3,['dave-bambi']);
 			case 'joke':
-				addWeek(['Supernovae', 'Glitch', 'Vs-Dave-Thanksgiving'], 2, ['bambi-stupid']);
+				addWeek(['Supernovae', 'Glitch', 'Vs-Dave-Thanksgiving'], 2, ['bambi-joke']);
 				if (FlxG.save.data.cheatingFound)
 					addWeek(['Cheating'], 2, ['bambi-3d']);
 				if(FlxG.save.data.unfairnessFound)
 					addWeek(['Unfairness'], 2, ['bambi-unfair']);
 			case 'extra':
-				addWeek(['Mealie'], 2, ['bambi-loser']);
-				addWeek(['Furiosity', 'Old-House', 'Old-Insanity'], 1, ['dave-angey', 'dave-old', 'dave-old']);
-				addWeek(['Old-Blocked', 'Old-Corn-Theft', 'Old-Maze', 'Beta-Maze'], 2, ['bambi-farmer-beta', 'bambi-farmer-beta', 'bambi-farmer-beta', 'bambi-farmer-beta']);
-				addWeek(['Old-Splitathon'], 3, ['the-duo']);
+				addWeek(['Mealie'], 2, ['bambi-mad']);
+				addWeek(['Furiosity'], 1, ['dave-3d']);
 		}
 	}
 
@@ -169,20 +167,20 @@ class FreeplayState extends MusicBeatState
 
 	public function UpdatePackSelection(change:Int)
 	{
-		CurrentPack += change;
-		if (CurrentPack == -1)
+		curCategory += change;
+		if (curCategory == -1)
 		{
-			CurrentPack = AllPossibleSongs.length - 1;
+			curCategory = categoryList.length - 1;
 		}
-		if (CurrentPack == AllPossibleSongs.length)
+		if (curCategory == categoryList.length)
 		{
-			CurrentPack = 0;
+			curCategory = 0;
 		}
-		NameAlpha.destroy();
-		NameAlpha = new Alphabet(40,(FlxG.height / 2) - 282,AllPossibleSongs[CurrentPack],true,false);
-		NameAlpha.screenCenter(X);
-		add(NameAlpha);
-		CurrentSongIcon.loadGraphic(Paths.image('week_icons_' + (AllPossibleSongs[CurrentPack].toLowerCase())));
+		nameAlpha.destroy();
+		nameAlpha = new Alphabet(40,(FlxG.height / 2) - 282,categoryList[curCategory],true,false);
+		nameAlpha.screenCenter(X);
+		add(nameAlpha);
+		curIcon.loadGraphic(Paths.image('week_icons_' + (categoryList[curCategory].toLowerCase())));
 	}
 
 	override function beatHit()
@@ -225,12 +223,12 @@ class FreeplayState extends MusicBeatState
 			{
 				loadingPack = true;
 				LoadProperPack();
-				FlxTween.tween(CurrentSongIcon, {alpha: 0}, 0.3);
-				FlxTween.tween(NameAlpha, {alpha: 0}, 0.3);
+				FlxTween.tween(curIcon, {alpha: 0}, 0.3);
+				FlxTween.tween(nameAlpha, {alpha: 0}, 0.3);
 				new FlxTimer().start(0.5, function(Dumbshit:FlxTimer)
 				{
-					CurrentSongIcon.visible = false;
-					NameAlpha.visible = false;
+					curIcon.visible = false;
+					nameAlpha.visible = false;
 					GoToActualFreeplay();
 					InMainFreeplayState = true;
 					loadingPack = false;

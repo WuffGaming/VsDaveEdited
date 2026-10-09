@@ -52,7 +52,7 @@ class TitleState extends MusicBeatState
 			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
 		#end 
 			
-                FlxG.mouse.visible = false; 
+        FlxG.mouse.visible = false; 
 		
 		fun = FlxG.random.int(0, 999);
 		if(fun == 1)

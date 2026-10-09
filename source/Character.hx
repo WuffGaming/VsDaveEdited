@@ -15,6 +15,7 @@ class Character extends FlxSprite
 
 	public var isPlayer:Bool = false;
 	public var curCharacter:String = 'bf';
+	public var icon:String = 'face';
 
 	public var holdTimer:Float = 0;
 	public var furiosityScale:Float = 1.02;
@@ -22,6 +23,7 @@ class Character extends FlxSprite
 
 	public var canFloat:Bool = false;
 	public var rtxChar:Bool = false;
+	public var bopper:Bool = false;
 
 	public var nativelyPlayable:Bool = false;
 
@@ -69,6 +71,8 @@ class Character extends FlxSprite
 				addOffset('hairFall', 0, -9);
 
 				addOffset('scared', -2, -17);
+				icon = 'gf';
+				bopper = true;
 
 				playAnim('danceRight');
 
@@ -100,7 +104,8 @@ class Character extends FlxSprite
 				addOffset('hairFall', 0, -9);
 
 				addOffset('scared', -2, -17);
-
+				icon = 'gf';
+				bopper = true;
 				playAnim('danceRight');
 
 			case 'gf-pixel':
@@ -124,6 +129,7 @@ class Character extends FlxSprite
 				setGraphicSize(Std.int(width * PlayState.daPixelZoom));
 				updateHitbox();
 				antialiasing = false;
+				bopper = true;
 
 			case 'dave':
 				// DAVE SHITE ANIMATION LOADING CODE
@@ -140,7 +146,7 @@ class Character extends FlxSprite
 				addOffset("singRIGHT", 5, -2);
 				addOffset("singLEFT", 29, 2);
 				addOffset("singDOWN", -5, 2);
-
+				icon = 'dave';
 				playAnim('idle');
 			case 'dave-old':
 				// DAVE SHITE ANIMATION LOADING CODE
@@ -161,7 +167,7 @@ class Character extends FlxSprite
 
 				setGraphicSize(Std.int(width * 1.1));
 				updateHitbox();
-
+				icon = 'dave';
 				playAnim('idle');
 			case 'dave-annoyed':
 				// DAVE SHITE ANIMATION LOADING CODE
@@ -180,7 +186,7 @@ class Character extends FlxSprite
 				addOffset("singLEFT", 85, -12);
 				addOffset("singDOWN", 0, -34);
 				addOffset("scared", 0, -2);
-	
+				icon = 'dave';
 				playAnim('idle');
 			case 'dave-annoyed-3d':
 				frames = Paths.getSparrowAtlas('dave/Dave_insanity_3d');
@@ -203,7 +209,7 @@ class Character extends FlxSprite
 				antialiasing = false;
 				canFloat = true;
 				rtxChar = true;
-		
+				icon = 'dave-3d';
 				playAnim('idle');
 			case 'dave-3d-standing-bruh-what':
 				// DAVE SHITE ANIMATION LOADING CODE
@@ -223,7 +229,7 @@ class Character extends FlxSprite
 				antialiasing = false;
 				canFloat = true;
 				rtxChar = true;
-		
+				icon = 'dave-3d';
 				playAnim('idle');
 			case 'dave-angey':
 				// DAVE SHITE ANIMATION LOADING CODE
@@ -246,7 +252,7 @@ class Character extends FlxSprite
 
 				canFloat = true;
 				rtxChar = true;
-		
+				icon = 'dave-3d';
 				playAnim('idle');
 
 			case 'bambi-3d':
@@ -271,7 +277,7 @@ class Character extends FlxSprite
 				antialiasing = false;
 				canFloat = true;
 				rtxChar = true;
-		
+				icon = 'bambi-3d';
 				playAnim('idle');
 			case 'bambi-unfair':
 				// BAMBI SHITE ANIMATION LOADING CODE
@@ -295,7 +301,7 @@ class Character extends FlxSprite
 				antialiasing = false;
 				canFloat = true;
 				rtxChar = true;
-		
+				icon = 'bambi-unfair';
 				playAnim('idle');
 			case 'bf':
 				var tex = Paths.getSparrowAtlas('BOYFRIEND');
@@ -336,7 +342,7 @@ class Character extends FlxSprite
 				playAnim('idle');
 
 				nativelyPlayable = true;
-
+				icon = 'bf';
 				flipX = true;
 			case 'tristan':
 				var tex = Paths.getSparrowAtlas('dave/TRISTAN');
@@ -375,7 +381,7 @@ class Character extends FlxSprite
 				addOffset('scared', 6, 3);
 	
 				playAnim('idle');
-
+				icon = 'tristan';
 				nativelyPlayable = true;
 	
 				flipX = true;
@@ -417,7 +423,7 @@ class Character extends FlxSprite
 				addOffset('scared', 6, 3);
 	
 				playAnim('idle');
-
+				icon = 'tristan';
 				nativelyPlayable = true;
 	
 				flipX = true;
@@ -448,7 +454,7 @@ class Character extends FlxSprite
 				addOffset("hey", 7, 4);
 
 				playAnim('idle');
-
+				icon = 'bf';
 				nativelyPlayable = true;
 
 				flipX = true;
@@ -510,7 +516,7 @@ class Character extends FlxSprite
 				height -= 100;
 
 				antialiasing = false;
-
+				icon = 'bf-pixel';
 				nativelyPlayable = true;
 
 				flipX = true;
@@ -567,7 +573,7 @@ class Character extends FlxSprite
 
 				nativelyPlayable = true;
 				flipX = true;
-
+				icon = 'bambi';
 
 			case 'bambi-old':
 				var tex = Paths.getSparrowAtlas('dave/bambi-old');
@@ -600,7 +606,7 @@ class Character extends FlxSprite
 				playAnim('idle');
 
 				nativelyPlayable = true;
-	
+				icon = 'bambi-joke';
 				flipX = true;
 				
 			case 'bambi-new':
@@ -616,7 +622,7 @@ class Character extends FlxSprite
 				addOffset("singRIGHT", -45, -11);
 				addOffset("singLEFT", -10, -9);
 				addOffset("singDOWN", -12, -48);
-
+				icon = 'bambi';
 				playAnim('idle');
 
 			case 'bambi-farmer-beta':
@@ -632,7 +638,7 @@ class Character extends FlxSprite
 				addOffset("singRIGHT", -66, 13);
 				addOffset("singLEFT", 2, -4);
 				addOffset("singDOWN", -14, -23);
-
+				icon = 'bambi';
 				playAnim('idle');
 
 			case 'dave-splitathon':
@@ -654,7 +660,7 @@ class Character extends FlxSprite
 				addOffset("scared", -15, 11);
 				addOffset("what", -3, 1);
 				addOffset("happy", -3, 1);
-
+				icon = 'dave';
 				playAnim('idle');
 				
 			case 'bambi-splitathon':
@@ -670,7 +676,7 @@ class Character extends FlxSprite
 				addOffset("singRIGHT", -34, -6);
 				addOffset("singLEFT", -3, 6);
 				addOffset("singDOWN", -20, -10);
-		
+				icon = 'bambi';
 				playAnim('idle');
 				
 			case 'tristan-golden':
@@ -711,7 +717,7 @@ class Character extends FlxSprite
 				addOffset('hit', 13, 25);
 	
 				playAnim('idle');
-
+				icon = 'tristan-golden';
 				nativelyPlayable = true;
 	
 				flipX = true;
@@ -728,7 +734,7 @@ class Character extends FlxSprite
 				addOffset('singDOWN');
 				addOffset('singUP', 0, 20);
 				addOffset('singRIGHT');
-
+				icon = 'bambi-3d';
 				playAnim('idle');
 			case 'bambi-bevel':
 				var tex = Paths.getSparrowAtlas('bambi/bevel_bambi');
@@ -763,7 +769,7 @@ class Character extends FlxSprite
 				addOffset('firstDeath', 37, 11);
 				addOffset('deathLoop', 37, 5);
 				addOffset('scared', -24, -10);
-
+				icon = 'bambi-joke';
 				playAnim('idle');
 
 				nativelyPlayable = true;
@@ -798,7 +804,7 @@ class Character extends FlxSprite
 				addOffset("singDOWNmiss", -10, -50);
 				addOffset("hey", 3, 21);
 				addOffset('scared', -24, -10);
-
+				icon = 'bambi-joke';
 				playAnim('idle');
 
 				nativelyPlayable = true;
@@ -833,9 +839,6 @@ class Character extends FlxSprite
 			}
 
 			var dadVar:Float = 4;
-
-			if (curCharacter == 'dad')
-				dadVar = 6.1;
 			if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
 			{
 				dance();
@@ -843,12 +846,8 @@ class Character extends FlxSprite
 			}
 		}
 
-		switch (curCharacter)
-		{
-			case 'gf':
-				if (animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
-					playAnim('danceRight');
-		}
+		if (bopper && animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
+			playAnim('danceRight');
 
 		super.update(elapsed);
 	}
@@ -862,21 +861,18 @@ class Character extends FlxSprite
 	{
 		if (!debugMode && canDance)
 		{
-			switch (curCharacter)
-			{
-				case 'gf' | 'gf-christmas' | 'gf-pixel':
-					if (!animation.curAnim.name.startsWith('hair'))
-					{
-						danced = !danced;
+			if (bopper)
+				if (!animation.curAnim.name.startsWith('hair'))
+				{
+					danced = !danced;
 
-						if (danced)
-							playAnim('danceRight', true);
-						else
-							playAnim('danceLeft', true);
-					}
-				default:
-					playAnim('idle', true);
-			}
+					if (danced)
+						playAnim('danceRight', true);
+					else
+						playAnim('danceLeft', true);
+				}
+			else
+				playAnim('idle', true);
 		}
 	}
 
@@ -921,7 +917,7 @@ class Character extends FlxSprite
 		else
 			offset.set(0, 0);
 	
-		if (curCharacter == 'gf')
+		if (bopper)
 		{
 			if (AnimName == 'singLEFT')
 			{
