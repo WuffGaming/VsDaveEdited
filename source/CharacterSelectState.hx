@@ -191,7 +191,7 @@ class CharacterSelectState extends MusicBeatState
 			// FlxG.log.add(i);
 			var babyArrow:FlxSprite = new FlxSprite(0, 0);
 
-			babyArrow.frames = Paths.getSparrowAtlas('NOTE_assets');
+			babyArrow.frames = Paths.getSparrowAtlas('notes/default');
 			babyArrow.animation.addByPrefix('green', 'arrowUP');
 			babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
 			babyArrow.animation.addByPrefix('purple', 'arrowLEFT');

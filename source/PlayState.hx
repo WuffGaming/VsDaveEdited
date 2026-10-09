@@ -108,6 +108,8 @@ class PlayState extends MusicBeatState
 	public var gf:Character;
 	public var boyfriend:Boyfriend;
 
+	public static var instance:PlayState = null; // Current PlayState, allows other objects to access static values.
+
 	private var daveExpressionSplitathon:Character;
 
 	private var notes:FlxTypedGroup<Note>;
@@ -163,6 +165,8 @@ class PlayState extends MusicBeatState
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 
+	public static var shakingChars = [];
+
 	var notestuffs:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
 	var fc:Bool = true;
 
@@ -206,6 +210,7 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{
+		instance = this;
 		theFunne = FlxG.save.data.newInput;
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
@@ -504,43 +509,27 @@ class PlayState extends MusicBeatState
 		{
 			case "tristan" | 'tristan-beta' | 'tristan-golden':
 				boyfriend.y = 100 + 325;
-				boyfriendOldIcon = 'tristan-beta';
 			case 'dave' | 'dave-annoyed' | 'dave-splitathon':
 				boyfriend.y = 100 + 160;
-				boyfriendOldIcon = 'dave-old';
 			case 'dave-old':
 				boyfriend.y = 100 + 270;
-				boyfriendOldIcon = 'dave';
 			case 'dave-angey' | 'dave-annoyed-3d' | 'dave-3d-standing-bruh-what':
 				boyfriend.y = 100;
-				switch(boyfriend.curCharacter)
-				{
-					case 'dave-angey':
-						boyfriendOldIcon = 'dave-annoyed-3d';
-					case 'dave-annoyed-3d':
-						boyfriendOldIcon = 'dave-3d-standing-bruh-what';
-					case 'dave-3d-standing-bruh-what':
-						boyfriendOldIcon = 'dave-old';
-				}
 			case 'bambi-3d':
 				boyfriend.y = 100 + 350;
-				boyfriendOldIcon = 'bambi-old';
 			case 'bambi-unfair':
 				boyfriend.y = 100 + 575;
-				boyfriendOldIcon = 'bambi-old';
 			case 'bambi' | 'bambi-old' | 'bambi-bevel' | 'what-lmao':
 				boyfriend.y = 100 + 400;
-				boyfriendOldIcon = 'bambi-old';
 			case 'bambi-new' | 'bambi-farmer-beta':
 				boyfriend.y = 100 + 450;
-				boyfriendOldIcon = 'bambi-old';
 			case 'bambi-splitathon':
 				boyfriend.y = 100 + 400;
-				boyfriendOldIcon = 'bambi-old';
 			case 'bambi-angey':
 				boyfriend.y = 100 + 450;
-				boyfriendOldIcon = 'bambi-old';
 		}
+
+		boyfriendOldIcon = boyfriend.altIcon;
 
 		if(darkLevels.contains(curStage) && SONG.song.toLowerCase() != "polygonized")
 		{
@@ -1335,79 +1324,39 @@ class PlayState extends MusicBeatState
 		{
 			// FlxG.log.add(i);
 			var babyArrow:FlxSprite = new FlxSprite(0, strumLine.y);
+			var style = player == 1 ? boyfriend.noteStyle : dad.noteStyle;
 
-			if (dad.rtxChar && player == 0 || boyfriend.rtxChar && player == 1)
+			babyArrow.frames = Paths.getSparrowAtlas('notes/' + style);
+			babyArrow.animation.addByPrefix('green', 'arrowUP');
+			babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
+			babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
+			babyArrow.animation.addByPrefix('red', 'arrowRIGHT');
+
+			babyArrow.antialiasing = true;
+			babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
+
+			switch (Math.abs(i))
 			{
-				babyArrow.frames = Paths.getSparrowAtlas('NOTE_assets_3D');
-				babyArrow.animation.addByPrefix('green', 'arrowUP');
-				babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
-				babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
-				babyArrow.animation.addByPrefix('red', 'arrowRIGHT');
-
-				babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
-
-				switch (Math.abs(i))
-				{
-					case 0:
-						babyArrow.x += Note.swagWidth * 0;
-						babyArrow.animation.addByPrefix('static', 'arrowLEFT');
-						babyArrow.animation.addByPrefix('pressed', 'left press', 24, false);
-						babyArrow.animation.addByPrefix('confirm', 'left confirm', 24, false);
-					case 1:
-						babyArrow.x += Note.swagWidth * 1;
-						babyArrow.animation.addByPrefix('static', 'arrowDOWN');
-						babyArrow.animation.addByPrefix('pressed', 'down press', 24, false);
-						babyArrow.animation.addByPrefix('confirm', 'down confirm', 24, false);
-					case 2:
-						babyArrow.x += Note.swagWidth * 2;
-						babyArrow.animation.addByPrefix('static', 'arrowUP');
-						babyArrow.animation.addByPrefix('pressed', 'up press', 24, false);
-						babyArrow.animation.addByPrefix('confirm', 'up confirm', 24, false);
-					case 3:
-						babyArrow.x += Note.swagWidth * 3;
-						babyArrow.animation.addByPrefix('static', 'arrowRIGHT');
-						babyArrow.animation.addByPrefix('pressed', 'right press', 24, false);
-						babyArrow.animation.addByPrefix('confirm', 'right confirm', 24, false);
-				}
-			}
-			else
-			{
-				switch (curStage)
-				{
-					default:
-						babyArrow.frames = Paths.getSparrowAtlas('NOTE_assets');
-						babyArrow.animation.addByPrefix('green', 'arrowUP');
-						babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
-						babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
-						babyArrow.animation.addByPrefix('red', 'arrowRIGHT');
-
-						babyArrow.antialiasing = true;
-						babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
-
-						switch (Math.abs(i))
-						{
-							case 0:
-								babyArrow.x += Note.swagWidth * 0;
-								babyArrow.animation.addByPrefix('static', 'arrowLEFT');
-								babyArrow.animation.addByPrefix('pressed', 'left press', 24, false);
-								babyArrow.animation.addByPrefix('confirm', 'left confirm', 24, false);
-							case 1:
-								babyArrow.x += Note.swagWidth * 1;
-								babyArrow.animation.addByPrefix('static', 'arrowDOWN');
-								babyArrow.animation.addByPrefix('pressed', 'down press', 24, false);
-								babyArrow.animation.addByPrefix('confirm', 'down confirm', 24, false);
-							case 2:
-								babyArrow.x += Note.swagWidth * 2;
-								babyArrow.animation.addByPrefix('static', 'arrowUP');
-								babyArrow.animation.addByPrefix('pressed', 'up press', 24, false);
-								babyArrow.animation.addByPrefix('confirm', 'up confirm', 24, false);
-							case 3:
-								babyArrow.x += Note.swagWidth * 3;
-								babyArrow.animation.addByPrefix('static', 'arrowRIGHT');
-								babyArrow.animation.addByPrefix('pressed', 'right press', 24, false);
-								babyArrow.animation.addByPrefix('confirm', 'right confirm', 24, false);
-						}
-				}
+				case 0:
+					babyArrow.x += Note.swagWidth * 0;
+					babyArrow.animation.addByPrefix('static', 'arrowLEFT');
+					babyArrow.animation.addByPrefix('pressed', 'left press', 24, false);
+					babyArrow.animation.addByPrefix('confirm', 'left confirm', 24, false);
+				case 1:
+					babyArrow.x += Note.swagWidth * 1;
+					babyArrow.animation.addByPrefix('static', 'arrowDOWN');
+					babyArrow.animation.addByPrefix('pressed', 'down press', 24, false);
+					babyArrow.animation.addByPrefix('confirm', 'down confirm', 24, false);
+				case 2:
+					babyArrow.x += Note.swagWidth * 2;
+					babyArrow.animation.addByPrefix('static', 'arrowUP');
+					babyArrow.animation.addByPrefix('pressed', 'up press', 24, false);
+					babyArrow.animation.addByPrefix('confirm', 'up confirm', 24, false);
+				case 3:
+					babyArrow.x += Note.swagWidth * 3;
+					babyArrow.animation.addByPrefix('static', 'arrowRIGHT');
+					babyArrow.animation.addByPrefix('pressed', 'right press', 24, false);
+					babyArrow.animation.addByPrefix('confirm', 'right confirm', 24, false);
 			}
 			babyArrow.updateHitbox();
 			babyArrow.scrollFactor.set();
@@ -1486,6 +1435,13 @@ class PlayState extends MusicBeatState
 		AUGHHHH = guyWhoComesIn;
 		AHHHHH = guyWhoFliesOut;
 		new FlxTimer().start(0.3, FlingCharacterIconToOblivionAndBeyond);
+	}
+
+	public override function destroy() {
+		backgroundSprites.kill();
+		super.destroy();
+
+		instance = null;
 	}
 
 	override function closeSubState()
@@ -3074,11 +3030,6 @@ class PlayState extends MusicBeatState
 		{
 			resyncVocals();
 		}
-
-		if (dad.curCharacter == 'spooky' && curStep % 4 == 2)
-		{
-			// dad.dance();
-		}
 		switch (SONG.song.toLowerCase())
 		{
 			case 'furiosity':
@@ -3200,20 +3151,11 @@ class PlayState extends MusicBeatState
 			// else
 			// Conductor.changeBPM(SONG.bpm);
 		}
-		if (dad.animation.finished)
+
+		if (dad.animation.finished && dad.holdTimer <= 0 && curBeat % 2 == 0)
 		{
-			switch (SONG.song.toLowerCase())
-			{
-				case 'tutorial':
-					dad.dance();
-					dadmirror.dance();
-				default:
-					if (dad.holdTimer <= 0 && curBeat % 2 == 0)
-					{
-						dad.dance();
-						dadmirror.dance();
-					}
-			}
+			dad.dance();
+			dadmirror.dance();
 		}
 
 		// FlxG.log.add('change bpm' + SONG.notes[Std.int(curStep / 16)].changeBPM);

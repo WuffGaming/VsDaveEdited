@@ -69,9 +69,9 @@ class Note extends FlxSprite
 		this.noteData = noteData;
 
 		var daStage:String = PlayState.curStage;
-		if (((CharactersWith3D.contains(PlayState.SONG.player2) && !musthit) || ((CharactersWith3D.contains(PlayState.SONG.player1) || PlayState.characteroverride == "dave-angey") && musthit)) || ((CharactersWith3D.contains(PlayState.SONG.player2) || CharactersWith3D.contains(PlayState.SONG.player1)) && ((this.strumTime / 50) % 20 > 10)))
+		if (((PlayState.instance.dad.noteStyle == '3d' && !musthit) || (PlayState.instance.boyfriend.noteStyle == '3d' && musthit)) || ((PlayState.instance.dad.noteStyle == '3d' || PlayState.instance.boyfriend.noteStyle == '3d') && ((this.strumTime / 50) % 20 > 10)))
 		{
-				frames = Paths.getSparrowAtlas('NOTE_assets_3D');
+				frames = Paths.getSparrowAtlas('notes/3d');
 
 				animation.addByPrefix('greenScroll', 'green0');
 				animation.addByPrefix('redScroll', 'red0');
@@ -97,15 +97,8 @@ class Note extends FlxSprite
 			switch (daStage)
 			{
 				default:
-				var dumbasspath:String = 'NOTE_assets';
-
-				    switch(noteStyle)
-				    {
-						case 'phone':
-							dumbasspath = 'NOTE_phone';
-						default:
-							dumbasspath = 'NOTE_assets';
-					}
+					var style = musthit ? PlayState.instance.boyfriend.noteStyle : PlayState.instance.dad.noteStyle;
+					var dumbasspath:String = 'notes/' + style;
 					frames = Paths.getSparrowAtlas(dumbasspath);
 
 					animation.addByPrefix('greenScroll', 'green0');
