@@ -106,13 +106,13 @@ class PauseSubState extends MusicBeatSubstate
 				case "Resume":
 					close();
 				case "Restart Song":
-					FlxG.resetState();
+					FlxG.switchState(()->new PlayState());
 				case "Exit to menu":
 					PlayState.screenshader.shader.uampmul.value[0] = 0;
 					PlayState.screenshader.Enabled = false;
 					PlayState.characteroverride = 'none';
 					PlayState.formoverride = 'none';
-					FlxG.switchState(new MainMenuState());
+					FlxG.switchState(()->new MainMenuState());
 			}
 		}
 

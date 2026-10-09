@@ -309,37 +309,14 @@ class PlayState extends MusicBeatState
 			case 5:
 				trace('i hate sick');
 		}
-
+		var defaultDialoguePath = 'ingame/' + SONG.song.toLowerCase() + '/dialogue';
 		switch (SONG.song.toLowerCase())
 		{
 			case 'tutorial':
 				dialogue = [":gf:Hey, you're pretty cute.", ':gf:Use the arrow keys to keep up \nwith me singing.'];
-			case 'house' | 'old-house':
-				dialogue = CoolUtil.coolTextFile(Paths.txt('house/houseDialogue'));
-			case 'insanity' | 'old-insanity':
-				dialogue = CoolUtil.coolTextFile(Paths.txt('insanity/insanityDialogue'));
-			case 'furiosity':
-				dialogue = CoolUtil.coolTextFile(Paths.txt('furiosity/furiosityDialogue'));
-			case 'polygonized':
-				dialogue = CoolUtil.coolTextFile(Paths.txt('polygonized/polyDialogue'));
-			case 'supernovae':
-				dialogue = CoolUtil.coolTextFile(Paths.txt('supernovae/supernovaeDialogue'));
-			case 'glitch':
-				dialogue = CoolUtil.coolTextFile(Paths.txt('glitch/glitchDialogue'));
-			case 'blocked' | 'old-blocked':
-				dialogue = CoolUtil.coolTextFile(Paths.txt('blocked/retardedDialogue'));
-			case 'corn-theft' | 'old-corn-theft':
-				dialogue = CoolUtil.coolTextFile(Paths.txt('corn-theft/cornDialogue'));
-			case 'cheating':
-				dialogue = CoolUtil.coolTextFile(Paths.txt('cheating/cheaterDialogue'));
-			case 'unfairness':
-				dialogue = CoolUtil.coolTextFile(Paths.txt('unfairness/unfairDialogue'));
-			case 'maze' | 'old-maze' | 'beta-maze':
-				dialogue = CoolUtil.coolTextFile(Paths.txt('maze/mazeDialogue'));
-			case 'splitathon' | 'old-splitathon':
-				dialogue = CoolUtil.coolTextFile(Paths.txt('splitathon/splitathonDialogue'));
-			case 'vs-dave-thanksgiving':
-				dialogue = CoolUtil.coolTextFile(Paths.txt('vs-dave-thanksgiving/lmaoDialogue'));
+			// TODO: UNHARDCODE THIS LMAO
+			case 'house' | 'insanity' | 'furiosity' | 'polygonized' | 'supernovae' | 'glitch' | 'blocked' | 'corn-theft' | 'maze' | 'cheating' | 'unfairness' | 'vs-dave-thanksgiving' | 'splitathon':
+				dialogue = CoolUtil.coolTextFile(Paths.songTxt(defaultDialoguePath));
 		}
 
 		var stageCheck:String = 'stage';
@@ -399,7 +376,7 @@ class PlayState extends MusicBeatState
 		var charoffsetx:Float = 0;
 		var charoffsety:Float = 0;
 		if (formoverride == "bf-pixel"
-			&& (SONG.song != "Tutorial" && SONG.song != "Roses" && SONG.song != "Thorns" && SONG.song != "Senpai"))
+			&& (SONG.song != "Tutorial"))
 		{
 			gfVersion = 'gf-pixel';
 			charoffsetx += 300;
@@ -411,6 +388,8 @@ class PlayState extends MusicBeatState
 		}
 		gf = new Character(400 + charoffsetx, 130 + charoffsety, gfVersion);
 		gf.scrollFactor.set(0.95, 0.95);
+		gf.x += gf.gameOffset[0];
+		gf.y += gf.gameOffset[1];
 
 		if (!(formoverride == "bf" || formoverride == "none" || formoverride == "bf-pixel" || formoverride == "bf-christmas") && SONG.song != "Tutorial")
 		{
@@ -422,12 +401,10 @@ class PlayState extends MusicBeatState
 		}
 
 		dad = new Character(100, 100, SONG.player2);
-		switch (SONG.song.toLowerCase())
-		{
-			default:
-				dadmirror = new Character(100, 100, "dave-angey");
-			
-		}
+		dadmirror = new Character(100, 100, "dave-angey");
+
+		dad.x += dad.gameOffset[0];
+		dad.y += dad.gameOffset[1];
 		
 
 		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
@@ -505,6 +482,9 @@ class PlayState extends MusicBeatState
 			boyfriend = new Boyfriend(770, 450, formoverride);
 		}
 
+		boyfriend.x += boyfriend.gameOffset[0];
+		boyfriend.y += boyfriend.gameOffset[1];
+
 		switch (boyfriend.curCharacter)
 		{
 			case "tristan" | 'tristan-beta' | 'tristan-golden':
@@ -531,22 +511,18 @@ class PlayState extends MusicBeatState
 
 		boyfriendOldIcon = boyfriend.altIcon;
 
+		var newColor:FlxColor = FlxColor.WHITE;
+
 		if(darkLevels.contains(curStage) && SONG.song.toLowerCase() != "polygonized")
-		{
-			dad.color = nightColor;
-			gf.color = nightColor;
-			boyfriend.color = nightColor;
-		}
+			newColor = nightColor;
 
 		if(sunsetLevels.contains(curStage))
-		{
-			dad.color = sunsetColor;
-			gf.color = sunsetColor;
-			boyfriend.color = sunsetColor;
-		}
+			newColor = sunsetColor;
 
-		for (char in [gf, dad, dadmirror,boyfriend])
+		for (char in [gf, dad, dadmirror,boyfriend]) {
 			add(char);
+			char.color = newColor;
+		}
 
 		if(SONG.song.toLowerCase() == "unfairness")
 		{
@@ -554,8 +530,6 @@ class PlayState extends MusicBeatState
 		}
 
 		var doof:DialogueBox = new DialogueBox(false, dialogue);
-		// doof.x += 70;
-		// doof.y = FlxG.height * 0.5;
 		doof.scrollFactor.set();
 		doof.finishThing = startCountdown;
 
@@ -1192,7 +1166,7 @@ class PlayState extends MusicBeatState
 		lastReportedPlayheadPosition = 0;
 
 		if (!paused)
-			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
+			FlxG.sound.playMusic(Paths.inst('ingame/' + PlayState.SONG.song + '/song'), 1, false);
 		vocals.play();
 		if (FlxG.save.data.tristanProgress == "pending play" && isStoryMode && storyWeek != 10)
 		{
@@ -1226,9 +1200,10 @@ class PlayState extends MusicBeatState
 		Conductor.changeBPM(songData.bpm);
 
 		curSong = songData.song;
-
+		// ok lets preload the song stuff
+		FlxG.sound.load(Paths.inst('ingame/' + PlayState.SONG.song + '/song'));
 		if (SONG.needsVoices)
-			vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
+			vocals = new FlxSound().loadEmbedded(Paths.voices('ingame/' + PlayState.SONG.song + '/song'));
 		else
 			vocals = new FlxSound();
 
@@ -1438,7 +1413,6 @@ class PlayState extends MusicBeatState
 	}
 
 	public override function destroy() {
-		backgroundSprites.kill();
 		super.destroy();
 
 		instance = null;
@@ -2196,6 +2170,8 @@ class PlayState extends MusicBeatState
 		canPause = false;
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;
+		FlxG.sound.music.destroy();
+		vocals.destroy();
 		if (SONG.validScore)
 		{
 			trace("score is valid");
@@ -2264,13 +2240,13 @@ class PlayState extends MusicBeatState
 						{
 							FlxG.switchState(new EndingState('badEnding', 'badEnding'));
 						}
-					case 'maze' | 'old-maze' | 'beta-maze':
+					case 'maze':
 						canPause = false;
 						FlxG.sound.music.volume = 0;
 						vocals.volume = 0;
 						generatedMusic = false; // stop the game from trying to generate anymore music and to just cease attempting to play the music in general
 						boyfriend.stunned = true;
-						var doof:DialogueBox = new DialogueBox(false, CoolUtil.coolTextFile(Paths.txt('maze/endDialogue')));
+						var doof:DialogueBox = new DialogueBox(false, CoolUtil.coolTextFile(Paths.songTxt('ingame/maze/end-dialogue')));
 						doof.scrollFactor.set();
 						doof.finishThing = function()
 						{
@@ -2284,7 +2260,7 @@ class PlayState extends MusicBeatState
 						vocals.volume = 0;
 						generatedMusic = false; // stop the game from trying to generate anymore music and to just cease attempting to play the music in general
 						boyfriend.stunned = true;
-						var doof:DialogueBox = new DialogueBox(false, CoolUtil.coolTextFile(Paths.txt('splitathon/splitathonDialogueEnd')));
+						var doof:DialogueBox = new DialogueBox(false, CoolUtil.coolTextFile(Paths.txt('ingame/splitathon/end-dialogue')));
 						doof.scrollFactor.set();
 						doof.finishThing = function()
 						{
@@ -2320,7 +2296,7 @@ class PlayState extends MusicBeatState
 						vocals.volume = 0;
 						generatedMusic = false; // stop the game from trying to generate anymore music and to just cease attempting to play the music in general
 						boyfriend.stunned = true;
-						var doof:DialogueBox = new DialogueBox(false, CoolUtil.coolTextFile(Paths.txt('insanity/endDialogue')));
+						var doof:DialogueBox = new DialogueBox(false, CoolUtil.coolTextFile(Paths.songTxt('ingame/insanity/end-dialogue')));
 						doof.scrollFactor.set();
 						doof.finishThing = nextSong;
 						doof.cameras = [camDialogue];
@@ -2331,7 +2307,7 @@ class PlayState extends MusicBeatState
 						vocals.volume = 0;
 						generatedMusic = false; // stop the game from trying to generate anymore music and to just cease attempting to play the music in general
 						boyfriend.stunned = true;
-						var doof:DialogueBox = new DialogueBox(false, CoolUtil.coolTextFile(Paths.txt('splitathon/splitathonDialogueEnd')));
+						var doof:DialogueBox = new DialogueBox(false, CoolUtil.coolTextFile(Paths.songTxt('ingame/splitathon/end-dialogue')));
 						doof.scrollFactor.set();
 						doof.finishThing = nextSong;
 						doof.cameras = [camDialogue];
@@ -2388,7 +2364,7 @@ class PlayState extends MusicBeatState
 						vocals.volume = 0;
 						generatedMusic = false; // stop the game from trying to generate anymore music and to just cease attempting to play the music in general
 						boyfriend.stunned = true;
-						var doof:DialogueBox = new DialogueBox(false, CoolUtil.coolTextFile(Paths.txt('insanity/endDialogue')));
+						var doof:DialogueBox = new DialogueBox(false, CoolUtil.coolTextFile(Paths.songTxt('ingame/insanity/end-dialogue')));
 						doof.scrollFactor.set();
 						doof.finishThing = ughWhyDoesThisHaveToFuckingExist;
 						doof.cameras = [camDialogue];
@@ -2399,7 +2375,7 @@ class PlayState extends MusicBeatState
 						vocals.volume = 0;
 						generatedMusic = false; // stop the game from trying to generate anymore music and to just cease attempting to play the music in general
 						boyfriend.stunned = true;
-						var doof:DialogueBox = new DialogueBox(false, CoolUtil.coolTextFile(Paths.txt('maze/endDialogue')));
+						var doof:DialogueBox = new DialogueBox(false, CoolUtil.coolTextFile(Paths.songTxt('maze/endDialogue')));
 						doof.scrollFactor.set();
 						doof.finishThing = ughWhyDoesThisHaveToFuckingExist;
 						doof.cameras = [camDialogue];
@@ -2410,7 +2386,7 @@ class PlayState extends MusicBeatState
 						vocals.volume = 0;
 						generatedMusic = false; // stop the game from trying to generate anymore music and to just cease attempting to play the music in general
 						boyfriend.stunned = true;
-						var doof:DialogueBox = new DialogueBox(false, CoolUtil.coolTextFile(Paths.txt('splitathon/splitathonDialogueEnd')));
+						var doof:DialogueBox = new DialogueBox(false, CoolUtil.coolTextFile(Paths.songTxt('splitathon/splitathonDialogueEnd')));
 						doof.scrollFactor.set();
 						doof.finishThing = ughWhyDoesThisHaveToFuckingExist;
 						doof.cameras = [camDialogue];

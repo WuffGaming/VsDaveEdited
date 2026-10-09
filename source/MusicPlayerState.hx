@@ -259,14 +259,14 @@ class MusicPlayerState extends MusicBeatState
                     currentlyplaying = true;
                     if (songs[curSelected].hasVocals)
                     {
-                        CurVocals = new FlxSound().loadEmbedded(Paths.voices(songs[curSelected].songName));
+                        CurVocals = new FlxSound().loadEmbedded(Paths.voices('ingame/' + songs[curSelected].songName + '/song'));
                     }
                     else
                     {
                         CurVocals = new FlxSound();
                     }
                     //let both the vocals and the instrumental load before playing
-                    FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 1,true);
+                    FlxG.sound.playMusic(Paths.inst('ingame/' + songs[curSelected].songName + '/song'), 1,true);
                     CurVocals.looped = true; //this assumes the vocal length is the same as the instrumental, which is also bad
                     CurVocals.play();
                     FlxG.sound.list.add(CurVocals);

@@ -58,7 +58,7 @@ class ChartingState extends MusicBeatState
 	var bullshitUI:FlxGroup;
 
 	var noteType:Int = 0;
-	var styles:Array<String> = ['normal', 'phone'];
+	var styles:Array<String> = ['normal'];
 
 	var noteTypeText:FlxText = new FlxText(-200, 0, 0,'Charting: Note', 16);
 
@@ -418,10 +418,10 @@ class ChartingState extends MusicBeatState
 			// vocals.stop();
 		}
 
-		FlxG.sound.playMusic(Paths.inst(daSong), 0.6);
+		FlxG.sound.playMusic(Paths.inst('ingame/' + daSong + '/song'), 0.6);
 
 		// WONT WORK FOR TUTORIAL OR TEST SONG!!! REDO LATER
-		vocals = new FlxSound().loadEmbedded(Paths.voices(daSong));
+		vocals = new FlxSound().loadEmbedded(Paths.voices('ingame/' + daSong + '/song'));
 		FlxG.sound.list.add(vocals);
 
 		FlxG.sound.music.pause();
