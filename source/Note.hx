@@ -175,37 +175,33 @@ class Note extends FlxSprite
 						animation.play('redScroll');
 				}
 		}
-		switch (PlayState.SONG.song.toLowerCase())
-		{
-			case 'cheating' | 'unfairness':
-				if (Type.getClassName(Type.getClass(FlxG.state)).contains("PlayState"))
+		if (Type.getClassName(Type.getClass(FlxG.state)).contains("PlayState"))
+			{
+				var state:PlayState = cast(FlxG.state,PlayState);
+				InPlayState = true;
+				if (musthit)
 				{
-					var state:PlayState = cast(FlxG.state,PlayState);
-					InPlayState = true;
-					if (musthit)
+					state.playerStrums.forEach(function(spr:FlxSprite)
 					{
-						state.playerStrums.forEach(function(spr:FlxSprite)
+						if (spr.ID == notetolookfor)
 						{
-							if (spr.ID == notetolookfor)
-							{
+							x = spr.x;
+							MyStrum = spr;
+						}
+					});
+				}
+				else
+				{
+					state.dadStrums.forEach(function(spr:FlxSprite)
+					{
+						if (spr.ID == notetolookfor)
+						{
 								x = spr.x;
 								MyStrum = spr;
 							}
 						});
-					}
-					else
-					{
-						state.dadStrums.forEach(function(spr:FlxSprite)
-						{
-							if (spr.ID == notetolookfor)
-							{
-									x = spr.x;
-									MyStrum = spr;
-								}
-							});
-					}
 				}
-		}
+			}
 		if (PlayState.SONG.song.toLowerCase() == 'unfairness')
 		{
 			var rng:FlxRandom = new FlxRandom();

@@ -13,7 +13,6 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import io.newgrounds.NG;
 import lime.app.Application;
 #if desktop
 import Discord.DiscordClient;
@@ -109,7 +108,7 @@ class MainMenuState extends MusicBeatState
 		camFollow = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
 
-		FlxG.camera.follow(camFollow, null, 0.06);
+		FlxG.camera.follow(camFollow, null, 0.6);
 		
 		camFollow.setPosition(640, 150.5);
 		for (i in 0...optionShit.length)
@@ -179,7 +178,7 @@ class MainMenuState extends MusicBeatState
 
 			if (controls.BACK)
 			{
-				FlxG.switchState(new TitleState());
+				FlxG.switchState(()->new TitleState());
 			}
 
 			if (controls.ACCEPT)
@@ -209,19 +208,17 @@ class MainMenuState extends MusicBeatState
 							switch (daChoice)
 							{
 								case 'story mode':
-									FlxG.switchState(new StoryMenuState());
-									trace("Story Menu Selected");
+									FlxG.switchState(()->new StoryMenuState());
 								case 'freeplay':
-									FlxG.switchState(new FreeplayState());
-									trace("Freeplay Menu Selected");
+									FlxG.switchState(()->new FreeplayState());
 								case 'options':
-									FlxG.switchState(new OptionsMenu());
+									FlxG.switchState(()->new OptionsMenu());
 								case 'extras':
-									FlxG.switchState(new ExtrasMenuState());
+									FlxG.switchState(()->new ExtrasMenuState());
 								case 'ost':
-									FlxG.switchState(new MusicPlayerState());
+									FlxG.switchState(()->new MusicPlayerState());
 								case 'credits':
-									FlxG.switchState(new CreditsMenuState());
+									FlxG.switchState(()->new CreditsMenuState());
 							}
 						});
 					}
