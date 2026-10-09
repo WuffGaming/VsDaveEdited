@@ -98,7 +98,7 @@ class FreeplayState extends MusicBeatState
 			case 'base':
 				addWeek(['Tutorial'], 0, ['gf']);
 			case 'dave':
-				addWeek(['House', 'Insanity', 'Polygonized'], 1, ['dave', 'dave', 'dave-33d']);
+				addWeek(['House', 'Insanity', 'Polygonized'], 1, ['dave', 'dave', 'dave-3d']);
 				addWeek(['Bonus-Song'], 1,['dave']);
 				addWeek(['Blocked','Corn-Theft','Maze',], 2, ['bambi']);
 				addWeek(['Splitathon'], 3,['dave-bambi']);
@@ -236,15 +236,10 @@ class FreeplayState extends MusicBeatState
 			}
 			if (controls.BACK)
 			{
-				FlxG.switchState(new MainMenuState());
+				FlxG.switchState(()->new MainMenuState());
 			}	
 		
 			return;
-		}
-
-		if (FlxG.sound.music.volume < 0.7)
-		{
-			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
 
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, 0.4));
@@ -273,7 +268,7 @@ class FreeplayState extends MusicBeatState
 
 		if (controls.BACK)
 		{
-			FlxG.switchState(new FreeplayState());
+			FlxG.switchState(()->new FreeplayState());
 		}
 
 		if (accepted)
@@ -288,6 +283,7 @@ class FreeplayState extends MusicBeatState
 
 			PlayState.storyWeek = songs[curSelected].week;
 			LoadingState.loadAndSwitchState(new CharacterSelectState());
+			//LoadingState.loadAndSwitchState(new PlayState());
 		}
 	}
 
@@ -365,10 +361,6 @@ class FreeplayState extends MusicBeatState
 
 		#if !switch
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
-		#end
-
-		#if PRELOAD_ALL
-		FlxG.sound.playMusic(Paths.inst('ingame/' + songs[curSelected].songName + '/song'), 0);
 		#end
 
 		var bullShit:Int = 0;

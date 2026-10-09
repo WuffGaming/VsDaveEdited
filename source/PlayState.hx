@@ -1670,7 +1670,7 @@ class PlayState extends MusicBeatState
 			if (FlxG.random.bool(0.1))
 			{
 				// gitaroo man easter egg
-				FlxG.switchState(new GitarooPause());
+				FlxG.switchState(()->new GitarooPause());
 			}
 			else
 				openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
@@ -1685,7 +1685,7 @@ class PlayState extends MusicBeatState
 					FlxG.save.data.cheatingFound = true;
 					shakeCam = false;
 					screenshader.Enabled = false;
-					FlxG.switchState(new PlayState());
+					FlxG.switchState(()->new PlayState());
 					return;
 					// FlxG.switchState(new VideoState('assets/videos/fortnite/fortniteballs.webm', new CrasherState()));
 				case 'cheating':
@@ -1693,16 +1693,16 @@ class PlayState extends MusicBeatState
 					FlxG.save.data.unfairnessFound = true;
 					shakeCam = false;
 					screenshader.Enabled = false;
-					FlxG.switchState(new PlayState());
+					FlxG.switchState(()->new PlayState());
 					return;
 				case 'unfairness':
 					shakeCam = false;
 					screenshader.Enabled = false;
-					FlxG.switchState(new YouCheatedSomeoneIsComing());
+					FlxG.switchState(()->new YouCheatedSomeoneIsComing());
 				default:
 					shakeCam = false;
 					screenshader.Enabled = false;
-					FlxG.switchState(new ChartingState());
+					FlxG.switchState(()->new ChartingState());
 					#if desktop
 					DiscordClient.changePresence("Chart Editor", null, null, true);
 					#end
@@ -1856,7 +1856,7 @@ class PlayState extends MusicBeatState
 							{
 								FlxG.save.data.unlockedcharacters[7] = true;
 							}
-							FlxG.switchState(new EndingState('rtxx_ending', 'badEnding'));
+							FlxG.switchState(()->new EndingState('rtxx_ending', 'badEnding'));
 					}
 				}
 				else
@@ -2160,7 +2160,7 @@ class PlayState extends MusicBeatState
 		STUPDVARIABLETHATSHOULDNTBENEEDED.animation.play("throw_phone");
 		new FlxTimer().start(5.5, function(timer:FlxTimer)
 		{ 
-			FlxG.switchState(new FreeplayState());
+			FlxG.switchState(()->new FreeplayState());
 		});
 	}
 
@@ -2229,16 +2229,16 @@ class PlayState extends MusicBeatState
 							{
 								FlxG.save.data.unlockedcharacters[5] = true;
 							}
-							FlxG.switchState(new EndingState('goodEnding', 'goodEnding'));
+							FlxG.switchState(()->new EndingState('goodEnding', 'goodEnding'));
 						}
 						else if (health < 0.1)
 						{
 							FlxG.save.data.unlockedcharacters[4] = true;
-							FlxG.switchState(new EndingState('vomit_ending', 'badEnding'));
+							FlxG.switchState(()->new EndingState('vomit_ending', 'badEnding'));
 						}
 						else
 						{
-							FlxG.switchState(new EndingState('badEnding', 'badEnding'));
+							FlxG.switchState(()->new EndingState('badEnding', 'badEnding'));
 						}
 					case 'maze':
 						canPause = false;
@@ -2250,7 +2250,7 @@ class PlayState extends MusicBeatState
 						doof.scrollFactor.set();
 						doof.finishThing = function()
 						{
-							FlxG.switchState(new StoryMenuState());
+							FlxG.switchState(()->new StoryMenuState());
 						};
 						doof.cameras = [camDialogue];
 						schoolIntro(doof, false);
@@ -2264,12 +2264,12 @@ class PlayState extends MusicBeatState
 						doof.scrollFactor.set();
 						doof.finishThing = function()
 						{
-							FlxG.switchState(new StoryMenuState());
+							FlxG.switchState(()->new StoryMenuState());
 						};
 						doof.cameras = [camDialogue];
 						schoolIntro(doof, false);
 					default:
-						FlxG.switchState(new StoryMenuState());
+						FlxG.switchState(()->new StoryMenuState());
 				}
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
@@ -2392,12 +2392,12 @@ class PlayState extends MusicBeatState
 						doof.cameras = [camDialogue];
 						schoolIntro(doof, false);
 					default:
-						FlxG.switchState(new FreeplayState());
+						FlxG.switchState(()->new FreeplayState());
 				}
 			}
 			else
 			{
-				FlxG.switchState(new FreeplayState());
+				FlxG.switchState(()->new FreeplayState());
 			}
 			
 		}
@@ -2405,7 +2405,7 @@ class PlayState extends MusicBeatState
 
 	function ughWhyDoesThisHaveToFuckingExist() 
 	{
-		FlxG.switchState(new FreeplayState());
+		FlxG.switchState(()->new FreeplayState());
 	}
 
 	var endingSong:Bool = false;
@@ -3230,7 +3230,7 @@ class PlayState extends MusicBeatState
 
 		if(curBeat % 2 == 0)
 		{
-			if (!boyfriend.animation.curAnim.name.startsWith("sing") && boyfriend.canDance)
+			if (!boyfriend.animation.curAnim.name.startsWith("sing") && boyfriend.canDance && boyfriend.animation.curAnim != null)
 				{
 					boyfriend.playAnim('idle', true);
 					if (darkLevels.contains(curStage) && SONG.song.toLowerCase() != "polygonized" && SONG.song.toLowerCase() != "furiosity")

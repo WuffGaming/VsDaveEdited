@@ -47,10 +47,6 @@ class TitleState extends MusicBeatState
 	override public function create():Void
 	{
 		FlxSprite.defaultAntialiasing = true;
-		#if sys
-		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
-			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
-		#end 
 			
         FlxG.mouse.visible = false; 
 		

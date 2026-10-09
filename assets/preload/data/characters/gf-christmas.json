@@ -1,0 +1,72 @@
+{
+  "path": "characters/shared/gfChristmas",
+  "globalOffset": [0, 0],
+  "gameOffset": [0, 0],
+  "camOffset": [0, 0],
+  "icon": "gf",
+  "bopper": true,
+  "animations": [
+    {
+      "name": "cheer",
+      "prefix": "GF Cheer",
+      "offset": [0,0]
+    },
+    {
+      "name": "singLEFT",
+      "prefix": "GF left note",
+      "offset": [0,-19]
+    },
+    {
+      "name": "singRIGHT",
+      "prefix": "GF Right Note",
+      "offset": [0,-20]
+    },
+    {
+      "name": "singUP",
+      "prefix": "GF Up Note",
+      "offset": [0,4]
+    },
+    {
+      "name": "singDOWN",
+      "prefix": "GF Down Nte",
+      "offset": [0,-20]
+    },
+    {
+      "name": "sad",
+      "prefix": "gf sad",
+      "indices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      "offset": [-2,-2]
+    },
+    {
+      "name": "danceLeft",
+      "prefix": "GF Dancing Beat",
+      "indices": [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+      "offset": [0,-9]
+    },
+    {
+      "name": "danceRight",
+      "prefix": "GF Dancing Beat",
+      "indices": [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
+      "offset": [0,-9]
+    },
+    {
+      "name": "hairBlow",
+      "prefix": "GF Dancing Beat Hair blowing",
+      "indices": [0, 1, 2, 3],
+      "looped": true,
+      "offset": [45,-8]
+    },
+    {
+      "name": "hairFall",
+      "prefix": "GF Dancing Beat Hair blowing",
+      "indices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+      "offset": [0,-9]
+    },
+    {
+      "name": "scared",
+      "prefix": "GF FEAR",
+      "looped": true,
+      "offset": [-2,-17]
+    }
+  ]
+}

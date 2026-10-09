@@ -64,7 +64,7 @@ class CharacterSelectState extends MusicBeatState
 	public var characters:Array<CharacterInSelect> = 
 	[
 		new CharacterInSelect(['bf', 'bf-pixel', 'bf-christmas'], [1, 1, 1, 1], ["Boyfriend", "Pixel Boyfriend", "Christmas Boyfriend"]),
-		new CharacterInSelect(['what-lmao', 'marcello-dave'], [0, 0, 0, 0], ["IF YOU SEE THIS CHRACTER, REPORT IT TO THE DEVS!", "IF YOU SEE THIS CHRACTER, REPORT IT TO THE DEVS!"]),
+		new CharacterInSelect(['what-lmao'], [0, 0, 0, 0], ["IF YOU SEE THIS CHRACTER, REPORT IT TO THE DEVS!"]),
 		new CharacterInSelect(['tristan', 'tristan-beta'], [2, 0.5, 0.5, 0.5], ["Tristan", 'Tristan (Beta)']),
 		new CharacterInSelect(['dave', 'dave-annoyed', 'dave-splitathon'], [0.25, 0.25, 2, 2], ["Dave", "Dave (Insanity)", 'Dave (Splitathon)']),
 		//these are the canon bambis' names according to marcello, dont change them back
@@ -421,6 +421,9 @@ class CharacterSelectState extends MusicBeatState
 			case 'bambi-angey':
 				char.y = 100 + 450;
 				char.y -= 75;
+			default:
+				char.x += char.gameOffset[0];
+				char.y += char.gameOffset[1];
 		}
 		add(char);
 		funnyIconMan.animation.play(char.curCharacter);
