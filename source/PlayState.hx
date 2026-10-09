@@ -94,8 +94,6 @@ class PlayState extends MusicBeatState
 
 	var focusOnDadGlobal:Bool = true;
 
-	var funnyFloatyBoys:Array<String> = ['dave-angey', 'bambi-3d', 'dave-annoyed-3d', 'dave-3d-standing-bruh-what', 'bambi-unfair'];
-
 	var storyDifficultyText:String = "";
 	var iconRPC:String = "";
 	var detailsText:String = "";
@@ -105,10 +103,10 @@ class PlayState extends MusicBeatState
 
 	private var vocals:FlxSound;
 
-	private var dad:Character;
-	private var dadmirror:Character;
-	private var gf:Character;
-	private var boyfriend:Boyfriend;
+	public var dad:Character;
+	public var dadmirror:Character;
+	public var gf:Character;
+	public var boyfriend:Boyfriend;
 
 	private var daveExpressionSplitathon:Character;
 
@@ -153,8 +151,6 @@ class PlayState extends MusicBeatState
 	private var generatedMusic:Bool = false;
 	private var shakeCam:Bool = false;
 	private var startingSong:Bool = false;
-
-	public var TwentySixKey:Bool = false;
 
 	public static var amogus:Int = 0;
 
@@ -560,11 +556,8 @@ class PlayState extends MusicBeatState
 			boyfriend.color = sunsetColor;
 		}
 
-		add(gf);
-
-		add(dad);
-		add(dadmirror);
-		add(boyfriend);
+		for (char in [gf, dad, dadmirror,boyfriend])
+			add(char);
 
 		if(SONG.song.toLowerCase() == "unfairness")
 		{
@@ -1326,9 +1319,6 @@ class PlayState extends MusicBeatState
 			daBeats += 1;
 		}
 
-		// trace(unspawnNotes.length);
-		// playerCounter += 1;
-
 		unspawnNotes.sort(sortByShit);
 
 		generatedMusic = true;
@@ -1346,7 +1336,7 @@ class PlayState extends MusicBeatState
 			// FlxG.log.add(i);
 			var babyArrow:FlxSprite = new FlxSprite(0, strumLine.y);
 
-			if (funnyFloatyBoys.contains(dad.curCharacter) && player == 0 || funnyFloatyBoys.contains(boyfriend.curCharacter) && player == 1)
+			if (dad.rtxChar && player == 0 || boyfriend.rtxChar && player == 1)
 			{
 				babyArrow.frames = Paths.getSparrowAtlas('NOTE_assets_3D');
 				babyArrow.animation.addByPrefix('green', 'arrowUP');
@@ -1591,23 +1581,10 @@ class PlayState extends MusicBeatState
 		}
 
 		//welcome to 3d sinning avenue
-		if(funnyFloatyBoys.contains(dad.curCharacter.toLowerCase()) && canFloat)
-		{
-			dad.y += (Math.sin(elapsedtime) * 0.6);
+		for (character in [dad, boyfriend, gf, dadmirror]) {
+			if (character.canFloat)
+				character.y += (Math.sin(elapsedtime) * 0.6);
 		}
-		if(funnyFloatyBoys.contains(boyfriend.curCharacter.toLowerCase()) && canFloat)
-		{
-			boyfriend.y += (Math.sin(elapsedtime) * 0.6);
-		}
-		/*if(funnyFloatyBoys.contains(dadmirror.curCharacter.toLowerCase()))
-		{
-			dadmirror.y += (Math.sin(elapsedtime) * 0.6);
-		}*/
-		if(funnyFloatyBoys.contains(gf.curCharacter.toLowerCase()) && canFloat)
-		{
-			gf.y += (Math.sin(elapsedtime) * 0.6);
-		}
-
 		if (SONG.song.toLowerCase() == 'cheating' && !inCutscene) // fuck you
 		{
 			playerStrums.forEach(function(spr:FlxSprite)
@@ -2605,14 +2582,6 @@ class PlayState extends MusicBeatState
 		{
 			songScore += score;
 
-			/* if (combo > 60)
-					daRating = 'sick';
-				else if (combo > 12)
-					daRating = 'good'
-				else if (combo > 4)
-					daRating = 'bad';
-			 */
-
 			var pixelShitPart1:String = "";
 			var pixelShitPart2:String = '';
 
@@ -2705,13 +2674,8 @@ class PlayState extends MusicBeatState
 
 				daLoop++;
 			}
-			/* 
-				trace(combo);
-				trace(seperatedScore);
-			 */
 
 			coolText.text = Std.string(seperatedScore);
-			// add(coolText);
 
 			FlxTween.tween(rating, {alpha: 0}, 0.2, {
 				startDelay: Conductor.crochet * 0.001

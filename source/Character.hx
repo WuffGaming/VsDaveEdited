@@ -20,6 +20,9 @@ class Character extends FlxSprite
 	public var furiosityScale:Float = 1.02;
 	public var canDance:Bool = true;
 
+	public var canFloat:Bool = false;
+	public var rtxChar:Bool = false;
+
 	public var nativelyPlayable:Bool = false;
 
 	public var globaloffset:Array<Float> = [0,0];
@@ -196,8 +199,10 @@ class Character extends FlxSprite
 				globaloffset[1] = 450; //this is the y
 				furiosityScale = 1.5;
 				setGraphicSize(Std.int(width / furiosityScale));
-			   updateHitbox();
-			   antialiasing = false;
+				updateHitbox();
+				antialiasing = false;
+				canFloat = true;
+				rtxChar = true;
 		
 				playAnim('idle');
 			case 'dave-3d-standing-bruh-what':
@@ -216,6 +221,8 @@ class Character extends FlxSprite
 				addOffset("singLEFT", 49, -9);
 				addOffset("singDOWN", 0, -10);
 				antialiasing = false;
+				canFloat = true;
+				rtxChar = true;
 		
 				playAnim('idle');
 			case 'dave-angey':
@@ -236,6 +243,9 @@ class Character extends FlxSprite
 				setGraphicSize(Std.int(width * furiosityScale),Std.int(height * furiosityScale));
 				updateHitbox();
 				antialiasing = false;
+
+				canFloat = true;
+				rtxChar = true;
 		
 				playAnim('idle');
 
@@ -259,6 +269,8 @@ class Character extends FlxSprite
 				setGraphicSize(Std.int(width / furiosityScale));
 				updateHitbox();
 				antialiasing = false;
+				canFloat = true;
+				rtxChar = true;
 		
 				playAnim('idle');
 			case 'bambi-unfair':
@@ -281,6 +293,8 @@ class Character extends FlxSprite
 				setGraphicSize(Std.int((width * 1.3) / furiosityScale));
 				updateHitbox();
 				antialiasing = false;
+				canFloat = true;
+				rtxChar = true;
 		
 				playAnim('idle');
 			case 'bf':

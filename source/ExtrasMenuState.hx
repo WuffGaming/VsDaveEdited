@@ -108,7 +108,7 @@ class ExtrasMenuState extends MusicBeatState
 		camFollow = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
 
-		FlxG.camera.follow(camFollow, null, 0.06);
+		FlxG.camera.follow(camFollow, null, 0.6);
 		
 		camFollow.setPosition(640, 150.5);
 		for (i in 0...optionShit.length)
