@@ -94,20 +94,6 @@ class StoryMenuState extends MusicBeatState
 		#if desktop
 		DiscordClient.changePresence("In the Story Menu", null);
 		#end
-		
-		FlxG.save.data.tristanProgress = null; //undo tristan stuff since its being moved
-		//DONT REMOVE THIS CODE because we might use it for reference in the future
-		tristanunlocked = false;
-		dofunnytristan = false;
-		if (FlxG.save.data.tristanProgress == "unlocked")
-		{
-			dofunnytristan = true;
-			FlxG.save.data.tristanProgress = "pending play";
-		}
-		else if (FlxG.save.data.tristanProgress != "unlocked" && FlxG.save.data.tristanProgress != null)
-		{
-			tristanunlocked = true;
-		}
 
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
@@ -275,7 +261,6 @@ class StoryMenuState extends MusicBeatState
 		#if debug
 		if (FlxG.keys.justPressed.EIGHT)
 		{
-			FlxG.save.data.tristanProgress = null;
 			FlxG.switchState(new StoryMenuState());
 		}
 		#end
@@ -363,11 +348,6 @@ class StoryMenuState extends MusicBeatState
 	{
 		if (weekUnlocked[curWeek])
 		{
-			if (FlxG.save.data.tristanProgress == "pending play" && curWeek == 0 && curWeek != 4)
-			{
-				FlxG.sound.play(Paths.sound('cancelMenu'));
-				return;
-			}
 			if (!stopspamming)
 			{
 				FlxG.sound.play(Paths.sound('confirmMenu'));
@@ -566,10 +546,6 @@ class StoryMenuState extends MusicBeatState
 		for (i in 0...grpWeekCharacters.members.length)
 		{
 			grpWeekCharacters.members[i].animation.play(weekCharacters[curWeek][i]);
-			if (FlxG.save.data.tristanProgress == "pending play" && !dofunnytristan && i == 2)
-			{
-					grpWeekCharacters.members[i].visible = false;
-			}
 		}
 		txtTracklist.text = "Tracks\n";
 

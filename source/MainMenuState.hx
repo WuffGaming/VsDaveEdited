@@ -73,11 +73,6 @@ class MainMenuState extends MusicBeatState
 		#if desktop
 		DiscordClient.changePresence("In the Menus", null);
 		#end
-		
-		if (FlxG.save.data.unlockedcharacters == null)
-		{
-			FlxG.save.data.unlockedcharacters = [true,true,false,false,false,false];
-		}
 
 		daRealEngineVer = engineVers[FlxG.random.int(0, 2)];
 		

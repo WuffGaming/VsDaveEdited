@@ -93,16 +93,6 @@ class CharacterSelectState extends MusicBeatState
 
 		currentSelectedCharacter = characters[currentReal];
 
-		if (FlxG.save.data.unlockedcharacters == null)
-		{
-			FlxG.save.data.unlockedcharacters = [true,true,false,false,false,false,false,false];
-		}
-
-		if(isDebug)	
-		{
-			FlxG.save.data.unlockedcharacters = [true,true,true,true,true,true,true,true]; //unlock everyone
-		}
-
 		FlxG.sound.playMusic(Paths.music("goodEnding"),1,true);
 
 		var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('dave/sky_night'));
@@ -277,12 +267,6 @@ class CharacterSelectState extends MusicBeatState
 		}
 		if (controls.ACCEPT)
 		{
-			if (!FlxG.save.data.unlockedcharacters[currentReal])
-			{
-				FlxG.camera.shake(0.05, 0.1);
-				FlxG.sound.play(Paths.sound('badnoise1'), 0.9);
-				return;
-			}
 			if (PressedTheFunny)
 			{
 				return;
@@ -394,51 +378,11 @@ class CharacterSelectState extends MusicBeatState
 		char.screenCenter();
 		char.y = 450;
 
-		switch (char.curCharacter)
-		{
-			case "tristan" | 'tristan-beta' | 'tristan-golden':
-				char.y = 100 + 325;
-			case 'dave' | 'dave-annoyed' | 'dave-splitathon':
-				char.y = 100 + 160;
-			case 'dave-old':
-				char.y = 100 + 270;
-			case 'dave-angey' | 'dave-annoyed-3d' | 'dave-3d-standing-bruh-what':
-				char.y = 100;
-			case 'bambi-3d':
-				char.y = 100 + 350;
-				char.x += 100;
-			case 'bambi-unfair':
-				char.y = 100 + 575;
-				char.x += 100;
-			case 'bambi' | 'bambi-old' | 'bambi-bevel' | 'what-lmao':
-				char.y = 100 + 400;
-				char.y -= 75;
-			case 'bambi-new' | 'bambi-farmer-beta':
-				char.y = 100 + 450;
-				char.y -= 75;
-			case 'bambi-splitathon':
-				char.y = 100 + 400;
-			case 'bambi-angey':
-				char.y = 100 + 450;
-				char.y -= 75;
-			default:
-				char.x += char.gameOffset[0];
-				char.y += char.gameOffset[1];
-		}
+		char.x += char.gameOffset[0];
+		char.y += char.gameOffset[1];
+		
 		add(char);
 		funnyIconMan.animation.play(char.curCharacter);
-		if (!FlxG.save.data.unlockedcharacters[currentReal])
-		{
-			char.color = FlxColor.BLACK;
-			funnyIconMan.color = FlxColor.BLACK;
-			funnyIconMan.animation.curAnim.curFrame = 1;
-			characterText.text = '???';
-			if(char.curCharacter == 'bambi-3d' || char.curCharacter == 'bambi-unfair')
-			{
-				//funny canon name
-				characterText.text = '[EXPUNGED]';
-			}
-		}
 		characterText.screenCenter(X);
 		notemodtext.text = FlxStringUtil.formatMoney(currentSelectedCharacter.noteMs[0]) + "x       " + FlxStringUtil.formatMoney(currentSelectedCharacter.noteMs[3]) + "x        " + FlxStringUtil.formatMoney(currentSelectedCharacter.noteMs[2]) + "x       " + FlxStringUtil.formatMoney(currentSelectedCharacter.noteMs[1]) + "x";
 	}

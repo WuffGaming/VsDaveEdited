@@ -357,29 +357,10 @@ class PlayState extends MusicBeatState
 		screenshader.waveSpeed = 1;
 		screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
 
-		if (formoverride == "bf-pixel" && (SONG.song != "Tutorial"))
-		{
-			gfVersion = 'gf-pixel';
-			//charoffsetx += 300;
-			//charoffsety += 300;
-		}
-		if(formoverride == "bf-christmas")
-		{
-			gfVersion = 'gf-christmas';
-		}
 		gf = new Character(400, 130, gfVersion);
 		gf.scrollFactor.set(0.95, 0.95);
 		gf.x += gf.gameOffset[0];
 		gf.y += gf.gameOffset[1];
-
-		if (!(formoverride == "bf" || formoverride == "none" || formoverride == "bf-pixel" || formoverride == "bf-christmas") && SONG.song != "Tutorial")
-		{
-			gf.visible = false;
-		}
-		else if (FlxG.save.data.tristanProgress == "pending play" && isStoryMode)
-		{
-			gf.visible = false;
-		}
 
 		dad = new Character(100, 100, SONG.player2);
 		dadmirror = new Character(100, 100, "dave-angey");
@@ -1067,10 +1048,6 @@ class PlayState extends MusicBeatState
 		if (!paused)
 			FlxG.sound.playMusic(Paths.inst('ingame/' + PlayState.SONG.song + '/song'), 1, false);
 		vocals.play();
-		if (FlxG.save.data.tristanProgress == "pending play" && isStoryMode && storyWeek != 10)
-		{
-			FlxG.sound.music.volume = 0;
-		}
 
 		#if desktop
 		DiscordClient.changePresence(detailsText
@@ -1581,7 +1558,6 @@ class PlayState extends MusicBeatState
 			{
 				case 'supernovae' | 'glitch' | 'vs-dave-thanksgiving':
 					PlayState.SONG = Song.loadFromJson("cheating", "cheating"); // you dun fucked up
-					FlxG.save.data.cheatingFound = true;
 					shakeCam = false;
 					screenshader.Enabled = false;
 					FlxG.switchState(()->new PlayState());
@@ -1589,7 +1565,6 @@ class PlayState extends MusicBeatState
 					// FlxG.switchState(new VideoState('assets/videos/fortnite/fortniteballs.webm', new CrasherState()));
 				case 'cheating':
 					PlayState.SONG = Song.loadFromJson("unfairness", "unfairness"); // you dun fucked up again
-					FlxG.save.data.unfairnessFound = true;
 					shakeCam = false;
 					screenshader.Enabled = false;
 					FlxG.switchState(()->new PlayState());
@@ -1714,11 +1689,6 @@ class PlayState extends MusicBeatState
 				screenshader.Enabled = false;
 			}
 
-			if(shakeCam)
-			{
-				FlxG.save.data.unlockedcharacters[7] = true;
-			}
-
 			if (!shakeCam)
 			{
 				if(!perfectMode)
@@ -1751,10 +1721,6 @@ class PlayState extends MusicBeatState
 							FlxG.openURL("https://www.youtube.com/watch?v=eTJOdgDzD64");
 							System.exit(0);
 						default:
-							if(shakeCam)
-							{
-								FlxG.save.data.unlockedcharacters[7] = true;
-							}
 							FlxG.switchState(()->new EndingState('rtxx_ending', 'badEnding'));
 					}
 				}
@@ -1762,10 +1728,6 @@ class PlayState extends MusicBeatState
 				{
 					if(!perfectMode)
 					{
-						if(shakeCam)
-						{
-							FlxG.save.data.unlockedcharacters[7] = true;
-						}
 						openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition()
 							.y, formoverride == "bf" || formoverride == "none" ? SONG.player1 : formoverride));
 
@@ -2063,38 +2025,9 @@ class PlayState extends MusicBeatState
 			#end
 		}
 
-		if (curSong.toLowerCase() == 'bonus-song')
-		{
-			FlxG.save.data.unlockedcharacters[3] = true;
-		}
-
 		if (isStoryMode)
 		{
 			campaignScore += songScore;
-
-			var completedSongs:Array<String> = [];
-			var mustCompleteSongs:Array<String> = ['House', 'Insanity', 'Polygonized', 'Blocked', 'Corn-Theft', 'Maze', 'Splitathon'];
-			var allSongsCompleted:Bool = true;
-			if (FlxG.save.data.songsCompleted == null)
-			{
-				FlxG.save.data.songsCompleted = new Array<String>();
-			}
-			completedSongs = FlxG.save.data.songsCompleted;
-			completedSongs.push(storyPlaylist[0]);
-			for (i in 0...mustCompleteSongs.length)
-			{
-				if (!completedSongs.contains(mustCompleteSongs[i]))
-				{
-					allSongsCompleted = false;
-					break;
-				}
-			}
-			if (allSongsCompleted && !FlxG.save.data.unlockedcharacters[6])
-			{
-				FlxG.save.data.unlockedcharacters[6] = true;
-			}
-			FlxG.save.data.songsCompleted = completedSongs;
-			FlxG.save.flush();
 
 			storyPlaylist.remove(storyPlaylist[0]);
 
@@ -2103,19 +2036,12 @@ class PlayState extends MusicBeatState
 				switch (curSong.toLowerCase())
 				{
 					case 'polygonized':
-						FlxG.save.data.tristanProgress = "unlocked";
 						if (health >= 0.1)
 						{
-							FlxG.save.data.unlockedcharacters[2] = true;
-							if (storyDifficulty == 2)
-							{
-								FlxG.save.data.unlockedcharacters[5] = true;
-							}
 							FlxG.switchState(()->new EndingState('goodEnding', 'goodEnding'));
 						}
 						else if (health < 0.1)
 						{
-							FlxG.save.data.unlockedcharacters[4] = true;
 							FlxG.switchState(()->new EndingState('vomit_ending', 'badEnding'));
 						}
 						else
