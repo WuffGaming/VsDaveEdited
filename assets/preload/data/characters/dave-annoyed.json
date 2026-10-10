@@ -1,0 +1,38 @@
+{
+  "path": "characters/dave/Dave_insanity_lol",
+  "gameOffset": [0, 0],
+  "camOffset": [0, 0],
+  "icon": "dave",
+  "animations": [
+    {
+      "name": "idle",
+      "prefix": "Idle",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singUP",
+      "prefix": "Up",
+      "offset": [3, 18]
+    },
+    {
+      "name": "singLEFT",
+      "prefix": "Left",
+      "offset": [85, -12]
+    },
+    {
+      "name": "singRIGHT",
+      "prefix": "Right",
+      "offset": [16, -18]
+    },
+    {
+      "name": "singDOWN",
+      "prefix": "Down",
+      "offset": [0, -34]
+    },
+    {
+      "name": "scared",
+      "prefix": "Scared",
+      "offset": [0, -2]
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "path": "characters/shared/bfPixel",
+  "globalOffset": [-200, -175],
+  "gameOffset": [0, 0],
+  "camOffset": [0, 0],
+  "antialiasing": false,
+  "scale": 6,
+  "icon": "bf-pixel",
+  "nativelyPlayable": true,
+  "flipX": true,
+  "deathSkin": "bf-pixel-dead",
+  "animations": [
+    {
+      "name": "idle",
+      "prefix": "BF IDLE instance",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singUP",
+      "prefix": "BF UP NOTE instance",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singLEFT",
+      "prefix": "BF LEFT NOTE instance",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singRIGHT",
+      "prefix": "BF RIGHT NOTE instance",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singDOWN",
+      "prefix": "BF DOWN NOTE instance",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singUPmiss",
+      "prefix": "BF UP MISS instance",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singLEFTmiss",
+      "prefix": "BF LEFT MISS instance",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singRIGHTmiss",
+      "prefix": "BF RIGHT MISS instance",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singDOWNmiss",
+      "prefix": "BF DOWN MISS instance",
+      "offset": [0, 0]
+    }
+  ]
+}

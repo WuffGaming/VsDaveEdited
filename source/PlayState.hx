@@ -373,20 +373,17 @@ class PlayState extends MusicBeatState
 		screenshader.waveSpeed = 1;
 		screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
 
-		var charoffsetx:Float = 0;
-		var charoffsety:Float = 0;
-		if (formoverride == "bf-pixel"
-			&& (SONG.song != "Tutorial"))
+		if (formoverride == "bf-pixel" && (SONG.song != "Tutorial"))
 		{
 			gfVersion = 'gf-pixel';
-			charoffsetx += 300;
-			charoffsety += 300;
+			//charoffsetx += 300;
+			//charoffsety += 300;
 		}
 		if(formoverride == "bf-christmas")
 		{
 			gfVersion = 'gf-christmas';
 		}
-		gf = new Character(400 + charoffsetx, 130 + charoffsety, gfVersion);
+		gf = new Character(400, 130, gfVersion);
 		gf.scrollFactor.set(0.95, 0.95);
 		gf.x += gf.gameOffset[0];
 		gf.y += gf.gameOffset[1];
@@ -411,6 +408,7 @@ class PlayState extends MusicBeatState
 
 		switch (SONG.player2)
 		{
+			/*
 			case 'gf':
 				dad.setPosition(gf.x, gf.y);
 				gf.visible = false;
@@ -465,6 +463,7 @@ class PlayState extends MusicBeatState
 			case 'bambi-angey':
 				dad.y += 450;
 				dad.x += 100;
+			*/
 		}
 
 
@@ -484,7 +483,7 @@ class PlayState extends MusicBeatState
 
 		boyfriend.x += boyfriend.gameOffset[0];
 		boyfriend.y += boyfriend.gameOffset[1];
-
+		/*
 		switch (boyfriend.curCharacter)
 		{
 			case "tristan" | 'tristan-beta' | 'tristan-golden':
@@ -508,7 +507,7 @@ class PlayState extends MusicBeatState
 			case 'bambi-angey':
 				boyfriend.y = 100 + 450;
 		}
-
+		*/
 		boyfriendOldIcon = boyfriend.altIcon;
 
 		var newColor:FlxColor = FlxColor.WHITE;
@@ -651,18 +650,19 @@ class PlayState extends MusicBeatState
 		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 150, healthBarBG.y + 40, 0, "", 20);
 		if (!FlxG.save.data.accuracyDisplay)
 			scoreTxt.x = healthBarBG.x + healthBarBG.width / 2;
-		scoreTxt.setFormat(Paths.font("comic.ttf"), 20, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreTxt.setFormat(Paths.font("comic.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
 		scoreTxt.borderSize = 1.5;
 		add(scoreTxt);
 
+		// add icons because i felt like it
 		iconP1 = new HealthIcon(boyfriend.icon, true);
-		iconP1.y = healthBar.y - (iconP1.height / 2);
-		add(iconP1);
-
 		iconP2 = new HealthIcon(dad.icon, false);
-		iconP2.y = healthBar.y - (iconP2.height / 2);
+
+		add(iconP1);
 		add(iconP2);
+
+		updateIcons();
 
 		strumLineNotes.cameras = [camHUD];
 		notes.cameras = [camHUD];
@@ -1060,7 +1060,7 @@ class PlayState extends MusicBeatState
 		{
 			dad.dance();
 			gf.dance();
-			boyfriend.playAnim('idle', true);
+			boyfriend.dance();
 
 			var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
 			introAssets.set('default', ['ready', "set", "go"]);
@@ -2761,7 +2761,7 @@ class PlayState extends MusicBeatState
 		{
 			if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
 			{
-				boyfriend.playAnim('idle');
+				boyfriend.dance();
 			}
 		}
 
@@ -3232,7 +3232,7 @@ class PlayState extends MusicBeatState
 		{
 			if (!boyfriend.animation.curAnim.name.startsWith("sing") && boyfriend.canDance && boyfriend.animation.curAnim != null)
 				{
-					boyfriend.playAnim('idle', true);
+					boyfriend.dance();
 					if (darkLevels.contains(curStage) && SONG.song.toLowerCase() != "polygonized" && SONG.song.toLowerCase() != "furiosity")
 					{
 						boyfriend.color = nightColor;
@@ -3287,6 +3287,8 @@ class PlayState extends MusicBeatState
 					dad.y += 450;
 				}
 		}
+		dad.x += dad.gameOffset[0];
+		dad.y += dad.gameOffset[1];
 		boyfriend.stunned = false;
 	}
 
@@ -3322,6 +3324,12 @@ class PlayState extends MusicBeatState
 		{
 			boyfriend.stunned = false;
 		}
+	}
+
+	public function updateIcons()
+	{
+		iconP1.y = healthBar.y - (iconP1.height / 2);
+		iconP2.y = healthBar.y - (iconP2.height / 2);
 	}
 
 

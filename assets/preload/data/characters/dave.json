@@ -1,0 +1,33 @@
+{
+  "path": "characters/dave/dave_sheet",
+  "gameOffset": [0, 0],
+  "camOffset": [0, 0],
+  "icon": "dave",
+  "animations": [
+    {
+      "name": "idle",
+      "prefix": "idleDance",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singUP",
+      "prefix": "Up",
+      "offset": [18, 12]
+    },
+    {
+      "name": "singLEFT",
+      "prefix": "Left",
+      "offset": [12, -6]
+    },
+    {
+      "name": "singRIGHT",
+      "prefix": "Right",
+      "offset": [5, -2]
+    },
+    {
+      "name": "singDOWN",
+      "prefix": "Down",
+      "offset": [-5, 2]
+    }
+  ]
+}

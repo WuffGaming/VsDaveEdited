@@ -1,0 +1,37 @@
+{
+  "path": "characters/dave/Dave_Furiosity",
+  "gameOffset": [0, 0],
+  "camOffset": [0, 0],
+  "icon": "dave-3d",
+  "antialiasing": false,
+  "floater": true,
+  "scale": 1.02,
+  "noteStyle": "3d",
+  "animations": [
+    {
+      "name": "idle",
+      "prefix": "IDLE",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singUP",
+      "prefix": "UP",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singLEFT",
+      "prefix": "LEFT",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singRIGHT",
+      "prefix": "RIGHT",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singDOWN",
+      "prefix": "DOWN",
+      "offset": [0, 0]
+    }
+  ]
+}
