@@ -2054,8 +2054,6 @@ class PlayState extends MusicBeatState
 		canPause = false;
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;
-		FlxG.sound.music.destroy();
-		vocals.destroy();
 		if (SONG.validScore)
 		{
 			trace("score is valid");
@@ -2207,7 +2205,7 @@ class PlayState extends MusicBeatState
 						marcello.color = 0xFF878787;
 						dad.visible = false;
 						boyfriend.stunned = true;
-						marcello.frames = Paths.getSparrowAtlas('dave/cutscene');
+						marcello.frames = Paths.getSparrowAtlas('characters/bambi/cutscene');
 						marcello.animation.addByPrefix('throw_phone', 'bambi0', 24, false);
 						FlxG.sound.play(Paths.sound('break_phone'), 1, false, null, true);
 						boyfriend.playAnim('hit', true);
