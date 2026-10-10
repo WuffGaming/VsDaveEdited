@@ -1,0 +1,76 @@
+{
+  "path": "characters/bambi/what",
+  "gameOffset": [0, 400],
+  "camOffset": [0, 0],
+  "antialiasing": true,
+  "icon": "bambi-joke",
+  "nativelyPlayable": true,
+  "flipX": true,
+  "animations": [
+    {
+      "name": "idle",
+      "prefix": "MARCELLO idle dance",
+      "offset": [-5, 0]
+    },
+    {
+      "name": "singUP",
+      "prefix": "MARCELLO NOTE UP0",
+      "offset": [-16,3]
+    },
+    {
+      "name": "singLEFT",
+      "prefix": "MARCELLO NOTE LEFT0",
+      "offset": [-10,-2]
+    },
+    {
+      "name": "singRIGHT",
+      "prefix": "MARCELLO NOTE RIGHT0",
+      "offset": [0,-4]
+    },
+    {
+      "name": "singDOWN",
+      "prefix": "MARCELLO NOTE DOWN0",
+      "offset": [-10,-17]
+    },
+    {
+      "name": "hey",
+      "prefix": "MARCELLO HEY",
+      "offset": [3,21]
+    },
+    {
+      "name": "singUPmiss",
+      "prefix": "MARCELLO NOTE UP MISS",
+      "offset": [-6,4]
+    },
+    {
+      "name": "singLEFTmiss",
+      "prefix": "MARCELLO NOTE LEFT MISS",
+      "offset": [-10,-2]
+    },
+    {
+      "name": "singRIGHTmiss",
+      "prefix": "MARCELLO NOTE RIGHT MISS",
+      "offset": [0,-4]
+    },
+    {
+      "name": "singDOWNmiss",
+      "prefix": "MARCELLO NOTE DOWN MISS",
+      "offset": [-10,-17]
+    },
+    {
+      "name": "firstDeath",
+      "prefix": "MARCELLO dead0",
+      "offset": [0,0]
+    },
+    {
+      "name": "deathLoop",
+      "prefix": "MARCELLO dead0",
+      "offset": [0,0]
+    },
+    {
+      "name": "deathConfirm",
+      "prefix": "MARCELLO dead0",
+      "offset": [0,0]
+    }
+  ]
+}

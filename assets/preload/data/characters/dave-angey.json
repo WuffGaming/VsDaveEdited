@@ -1,7 +1,7 @@
 {
   "path": "characters/dave/Dave_Furiosity",
-  "gameOffset": [0, 0],
-  "camOffset": [0, 0],
+  "gameOffset": [150, 0],
+  "camOffset": [0, 150],
   "icon": "dave-3d",
   "antialiasing": false,
   "floater": true,

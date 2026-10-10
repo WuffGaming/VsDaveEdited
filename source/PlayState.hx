@@ -225,22 +225,6 @@ class PlayState extends MusicBeatState
 		// Making difficulty text for Discord Rich Presence.
 		storyDifficultyText = CoolUtil.difficultyString();
 
-		// To avoid having duplicate images in Discord assets
-		switch (SONG.player2)
-		{
-			case 'dave' | 'dave-old' | 'dave-angey':
-				iconRPC = 'icon_dave';
-			case 'bambi-new' | 'bambi-angey' | 'bambi' | 'bambi-old' | 'bambi-bevel' | 'what-lmao' | 'bambi-farmer-beta' | 'bambi-3d' | 'bambi-unfair':
-				iconRPC = 'icon_bambi';
-			default:
-				iconRPC = 'icon_none';
-		}
-		switch (SONG.song.toLowerCase())
-		{
-			case 'splitathon':
-				iconRPC = 'icon_both';
-		}
-
 		if (isStoryMode)
 		{
 			detailsText = "Story Mode: Week " + storyWeek;
@@ -404,68 +388,7 @@ class PlayState extends MusicBeatState
 		dad.y += dad.gameOffset[1];
 		
 
-		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
-
-		switch (SONG.player2)
-		{
-			/*
-			case 'gf':
-				dad.setPosition(gf.x, gf.y);
-				gf.visible = false;
-				if (isStoryMode)
-				{
-					camPos.x += 600;
-					tweenCamIn();
-				}
-			case "tristan" | 'tristan-beta' | 'tristan-golden':
-				dad.y += 325;
-				dad.x += 100;
-			case 'dave' | 'dave-annoyed' | 'dave-splitathon':
-				{
-					dad.y += 160;
-					dad.x += 250;
-				}
-			case 'dave-old':
-				{
-					dad.y += 270;
-					dad.x += 150;
-				}
-			case 'dave-angey' | 'dave-annoyed-3d' | 'dave-3d-standing-bruh-what':
-				{
-					dad.y += 0;
-					dad.x += 150;
-					camPos.set(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y + 150);
-				}
-			case 'bambi-3d':
-				{
-					dad.y += 35;
-					camPos.set(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y + 150);
-				}
-			case 'bambi-unfair':
-				{
-					dad.y += 90;
-					camPos.set(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y + 50);
-				}
-			case 'bambi' | 'bambi-old' | 'bambi-bevel' | 'what-lmao':
-				{
-					dad.y += 400;
-				}
-			case 'bambi-new' | 'bambi-farmer-beta':
-				{
-					dad.y += 450;
-					dad.x += 200;
-				}
-			case 'bambi-splitathon':
-				{
-					dad.x += 175;
-					dad.y += 400;
-				}
-			case 'bambi-angey':
-				dad.y += 450;
-				dad.x += 100;
-			*/
-		}
-
+		var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x + dad.camOffset[0], dad.getGraphicMidpoint().y + dad.camOffset[1]);
 
 		dadmirror.y += 0;
 		dadmirror.x += 150;
@@ -483,31 +406,7 @@ class PlayState extends MusicBeatState
 
 		boyfriend.x += boyfriend.gameOffset[0];
 		boyfriend.y += boyfriend.gameOffset[1];
-		/*
-		switch (boyfriend.curCharacter)
-		{
-			case "tristan" | 'tristan-beta' | 'tristan-golden':
-				boyfriend.y = 100 + 325;
-			case 'dave' | 'dave-annoyed' | 'dave-splitathon':
-				boyfriend.y = 100 + 160;
-			case 'dave-old':
-				boyfriend.y = 100 + 270;
-			case 'dave-angey' | 'dave-annoyed-3d' | 'dave-3d-standing-bruh-what':
-				boyfriend.y = 100;
-			case 'bambi-3d':
-				boyfriend.y = 100 + 350;
-			case 'bambi-unfair':
-				boyfriend.y = 100 + 575;
-			case 'bambi' | 'bambi-old' | 'bambi-bevel' | 'what-lmao':
-				boyfriend.y = 100 + 400;
-			case 'bambi-new' | 'bambi-farmer-beta':
-				boyfriend.y = 100 + 450;
-			case 'bambi-splitathon':
-				boyfriend.y = 100 + 400;
-			case 'bambi-angey':
-				boyfriend.y = 100 + 450;
-		}
-		*/
+
 		boyfriendOldIcon = boyfriend.altIcon;
 
 		var newColor:FlxColor = FlxColor.WHITE;
@@ -2121,13 +2020,6 @@ class PlayState extends MusicBeatState
 		if (focusondad)
 		{
 			camFollow.setPosition(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
-			// camFollow.setPosition(lucky.getMidpoint().x - 120, lucky.getMidpoint().y + 210);
-
-			switch (dad.curCharacter)
-			{
-				case 'dave-angey' | 'dave-annoyed-3d' | 'dave-3d-standing-bruh-what':
-					camFollow.y = dad.getMidpoint().y;
-			}
 
 			if (SONG.song.toLowerCase() == 'tutorial')
 			{
@@ -2138,14 +2030,6 @@ class PlayState extends MusicBeatState
 		if (!focusondad)
 		{
 			camFollow.setPosition(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
-
-			switch(boyfriend.curCharacter)
-			{
-				case 'dave-angey' | 'dave-annoyed-3d' | 'dave-3d-standing-bruh-what':
-					camFollow.y = boyfriend.getMidpoint().y;
-				case 'bambi-3d' | 'bambi-unfair':
-					camFollow.y = boyfriend.getMidpoint().y - 350;
-			}
 
 			if (SONG.song.toLowerCase() == 'tutorial')
 			{
@@ -3274,19 +3158,6 @@ class PlayState extends MusicBeatState
 		dad = new Character(100, 100, char);
 		add(dad);
 		dad.color = nightColor;
-		switch (dad.curCharacter)
-		{
-			case 'dave-splitathon':
-				{
-					dad.y += 160;
-					dad.x += 250;
-				}
-			case 'bambi-splitathon':
-				{
-					dad.x += 100;
-					dad.y += 450;
-				}
-		}
 		dad.x += dad.gameOffset[0];
 		dad.y += dad.gameOffset[1];
 		boyfriend.stunned = false;

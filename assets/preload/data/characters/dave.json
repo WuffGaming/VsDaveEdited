@@ -1,6 +1,6 @@
 {
   "path": "characters/dave/dave_sheet",
-  "gameOffset": [0, 0],
+  "gameOffset": [250, 160],
   "camOffset": [0, 0],
   "icon": "dave",
   "animations": [

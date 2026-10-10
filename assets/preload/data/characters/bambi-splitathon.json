@@ -1,8 +1,8 @@
 {
-  "path": "characters/dave/Dave_insanity_lol",
-  "gameOffset": [250, 160],
+  "path": "characters/bambi/Splitathon_Bambi",
+  "gameOffset": [175, 400],
   "camOffset": [0, 0],
-  "icon": "dave",
+  "icon": "bambi",
   "animations": [
     {
       "name": "idle",
@@ -12,27 +12,22 @@
     {
       "name": "singUP",
       "prefix": "Up",
-      "offset": [3, 18]
+      "offset": [-24,15]
     },
     {
       "name": "singLEFT",
       "prefix": "Left",
-      "offset": [85, -12]
+      "offset": [-3,6]
     },
     {
       "name": "singRIGHT",
       "prefix": "Right",
-      "offset": [16, -18]
+      "offset": [-34,-6]
     },
     {
       "name": "singDOWN",
       "prefix": "Down",
-      "offset": [0, -34]
-    },
-    {
-      "name": "scared",
-      "prefix": "Scared",
-      "offset": [0, -2]
+      "offset": [-20,-10]
     }
   ]
 }

@@ -60,7 +60,9 @@ typedef AnimationData =
 
 	var ?frameIndices:Array<Int>; // If using indices, specify said indices. Plays full animation if null.
 
-	var offset:Array<Int>;
+	var offset:Array<Int>; // Offset of Animation
+
+	var flippedOffset:Array<Int>; // Optional parameter for when the character is flipped.
 
 	var flipX:Null<Bool>;
 
@@ -89,7 +91,7 @@ class Character extends FlxSprite
 
 	public var nativelyPlayable:Bool = false;
 
-	public var globaloffset:Array<Float> = [0, 0];
+	public var globalOffset:Array<Float> = [0, 0];
 	public var gameOffset:Array<Float> = [0, 0];
 	public var camOffset:Array<Float> = [0, 0];
 	public var charScale:Float = 1;
@@ -102,268 +104,10 @@ class Character extends FlxSprite
 		curCharacter = character;
 		this.isPlayer = isPlayer;
 
-		var tex:FlxAtlasFrames;
 		antialiasing = true;
 
-		switch (curCharacter)
-		{
-			case 'bambi':
-				var tex = Paths.getSparrowAtlas('characters/bambi/bambi');
-				frames = tex;
-				animation.addByPrefix('idle', 'BF idle dance', 24, false);
-				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
-				animation.addByPrefix('singLEFT', 'BF NOTE LEFT0', 24, false);
-				animation.addByPrefix('singRIGHT', 'BF NOTE RIGHT0', 24, false);
-				animation.addByPrefix('singDOWN', 'BF NOTE DOWN0', 24, false);
-				animation.addByPrefix('singUPmiss', 'BF NOTE UP MISS0', 24, false);
-				animation.addByPrefix('singLEFTmiss', 'BF NOTE LEFT MISS0', 24, false);
-				animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS0', 24, false);
-				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS0', 24, false);
 
-				animation.addByPrefix('firstDeath', "BF dies", 24, false);
-				animation.addByPrefix('deathLoop', "BF Dead Loop", 24, true);
-				animation.addByPrefix('deathConfirm', "BF Dead confirm", 24, false);
-	
-				addOffset('idle', -5);
-				addOffset("singUP", -29, 27);
-				addOffset("singRIGHT", -38, -7);
-				addOffset("singLEFT", 12, -6);
-				addOffset("singDOWN", -10, -50);
-				addOffset("singUPmiss", -29, 27);
-				addOffset("singRIGHTmiss", -30, 21);
-				addOffset("singLEFTmiss", 12, 24);
-				addOffset("singDOWNmiss", -11, -19);
-				addOffset('firstDeath', 37, 11);
-				addOffset('deathLoop', 37, 5);
-				addOffset('deathConfirm', 37, 69);
-				playAnim('idle');
-
-				nativelyPlayable = true;
-				flipX = true;
-				icon = 'bambi';
-
-			case 'bambi-old':
-				var tex = Paths.getSparrowAtlas('characters/bambi/bambi-old');
-				frames = tex;
-				animation.addByPrefix('idle', 'MARCELLO idle dance', 24, false);
-				animation.addByPrefix('singUP', 'MARCELLO NOTE UP0', 24, false);
-				animation.addByPrefix('singLEFT', 'MARCELLO NOTE LEFT0', 24, false);
-				animation.addByPrefix('singRIGHT', 'MARCELLO NOTE RIGHT0', 24, false);
-				animation.addByPrefix('singDOWN', 'MARCELLO NOTE DOWN0', 24, false);
-				animation.addByPrefix('idle', 'MARCELLO idle dance', 24, false);
-				animation.addByPrefix('singUPmiss', 'MARCELLO MISS UP0', 24, false);
-				animation.addByPrefix('singLEFTmiss', 'MARCELLO MISS LEFT0', 24, false);
-				animation.addByPrefix('singRIGHTmiss', 'MARCELLO MISS RIGHT0', 24, false);
-				animation.addByPrefix('singDOWNmiss', 'MARCELLO MISS DOWN0', 24, false);
-
-				animation.addByPrefix('firstDeath', "MARCELLO dead0", 24, false);
-				animation.addByPrefix('deathLoop', "MARCELLO dead0", 24, true);
-				animation.addByPrefix('deathConfirm', "MARCELLO dead0", 24, false);
-	
-				addOffset('idle');
-				addOffset("singUP", -16, 3);
-				addOffset("singRIGHT", 0, -4);
-				addOffset("singLEFT", -10, -2);
-				addOffset("singDOWN", -10, -17);
-				addOffset("singUPmiss", -6, 4);
-				addOffset("singRIGHTmiss", 0, -4);
-				addOffset("singLEFTmiss", -10, -2);
-				addOffset("singDOWNmiss", -10, -17);
-
-				playAnim('idle');
-
-				nativelyPlayable = true;
-				icon = 'bambi-joke';
-				flipX = true;
-				
-			case 'bambi-new':
-				frames = Paths.getSparrowAtlas('characters/bambi/bambiRemake');
-				animation.addByPrefix('idle', 'Idle', 24, false);
-				animation.addByPrefix('singDOWN', 'down', 24, false);
-				animation.addByPrefix('singUP', 'up', 24, false);
-				animation.addByPrefix('singLEFT', 'left', 24, false);
-				animation.addByPrefix('singRIGHT', 'right', 24, false);
-
-				addOffset('idle');
-				addOffset("singUP", 36, -5);
-				addOffset("singRIGHT", -45, -11);
-				addOffset("singLEFT", -10, -9);
-				addOffset("singDOWN", -12, -48);
-				icon = 'bambi';
-				playAnim('idle');
-
-			case 'dave-splitathon':
-				frames = Paths.getSparrowAtlas('characters/dave/Splitathon_Dave');
-				animation.addByPrefix('idle', 'SplitIdle', 24, false);
-				animation.addByPrefix('singDOWN', 'SplitDown', 24, false);
-				animation.addByPrefix('singUP', 'SplitUp', 24, false);
-				animation.addByPrefix('singLEFT', 'SplitLeft', 24, false);
-				animation.addByPrefix('singRIGHT', 'SplitRight', 24, false);
-				animation.addByPrefix('scared', 'Nervous', 24, true);
-				animation.addByPrefix('what', 'Mad', 24, true);
-				animation.addByPrefix('happy', 'Happy', 24, true);
-
-				addOffset('idle');
-				addOffset("singUP", -12, 20);
-				addOffset("singRIGHT", -40, -13);
-				addOffset("singLEFT", 32, 8);
-				addOffset("singDOWN", 3, -21);
-				addOffset("scared", -15, 11);
-				addOffset("what", -3, 1);
-				addOffset("happy", -3, 1);
-				icon = 'dave';
-				playAnim('idle');
-				
-			case 'bambi-splitathon':
-				frames = Paths.getSparrowAtlas('characters/bambi/Splitathon_Bambi');
-				animation.addByPrefix('idle', 'Idle', 24, false);
-				animation.addByPrefix('singDOWN', 'Down', 24, false);
-				animation.addByPrefix('singUP', 'Up', 24, false);
-				animation.addByPrefix('singLEFT', 'Left', 24, false);
-				animation.addByPrefix('singRIGHT', 'Right', 24, false);
-							
-				addOffset('idle');
-				addOffset("singUP", -24, 15);
-				addOffset("singRIGHT", -34, -6);
-				addOffset("singLEFT", -3, 6);
-				addOffset("singDOWN", -20, -10);
-				icon = 'bambi';
-				playAnim('idle');
-				
-			case 'tristan-golden':
-				var tex = Paths.getSparrowAtlas('characters/tristan/tristan_golden');
-				frames = tex;
-				animation.addByPrefix('idle', 'BF idle dance', 24, false);
-				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
-				animation.addByPrefix('singLEFT', 'BF NOTE LEFT0', 24, false);
-				animation.addByPrefix('singRIGHT', 'BF NOTE RIGHT0', 24, false);
-				animation.addByPrefix('singDOWN', 'BF NOTE DOWN0', 24, false);
-				animation.addByPrefix('singUPmiss', 'BF NOTE UP MISS', 24, false);
-				animation.addByPrefix('singLEFTmiss', 'BF NOTE LEFT MISS', 24, false);
-				animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS', 24, false);
-				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
-				animation.addByPrefix('hey', 'BF HEY', 24, false);
-	
-				animation.addByPrefix('firstDeath', "BF dies", 24, false);
-				animation.addByPrefix('deathLoop', "BF Dead Loop", 24, true);
-				animation.addByPrefix('deathConfirm', "BF Dead confirm", 24, false);
-				animation.addByPrefix('dodge', "boyfriend dodge", 24, false);
-				animation.addByPrefix('scared', 'BF idle shaking', 24);
-				animation.addByPrefix('hit', 'BF hit', 24, false);
-	
-				addOffset('idle');
-				addOffset("singUP", -59, 57);
-				addOffset("singRIGHT", -58, -6);
-				addOffset("singLEFT", -4, -2);
-				addOffset("singDOWN", -40, -30);
-				addOffset("singUPmiss", -59, 57);
-				addOffset("singRIGHTmiss", -58, -6);
-				addOffset("singLEFTmiss", -4, -2);
-				addOffset("singDOWNmiss", -40, -30);
-				addOffset("hey", -2, 1);
-				addOffset('firstDeath', 17, 1);
-				addOffset('deathLoop', 17, 5);
-				addOffset('deathConfirm', 12, 36);
-				addOffset('scared', 6, 3);
-				addOffset('hit', 13, 25);
-	
-				playAnim('idle');
-				icon = 'tristan-golden';
-				nativelyPlayable = true;
-	
-				flipX = true;
-			case 'bambi-angey':
-				frames = Paths.getSparrowAtlas('characters/bambi/bambimaddddd');
-				animation.addByPrefix('idle', 'idle', 24, true);
-				animation.addByPrefix('singLEFT', 'left', 24, false);
-				animation.addByPrefix('singDOWN', 'down', 24, false);
-				animation.addByPrefix('singUP', 'up', 24, false);
-				animation.addByPrefix('singRIGHT', 'right', 24, false);
-
-				addOffset('idle');
-				addOffset('singLEFT');
-				addOffset('singDOWN');
-				addOffset('singUP', 0, 20);
-				addOffset('singRIGHT');
-				icon = 'bambi-3d';
-				playAnim('idle');
-			case 'bambi-bevel':
-				var tex = Paths.getSparrowAtlas('characters/bambi/bevel_bambi');
-				frames = tex;
-				animation.addByPrefix('idle', 'MARCELLO idle dance', 24, false);
-				animation.addByPrefix('singUP', 'MARCELLO NOTE UP0', 24, false);
-				animation.addByPrefix('singLEFT', 'MARCELLO NOTE LEFT0', 24, false);
-				animation.addByPrefix('singRIGHT', 'MARCELLO NOTE RIGHT0', 24, false);
-				animation.addByPrefix('singDOWN', 'MARCELLO NOTE DOWN0', 24, false);
-				animation.addByPrefix('singUPmiss', 'MARCELLO NOTE UP MISS', 24, false);
-				animation.addByPrefix('singLEFTmiss', 'MARCELLO NOTE LEFT MISS', 24, false);
-				animation.addByPrefix('singRIGHTmiss', 'MARCELLO NOTE RIGHT MISS', 24, false);
-				animation.addByPrefix('singDOWNmiss', 'MARCELLO NOTE DOWN MISS', 24, false);
-				animation.addByPrefix('hey', 'MARCELLO HEY', 24, false);
-
-				animation.addByPrefix('firstDeath', "MARCELLO dies", 24, false);
-				animation.addByPrefix('deathLoop', "MARCELLO Dead Loop", 24, true);
-				animation.addByPrefix('dodge', "boyfriend dodge", 24, false);
-				animation.addByPrefix('scared', 'MARCELLO idle shaking', 24);
-				animation.addByPrefix('hit', 'MARCELLO hit', 24, false);
-
-				addOffset('idle');
-				addOffset("singUP", -59, 37);
-				addOffset("singRIGHT", -38, -3);
-				addOffset("singLEFT", 12, -6);
-				addOffset("singDOWN", -10, -50);
-				addOffset("singUPmiss", -59, 37);
-				addOffset("singRIGHTmiss", -38, -3);
-				addOffset("singLEFTmiss", 12, -6);
-				addOffset("singDOWNmiss", -10, -50);
-				addOffset("hey", 3, 21);
-				addOffset('firstDeath', 37, 11);
-				addOffset('deathLoop', 37, 5);
-				addOffset('scared', -24, -10);
-				icon = 'bambi-joke';
-				playAnim('idle');
-
-				nativelyPlayable = true;
-
-				flipX = true;
-			case 'what-lmao':
-				var tex = Paths.getSparrowAtlas('characters/bambi/what');
-				frames = tex;
-				animation.addByPrefix('idle', 'MARCELLO idle dance', 24, false);
-				animation.addByPrefix('singUP', 'MARCELLO NOTE UP0', 24, false);
-				animation.addByPrefix('singLEFT', 'MARCELLO NOTE LEFT0', 24, false);
-				animation.addByPrefix('singRIGHT', 'MARCELLO NOTE RIGHT0', 24, false);
-				animation.addByPrefix('singDOWN', 'MARCELLO NOTE DOWN0', 24, false);
-				animation.addByPrefix('singUPmiss', 'MARCELLO NOTE UP MISS', 24, false);
-				animation.addByPrefix('singLEFTmiss', 'MARCELLO NOTE LEFT MISS', 24, false);
-				animation.addByPrefix('singRIGHTmiss', 'MARCELLO NOTE RIGHT MISS', 24, false);
-				animation.addByPrefix('singDOWNmiss', 'MARCELLO NOTE DOWN MISS', 24, false);
-				animation.addByPrefix('hey', 'MARCELLO HEY', 24, false);
-
-				animation.addByPrefix('dodge', "boyfriend dodge", 24, false);
-				animation.addByPrefix('scared', 'MARCELLO idle shaking', 24);
-				animation.addByPrefix('hit', 'MARCELLO hit', 24, false);
-
-				addOffset('idle');
-				addOffset("singUP", -59, 37);
-				addOffset("singRIGHT", -38, -3);
-				addOffset("singLEFT", 12, -6);
-				addOffset("singDOWN", -10, -50);
-				addOffset("singUPmiss", -59, 37);
-				addOffset("singRIGHTmiss", -38, -3);
-				addOffset("singLEFTmiss", 12, -6);
-				addOffset("singDOWNmiss", -10, -50);
-				addOffset("hey", 3, 21);
-				addOffset('scared', -24, -10);
-				icon = 'bambi-joke';
-				playAnim('idle');
-
-				nativelyPlayable = true;
-
-				flipX = true;
-			default:
-				parseDataFile();
-		}
+		parseDataFile();
 		dance();
 
 		if(isPlayer)
@@ -380,30 +124,7 @@ class Character extends FlxSprite
 		trace('PARSING CHARACTER: ' + curCharacter);
 		var rawJson = Assets.getText(Paths.json('characters/${curCharacter}'));
 		var jsonData:CharacterData = cast Json.parse(rawJson);
-
 		var data:CharacterData = cast jsonData;
-
-		var tex:FlxAtlasFrames;
-		tex = Paths.getSparrowAtlas(data.path);
-		frames = tex;
-		if (frames != null)
-			for (anim in data.animations)
-			{
-				var frameRate = anim.frameRate == null ? 24 : anim.frameRate;
-				var looped = anim.looped == null ? false : anim.looped;
-				var flipx = anim.flipX == null ? false : anim.flipX;
-				var flipy = anim.flipY == null ? false : anim.flipY;
-
-				if (anim.frameIndices != null)
-				{
-					animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", frameRate, looped, flipx, flipy);
-				}
-				else
-				{
-					animation.addByPrefix(anim.name, anim.prefix, frameRate, looped, flipx, flipy);
-				}
-				addOffset(anim.name, anim.offset[0], anim.offset[1]);
-			}
 
 		// do dances use DanceLeft / DanceRight?
 		bopper = data.bopper == null ? false : data.bopper;
@@ -431,15 +152,43 @@ class Character extends FlxSprite
 
 		icon = data.icon;
 
+		// im moving this down here Lol!
+		var tex:FlxAtlasFrames;
+		tex = Paths.getSparrowAtlas(data.path);
+		frames = tex;
+		if (frames != null)
+			for (anim in data.animations)
+			{
+				var offset = anim.offset == null ? [0,0] : anim.offset;
+				if ((isPlayer && !nativelyPlayable || !isPlayer && nativelyPlayable) && anim.flippedOffset != null)
+					offset = anim.flippedOffset;
+				var frameRate = anim.frameRate == null ? 24 : anim.frameRate;
+				var looped = anim.looped == null ? false : anim.looped;
+				var flipx = anim.flipX == null ? false : anim.flipX;
+				var flipy = anim.flipY == null ? false : anim.flipY;
+
+				if (anim.frameIndices != null)
+				{
+					animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", frameRate, looped, flipx, flipy);
+				}
+				else
+				{
+					animation.addByPrefix(anim.name, anim.prefix, frameRate, looped, flipx, flipy);
+				}
+				addOffset(anim.name, anim.offset[0], anim.offset[1]);
+			}
+
 		if (data.scaleSize)
 			scale.set(charScale, charScale); // scale can be a float
 		else
 			setGraphicSize(Std.int(width * charScale), Std.int(height * charScale)); // setGraphicSize cannot
 
 		updateHitbox();
-		globaloffset = data.globalOffset; // mostly dependency for tha cores
-		gameOffset = data.gameOffset;
-		camOffset = data.camOffset;
+
+		// you deadass gotta check everything bro
+		globalOffset = data.globalOffset == null ? [0,0] : data.globalOffset;
+		gameOffset = data.gameOffset == null ? globalOffset : data.gameOffset; // we already checked for if globalOffset is null so we can just use that Lol
+		camOffset = data.camOffset == null ? [0,0] : data.camOffset;
 
 		playAnim(data.bopper ? 'danceRight' : 'idle');
 	}
@@ -519,11 +268,11 @@ class Character extends FlxSprite
 			{
 				if(!nativelyPlayable)
 				{
-					offset.set((daOffset[0] * -1) + globaloffset[0], daOffset[1] + globaloffset[1]);
+					offset.set((daOffset[0] * -1) + globalOffset[0], daOffset[1] + globalOffset[1]);
 				}
 				else
 				{
-					offset.set(daOffset[0] + globaloffset[0], daOffset[1] + globaloffset[1]);
+					offset.set(daOffset[0] + globalOffset[0], daOffset[1] + globalOffset[1]);
 				}
 			}
 			else

@@ -1,16 +1,16 @@
 {
-  "path": "characters/tristan/TRISTAN",
-  "gameOffset": [100, 325],
+  "path": "characters/bambi/bambi",
+  "gameOffset": [0, 400],
   "camOffset": [0, 0],
   "antialiasing": true,
-  "icon": "tristan",
+  "icon": "bambi",
   "nativelyPlayable": true,
   "flipX": true,
   "animations": [
     {
       "name": "idle",
       "prefix": "BF idle dance",
-      "offset": [0, 0]
+      "offset": [-5, 0]
     },
     {
       "name": "singUP",

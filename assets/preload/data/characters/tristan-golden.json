@@ -1,9 +1,9 @@
 {
-  "path": "characters/tristan/TRISTAN",
+  "path": "characters/tristan/tristan_golden",
   "gameOffset": [100, 325],
   "camOffset": [0, 0],
   "antialiasing": true,
-  "icon": "tristan",
+  "icon": "tristan-golden",
   "nativelyPlayable": true,
   "flipX": true,
   "animations": [

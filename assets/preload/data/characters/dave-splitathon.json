@@ -1,0 +1,51 @@
+{
+  "path": "characters/dave/Splitathon_Dave",
+  "gameOffset": [250, 160],
+  "camOffset": [0, 0],
+  "icon": "dave",
+  "animations": [
+    {
+      "name": "idle",
+      "prefix": "SplitIdle",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singUP",
+      "prefix": "SplitUp",
+      "offset": [-12,20]
+    },
+    {
+      "name": "singLEFT",
+      "prefix": "SplitLeft",
+      "offset": [32,8]
+    },
+    {
+      "name": "singRIGHT",
+      "prefix": "SplitRight",
+      "offset": [-40,-13]
+    },
+    {
+      "name": "singDOWN",
+      "prefix": "SplitDown",
+      "offset": [3,-21]
+    },
+    {
+      "name": "scared",
+      "prefix": "Nervous",
+      "looped": true,
+      "offset": [-15,11]
+    },
+    {
+      "name": "what",
+      "prefix": "Mad",
+      "looped": true,
+      "offset": [-3,1]
+    },
+    {
+      "name": "happy",
+      "prefix": "Happy",
+      "looped": true,
+      "offset": [-3,1]
+    }
+  ]
+}
