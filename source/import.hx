@@ -1,4 +1,4 @@
-import Paths;
+import backend.util.Paths;
 #if sys
 import sys.FileSystem;
 import sys.io.File;

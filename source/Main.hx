@@ -12,7 +12,7 @@
 	{
 		var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels depending on your zoom).
 		var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels depending on your zoom).
-		var initialState:Class<FlxState> = TitleState; // The FlxState the game starts with.
+		var initialState:Class<FlxState> = game.state.main.TitleState; // The FlxState the game starts with.
 		var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
 		var framerate:Int = 144; // How many frames per second the game should run at.
 		var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
@@ -64,7 +64,7 @@
 			}
 
 			#if !debug
-			initialState = TitleState;
+			initialState = game.state.main.TitleState;
 			#end
 
 			addChild(new FlxGame(gameWidth, gameHeight, initialState, framerate, framerate, skipSplash, startFullscreen));
@@ -73,7 +73,7 @@
 
 		#if web
 		var str1:String = "HTML CRAP";
-		var vHandler = new VideoHandler();
+		var vHandler = new backend.video.VideoHandler();
 		vHandler.init1();
 		vHandler.video.name = str1;
 		addChild(vHandler.video);
@@ -82,7 +82,7 @@
 		vHandler.source(ourSource);
 		#elseif desktop
 		var str1:String = "WEBM SHIT"; 
-		var webmHandle = new WebmHandler();
+		var webmHandle = new backend.video.WebmHandler();
 		webmHandle.source(ourSource);
 		webmHandle.makePlayer();
 		webmHandle.webm.name = str1;
