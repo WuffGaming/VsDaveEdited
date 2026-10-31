@@ -27,7 +27,7 @@ import flixel.tweens.misc.ColorTween;
 import flixel.util.FlxStringUtil;
 import lime.utils.Assets;
 #if desktop
-import Discord.DiscordClient;
+import backend.Discord.DiscordClient;
 #end
 using StringTools;
 /*
@@ -35,7 +35,7 @@ hi cool lil committers looking at this code, 95% of this is my code and I'd appr
 -vs dave dev T5mpler 
 i have to put this here just in case you think of doing so
 */
-class CreditsMenuState
+class CreditsMenuState extends MusicBeatState
 {
 	var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('backgrounds/SUSSUS AMOGUS'));
    var selectedFormat:FlxText;

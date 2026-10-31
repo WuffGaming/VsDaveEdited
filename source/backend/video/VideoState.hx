@@ -1,5 +1,6 @@
 package backend.video;
 
+import game.MusicBeatState;
 import flixel.FlxState;
 import flixel.FlxG;
 
@@ -15,9 +16,7 @@ import openfl.utils.AssetType;
 
 import openfl.Lib;
 
-using StringTools;
-
-class VideoState
+class VideoState extends MusicBeatState
 {
 	public var leSource:String = "";
 	public var transClass:FlxState;

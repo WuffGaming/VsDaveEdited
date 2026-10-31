@@ -1,8 +1,8 @@
 package game.state.editors;
 
-import Conductor.BPMChangeEvent;
-import Section.SwagSection;
-import Song.SwagSong;
+import game.song.Conductor.BPMChangeEvent;
+import game.song.Section.SwagSection;
+import game.song.Song.SwagSong;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.display.FlxGridOverlay;
@@ -34,9 +34,7 @@ import openfl.media.Sound;
 import openfl.net.FileReference;
 import openfl.utils.ByteArray;
 
-using StringTools;
-
-class ChartingState
+class ChartEditor extends MusicBeatState
 {
 	var _file:FileReference;
 

@@ -23,12 +23,14 @@ import flixel.util.FlxTimer;
 import lime.app.Application;
 import openfl.Assets;
 #if desktop
-import Discord.DiscordClient;
+import backend.Discord.DiscordClient;
 #end
 
-using StringTools;
+import game.song.Conductor;
 
-class TitleState
+import game.object.Alphabet;
+
+class TitleState extends MusicBeatState
 {
 	static var initialized:Bool = false;
 
@@ -49,14 +51,8 @@ class TitleState
 		FlxSprite.defaultAntialiasing = true;
 			
         FlxG.mouse.visible = false; 
-		
-		fun = FlxG.random.int(0, 999);
-		if(fun == 1)
-		{
-			LoadingState.loadAndSwitchState(new SusState());
-		}
 
-		PlayerSettings.init();
+		game.PlayerSettings.init();
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
@@ -70,20 +66,13 @@ class TitleState
 			
 		FlxG.save.bind('funkin', 'ninjamuffin99');
 
-		SaveDataHandler.initSave();
+		backend.SaveDataHandler.initSave();
 
-		Highscore.load();
-
-		#if FREEPLAY
-		FlxG.switchState(new FreeplayState());
-		#elseif CHARTING
-		FlxG.switchState(new ChartingState());
-		#else
+		game.song.Highscore.load();
 		new FlxTimer().start(1, function(tmr:FlxTimer)
 		{
 			startIntro();
 		});
-		#end
 	}
 
 	var logoBl:FlxSprite;

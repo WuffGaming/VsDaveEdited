@@ -32,7 +32,7 @@ class CharacterInSelect
 		this.polishedNames = polishedNames;
 	}
 }
-class CharacterSelectState
+class CharacterSelectState extends MusicBeatState
 {
 	public var char:Boyfriend;
 	public var current:Int = 0;

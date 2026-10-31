@@ -16,12 +16,13 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 #if desktop
-import Discord.DiscordClient;
+import backend.Discord.DiscordClient;
 #end
 
-using StringTools;
+import game.object.menu.MenuCharacter;
+import game.object.menu.MenuItem;
 
-class StoryMenuState
+class StoryMenuState extends MusicBeatState
 {
 	var scoreText:FlxText;
 
@@ -356,6 +357,8 @@ class StoryMenuState
 				stopspamming = true;
 			}
 
+			var PlayState = game.state.funkin.PlayState;
+
 			PlayState.storyPlaylist = weekData[curWeek];
 			PlayState.isStoryMode = true;
 			selectedWeek = true;
@@ -374,7 +377,7 @@ class StoryMenuState
 
 			PlayState.storyDifficulty = curDifficulty;
 
-			PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
+			PlayState.SONG = game.song.Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
 			PlayState.storyWeek = curWeek;
 			PlayState.campaignScore = 0;
 			new FlxTimer().start(1, function(tmr:FlxTimer)
@@ -387,7 +390,7 @@ class StoryMenuState
 						LoadingState.loadAndSwitchState(new PlayState(), true);
 					case 1:
 						FlxG.sound.music.stop();
-						LoadingState.loadAndSwitchState(new VideoState('assets/videos/daveCutscene.webm', new PlayState()), true);
+						LoadingState.loadAndSwitchState(new backend.video.VideoState('assets/videos/daveCutscene.webm', new PlayState()), true);
 				}
 				
 			});

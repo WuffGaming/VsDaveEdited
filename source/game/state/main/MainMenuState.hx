@@ -15,12 +15,12 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import lime.app.Application;
 #if desktop
-import Discord.DiscordClient;
+import backend.Discord.DiscordClient;
 #end
 
 using StringTools;
 
-class MainMenuState
+class MainMenuState extends MusicBeatState
 {
 	var curSelected:Int = 0;
 

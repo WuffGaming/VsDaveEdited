@@ -14,8 +14,9 @@ import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
 
 import haxe.io.Path;
+import game.state.funkin.PlayState;
 
-class LoadingState
+class LoadingState extends MusicBeatState
 {
 	inline static var MIN_TIME = 1.0;
 	

@@ -44,7 +44,7 @@ import openfl.display.StageQuality;
 import openfl.filters.ShaderFilter;
 import flash.system.System;
 #if desktop
-import Discord.DiscordClient;
+import backend.Discord.DiscordClient;
 #end
 
 #if sys 
@@ -54,7 +54,7 @@ import sys.io.Process;
 
 using StringTools;
 
-class PlayState
+class PlayState extends MusicBeatState
 {
 	public static var curStage:String = '';
 	public static var characteroverride:String = "none";
@@ -1576,7 +1576,7 @@ class PlayState
 				default:
 					shakeCam = false;
 					screenshader.Enabled = false;
-					FlxG.switchState(()->new ChartingState());
+					FlxG.switchState(()->new ChartEditor());
 					#if desktop
 					DiscordClient.changePresence("Chart Editor", null, null, true);
 					#end

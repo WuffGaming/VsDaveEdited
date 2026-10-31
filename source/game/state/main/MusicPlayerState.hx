@@ -17,7 +17,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxStringUtil;
 import lime.utils.Assets;
 #if desktop
-import Discord.DiscordClient;
+import backend.Discord.DiscordClient;
 #end
 using StringTools;
 
@@ -26,7 +26,7 @@ using StringTools;
 
 //unlike the character select code, you guys are free to use this without asking me(but you gotta give me credit), although you might have to ask moldy. -ben
 
-class MusicPlayerState
+class MusicPlayerState extends MusicBeatState
 {
     var songs:Array<PlaySongMetadata> = [];
     private var grpSongs:FlxTypedGroup<Alphabet>;

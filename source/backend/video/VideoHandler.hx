@@ -11,8 +11,6 @@ import openfl.net.NetConnection;
 import openfl.net.NetStream;
 import flixel.FlxG;
 
-using StringTools;
-
 class VideoHandler
 {
 	public var netStream:NetStream;

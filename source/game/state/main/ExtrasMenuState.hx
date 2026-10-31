@@ -2,7 +2,7 @@ package game.state.main;
 
 import flixel.math.FlxRandom;
 import flixel.math.FlxPoint;
-import Controls.KeyboardScheme;
+import game.Controls.KeyboardScheme;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -15,12 +15,11 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import lime.app.Application;
 #if desktop
-import Discord.DiscordClient;
+import backend.Discord.DiscordClient;
 #end
 
-using StringTools;
 
-class ExtrasMenuState
+class ExtrasMenuState extends MusicBeatState
 {
 	var curSelected:Int = 0;
 
@@ -215,17 +214,17 @@ class ExtrasMenuState
                                 switch (daChoice)
                                 {
                                     case 'story mode':
-                                        FlxG.switchState(new StoryMenuState());
+                                        FlxG.switchState(()->new StoryMenuState());
                                         trace("Story Menu Selected");
                                     case 'freeplay':
-                                        FlxG.switchState(new FreeplayState());
+                                        FlxG.switchState(()->new FreeplayState());
                                         trace("Freeplay Menu Selected");
                                     case 'options':
-                                        FlxG.switchState(new OptionsMenu());
+                                        FlxG.switchState(new game.state.option.OptionsMenu());
                                     case 'ost':
-                                        FlxG.switchState(new MusicPlayerState());
+                                        FlxG.switchState(()->new MusicPlayerState());
                                     case 'credits':
-                                        FlxG.switchState(new CreditsMenuState());
+                                        FlxG.switchState(()->new CreditsMenuState());
                                 }
                             });
                         }

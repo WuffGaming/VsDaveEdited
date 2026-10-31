@@ -1,7 +1,7 @@
 package game.object;
 
 import cpp.Lib;
-import Shaders.InvertShader;
+import backend.shader.Shaders.InvertShader;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
