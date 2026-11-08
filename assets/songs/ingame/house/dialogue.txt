@@ -1,6 +1,6 @@
-setfont_normal:generic:Here we have Dave, minding his own business...
-:bf: beb 
-:dave: Wait, who are you two?
-:dave: Oh wait! I saw you guys a couple days ago!
-:bf: beep bop
-:dave: Oh, you want to sing? Well let's go then!
+:bf:test
+:bf:yadayada
+:bf:ok cool
+:null:ok what if the portrait doesnt exist
+:null:ok if you made it this far you're good
+:bf:this dialogue system will be replaced with json though soon so dont count on it LMAO
