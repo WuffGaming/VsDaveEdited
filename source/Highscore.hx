@@ -81,10 +81,22 @@ class Highscore
 			daSong += '-easy';
 		else if (diff == 2)
 			daSong += '-hard';
-		else if (diff == 3)
-			daSong += '-unnerf';
 
 		return daSong;
+	}
+
+	public static function getDifficulty(song:String, diff:Int):String
+	{
+		var songJson:String = '';
+
+		if (diff == 0)
+			songJson = 'easy';
+		else if (diff == 2)
+			songJson = 'hard';
+		else
+			songJson = 'normal';
+
+		return songJson;
 	}
 
 	public static function getScore(song:String, diff:Int):Int

@@ -117,8 +117,8 @@ class PlayState extends MusicBeatState
 
 	private var strumLineNotes:FlxTypedGroup<FlxSprite>;
 
-	public var playerStrums:FlxTypedGroup<FlxSprite>;
-	public var dadStrums:FlxTypedGroup<FlxSprite>;
+	public var playerStrums:FlxTypedGroup<StrumNote>;
+	public var dadStrums:FlxTypedGroup<StrumNote>;
 
 	private var camZooming:Bool = false;
 	private var curSong:String = "";
@@ -258,7 +258,7 @@ class PlayState extends MusicBeatState
 		persistentDraw = true;
 
 		if (SONG == null)
-			SONG = Song.loadFromJson('tutorial');
+			SONG = Song.loadFromJson('house', 'hard');
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);
@@ -332,9 +332,9 @@ class PlayState extends MusicBeatState
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
 		add(strumLineNotes);
 
-		playerStrums = new FlxTypedGroup<FlxSprite>();
+		playerStrums = new FlxTypedGroup<StrumNote>();
 
-		dadStrums = new FlxTypedGroup<FlxSprite>();
+		dadStrums = new FlxTypedGroup<StrumNote>();
 
 		generateSong(SONG.song);
 
@@ -359,7 +359,7 @@ class PlayState extends MusicBeatState
 
 		FlxG.fixedTimestep = false;
 
-		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('healthBar'));
+		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('ui/game/healthBar'));
 		if (FlxG.save.data.downscroll)
 			healthBarBG.y = 50;
 		healthBarBG.screenCenter(X);
@@ -462,8 +462,8 @@ class PlayState extends MusicBeatState
 		{
 			switch (curSong.toLowerCase())
 			{
-				case 'house' | 'insanity' | 'furiosity' | 'polygonized' | 'supernovae' | 'glitch' | 'blocked' | 'corn-theft' | 'maze' | 'splitathon' | 'cheating' | 'unfairness':
-					schoolIntro(doof);
+				//case 'house' | 'insanity' | 'furiosity' | 'polygonized' | 'supernovae' | 'glitch' | 'blocked' | 'corn-theft' | 'maze' | 'splitathon' | 'cheating' | 'unfairness':
+					//schoolIntro(doof);
 				default:
 					startCountdown();
 			}
@@ -489,7 +489,7 @@ class PlayState extends MusicBeatState
 			default:
 				defaultCamZoom = 0.9;
 				curStage = 'daveHouse';
-				var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('dave/sky'));
+				var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stages/dave/sky'));
 				bg.antialiasing = true;
 				bg.scrollFactor.set(0.75, 0.75);
 				bg.active = false;
@@ -497,7 +497,7 @@ class PlayState extends MusicBeatState
 				sprites.add(bg);
 				add(bg);
 	
-				var stageHills:FlxSprite = new FlxSprite(-225, -125).loadGraphic(Paths.image('dave/hills'));
+				var stageHills:FlxSprite = new FlxSprite(-225, -125).loadGraphic(Paths.image('stages/dave/hills'));
 				stageHills.setGraphicSize(Std.int(stageHills.width * 1.25));
 				stageHills.updateHitbox();
 				stageHills.antialiasing = true;
@@ -507,7 +507,7 @@ class PlayState extends MusicBeatState
 				sprites.add(stageHills);
 				add(stageHills);
 	
-				var gate:FlxSprite = new FlxSprite(-200, -125).loadGraphic(Paths.image('dave/gate'));
+				var gate:FlxSprite = new FlxSprite(-200, -125).loadGraphic(Paths.image('stages/dave/gate'));
 				gate.setGraphicSize(Std.int(gate.width * 1.2));
 				gate.updateHitbox();
 				gate.antialiasing = true;
@@ -517,7 +517,7 @@ class PlayState extends MusicBeatState
 				sprites.add(gate);
 				add(gate);
 	
-				var stageFront:FlxSprite = new FlxSprite(-225, -125).loadGraphic(Paths.image('dave/grass'));
+				var stageFront:FlxSprite = new FlxSprite(-225, -125).loadGraphic(Paths.image('stages/dave/grass'));
 				stageFront.setGraphicSize(Std.int(stageFront.width * 1.2));
 				stageFront.updateHitbox();
 				stageFront.antialiasing = true;
@@ -582,12 +582,6 @@ class PlayState extends MusicBeatState
 			dad.dance();
 			gf.dance();
 			boyfriend.dance();
-
-			var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
-			introAssets.set('default', ['ready', "set", "go"]);
-
-			var introAlts:Array<String> = introAssets.get('default');
-
 			switch (swagCounter)
 
 			{
@@ -596,7 +590,7 @@ class PlayState extends MusicBeatState
 					focusOnDadGlobal = false;
 					ZoomCam(false);
 				case 1:
-					var ready:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[0]));
+					var ready:FlxSprite = new FlxSprite().loadGraphic(Paths.image('ui/game/ready'));
 					ready.scrollFactor.set();
 					ready.updateHitbox();
 
@@ -613,7 +607,7 @@ class PlayState extends MusicBeatState
 					focusOnDadGlobal = true;
 					ZoomCam(true);
 				case 2:
-					var set:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[1]));
+					var set:FlxSprite = new FlxSprite().loadGraphic(Paths.image('ui/game/set'));
 					set.scrollFactor.set();
 
 					set.screenCenter();
@@ -629,7 +623,7 @@ class PlayState extends MusicBeatState
 					focusOnDadGlobal = false;
 					ZoomCam(false);
 				case 3:
-					var go:FlxSprite = new FlxSprite().loadGraphic(Paths.image(introAlts[2]));
+					var go:FlxSprite = new FlxSprite().loadGraphic(Paths.image('ui/game/go'));
 					go.scrollFactor.set();
 
 					go.updateHitbox();
@@ -650,7 +644,6 @@ class PlayState extends MusicBeatState
 			}
 
 			swagCounter += 1;
-			// generateSong('fresh');
 		}, 5);
 	}
 
@@ -794,10 +787,10 @@ class PlayState extends MusicBeatState
 		for (i in 0...4)
 		{
 			// FlxG.log.add(i);
-			var babyArrow:FlxSprite = new FlxSprite(0, strumLine.y);
+			var babyArrow:StrumNote = new StrumNote(0, strumLine.y);
 			var style = player == 1 ? boyfriend.noteStyle : dad.noteStyle;
 
-			babyArrow.frames = Paths.getSparrowAtlas('notes/' + style);
+			babyArrow.frames = Paths.getSparrowAtlas('ui/game/notes/' + style);
 			babyArrow.animation.addByPrefix('green', 'arrowUP');
 			babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
 			babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
@@ -847,7 +840,7 @@ class PlayState extends MusicBeatState
 				dadStrums.add(babyArrow);
 			}
 
-			babyArrow.animation.play('static');
+			babyArrow.playAnim('static');
 			babyArrow.x += 50;
 			babyArrow.x += ((FlxG.width / 2) * player);
 
@@ -1247,15 +1240,15 @@ class PlayState extends MusicBeatState
 						camHUD.shake(0.0045, 0.1);
 					}
 					dad.playAnim('sing' + fuckingDumbassBullshitFuckYou + altAnim, true);
-					dadStrums.forEach(function(sprite:FlxSprite) {
+					dadStrums.forEach(function(sprite:StrumNote) {
 					if (Math.abs(Math.round(Math.abs(daNote.noteData)) % 4) == sprite.ID)
 						{
-							sprite.animation.play('confirm', true);
+							sprite.playAnim('confirm', true);
 							sprite.centerOffsets();
 
 							sprite.animation.onFinish.add(function(name:String)
 							{
-								sprite.animation.play('static',true);
+								sprite.playAnim('static',true);
 								sprite.centerOffsets();
 							});
 
@@ -1406,24 +1399,19 @@ class PlayState extends MusicBeatState
 
 	function nextSong()
 	{
-		var difficulty:String = "";
+		var difficulty:String = "normal";
 
 		if (storyDifficulty == 0)
-			difficulty = '-easy';
+			difficulty = 'easy';
 
 		if (storyDifficulty == 2)
-			difficulty = '-hard';
-
-		if (storyDifficulty == 3)
-			difficulty = '-hard';
-
-		trace(PlayState.storyPlaylist[0].toLowerCase() + difficulty);
+			difficulty = 'hard';
 
 		FlxTransitionableState.skipNextTransIn = true;
 		FlxTransitionableState.skipNextTransOut = true;
 		prevCamFollow = camFollow;
 
-		PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0]);
+		PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase(), difficulty);
 		FlxG.sound.music.stop();
 		
 		switch (curSong.toLowerCase())
@@ -1503,7 +1491,7 @@ class PlayState extends MusicBeatState
 		{
 			songScore += score;
 
-			rating.loadGraphic(Paths.image(daRating));
+			rating.loadGraphic(Paths.image('ui/game/rating/$daRating'));
 			rating.screenCenter();
 			rating.x = coolText.x - 40;
 			rating.y -= 60;
@@ -1511,7 +1499,7 @@ class PlayState extends MusicBeatState
 			rating.velocity.y -= FlxG.random.int(140, 175);
 			rating.velocity.x -= FlxG.random.int(0, 10);
 
-			var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('combo'));
+			var comboSpr:FlxSprite = new FlxSprite().loadGraphic(Paths.image('ui/game/rating/combo'));
 			comboSpr.screenCenter();
 			comboSpr.x = coolText.x;
 			comboSpr.acceleration.y = 600;
@@ -1544,7 +1532,7 @@ class PlayState extends MusicBeatState
 			var daLoop:Int = 0;
 			for (i in seperatedScore)
 			{
-				var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image('num' + Std.int(i)));
+				var numScore:FlxSprite = new FlxSprite().loadGraphic(Paths.image('ui/game/rating/num' + Std.int(i)));
 				numScore.screenCenter();
 				numScore.x = coolText.x + (43 * daLoop) - 90;
 				numScore.y += 80;
@@ -1734,42 +1722,41 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		playerStrums.forEach(function(spr:FlxSprite)
+		playerStrums.forEach(function(spr:StrumNote)
 		{
 			switch (spr.ID)
 			{
 				case 2:
 					if (upP && spr.animation.curAnim.name != 'confirm')
 					{
-						spr.animation.play('pressed');
+						spr.playAnim('pressed');
 					}
 					if (upR)
 					{
-						spr.animation.play('static');
+						spr.playAnim('static');
 					}
 				case 3:
 					if (rightP && spr.animation.curAnim.name != 'confirm')
-						spr.animation.play('pressed');
+						spr.playAnim('pressed');
 					if (rightR)
 					{
-						spr.animation.play('static');
+						spr.playAnim('static');
 					}
 				case 1:
 					if (downP && spr.animation.curAnim.name != 'confirm')
-						spr.animation.play('pressed');
+						spr.playAnim('pressed');
 					if (downR)
 					{
-						spr.animation.play('static');
+						spr.playAnim('static');
 					}
 				case 0:
 					if (leftP && spr.animation.curAnim.name != 'confirm')
-						spr.animation.play('pressed');
+						spr.playAnim('pressed');
 					if (leftR)
 					{
-						spr.animation.play('static');
+						spr.playAnim('static');
 					}
 			}
-			spr.centerOffsets();
 		});
 	}
 
@@ -1917,11 +1904,11 @@ class PlayState extends MusicBeatState
 			}
 			boyfriend.playAnim('sing' + fuckingDumbassBullshitFuckYou, true);
 
-			playerStrums.forEach(function(spr:FlxSprite)
+			playerStrums.forEach(function(spr:StrumNote)
 			{
 				if (Math.abs(note.noteData) == spr.ID)
 				{
-					spr.animation.play('confirm', true);
+					spr.playAnim('confirm', true);
 				}
 			});
 

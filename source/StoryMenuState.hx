@@ -360,21 +360,19 @@ class StoryMenuState extends MusicBeatState
 			PlayState.isStoryMode = true;
 			selectedWeek = true;
 
-			var diffic = "";
+			var diffic = "normal";
 
 			switch (curDifficulty)
 			{
 				case 0:
-					diffic = '-easy';
+					diffic = 'easy';
 				case 2:
-					diffic = '-hard';
-				case 3:
-					diffic = '-unnerf';
+					diffic = 'hard';
 			}
 
 			PlayState.storyDifficulty = curDifficulty;
 
-			PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + diffic, PlayState.storyPlaylist[0].toLowerCase());
+			PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase(), diffic);
 			PlayState.storyWeek = curWeek;
 			PlayState.campaignScore = 0;
 			new FlxTimer().start(1, function(tmr:FlxTimer)

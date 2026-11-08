@@ -16,6 +16,7 @@ class Paths
 		currentLevel = name.toLowerCase();
 	}
 
+	// TODO: idk bro
 	static function getPath(file:String, type:AssetType, library:Null<String>)
 	{
 		if (library != null)
@@ -85,30 +86,30 @@ class Paths
 		return getPath('music/$key.$SOUND_EXT', MUSIC, library);
 	}
 
-	inline static public function voices(song:String)
+	inline static public function voices(song:String, ?library:String)
 	{
-		return 'songs:assets/songs/${song.toLowerCase()}/Voices.$SOUND_EXT';
+		return getPath('songs/${song.toLowerCase()}/Voices.$SOUND_EXT', MUSIC, library);
 	}
 
-	inline static public function inst(song:String)
+	inline static public function inst(song:String, ?library:String)
 	{
-		return 'songs:assets/songs/${song.toLowerCase()}/Inst.$SOUND_EXT';
+		return getPath('songs/${song.toLowerCase()}/Inst.$SOUND_EXT', MUSIC, library);
 	}
 
-	inline static public function songJson(song:String)
+	inline static public function songJson(song:String, ?library:String)
 	{
-		return 'songs:assets/songs/${song.toLowerCase()}.json';
+		return getPath('songs/${song.toLowerCase()}.json', TEXT, library);
 	}
 
-	inline static public function songTxt(song:String)
+	inline static public function songTxt(song:String, ?library:String)
 	{
-		return 'songs:assets/songs/${song.toLowerCase()}.txt';
+		return getPath('songs/${song.toLowerCase()}.txt', TEXT, library);
 	}
 
 
-	inline static public function externmusic(song:String)
+	inline static public function externmusic(song:String, ?library:String)
 	{
-		return 'songs:assets/songs/extern/${song.toLowerCase()}.$SOUND_EXT';
+		return getPath('songs/extern/${song.toLowerCase()}.$SOUND_EXT', MUSIC, library);
 	}
 
 	inline static public function image(key:String, ?library:String)
@@ -121,9 +122,9 @@ class Paths
 		return getPath('images/$key.json', IMAGE, library);
 	}
 
-	inline static public function font(key:String)
+	inline static public function font(key:String, ?library:String)
 	{
-		return 'assets/fonts/$key';
+		return getPath('fonts/$key', FONT, library);
 	}
 
 		static public function loadJSON(key:String, ?library:String):Dynamic

@@ -69,105 +69,50 @@ class Note extends FlxSprite
 		this.noteData = noteData;
 
 		var daStage:String = PlayState.curStage;
-		if (((PlayState.instance.dad.noteStyle == '3d' && !musthit) || (PlayState.instance.boyfriend.noteStyle == '3d' && musthit)) || ((PlayState.instance.dad.noteStyle == '3d' || PlayState.instance.boyfriend.noteStyle == '3d') && ((this.strumTime / 50) % 20 > 10)))
+
+		var style = musthit ? PlayState.instance.boyfriend.noteStyle : PlayState.instance.dad.noteStyle;
+		var dumbasspath:String = 'ui/game/notes/' + style;
+		frames = Paths.getSparrowAtlas(dumbasspath);
+
+		animation.addByPrefix('greenScroll', 'green0');
+		animation.addByPrefix('redScroll', 'red0');
+		animation.addByPrefix('blueScroll', 'blue0');
+		animation.addByPrefix('purpleScroll', 'purple0');
+
+		animation.addByPrefix('purpleholdend', 'pruple end hold');
+		animation.addByPrefix('greenholdend', 'green hold end');
+		animation.addByPrefix('redholdend', 'red hold end');
+		animation.addByPrefix('blueholdend', 'blue hold end');
+
+		animation.addByPrefix('purplehold', 'purple hold piece');
+		animation.addByPrefix('greenhold', 'green hold piece');
+		animation.addByPrefix('redhold', 'red hold piece');
+		animation.addByPrefix('bluehold', 'blue hold piece');
+
+		setGraphicSize(Std.int(width * 0.7));
+		updateHitbox();
+		antialiasing = true;
+
+		switch (noteData)
 		{
-				frames = Paths.getSparrowAtlas('notes/3d');
-
-				animation.addByPrefix('greenScroll', 'green0');
-				animation.addByPrefix('redScroll', 'red0');
-				animation.addByPrefix('blueScroll', 'blue0');
-				animation.addByPrefix('purpleScroll', 'purple0');
-
-				animation.addByPrefix('purpleholdend', 'pruple end hold');
-				animation.addByPrefix('greenholdend', 'green hold end');
-				animation.addByPrefix('redholdend', 'red hold end');
-				animation.addByPrefix('blueholdend', 'blue hold end');
-
-				animation.addByPrefix('purplehold', 'purple hold piece');
-				animation.addByPrefix('greenhold', 'green hold piece');
-				animation.addByPrefix('redhold', 'red hold piece');
-				animation.addByPrefix('bluehold', 'blue hold piece');
-
-				setGraphicSize(Std.int(width * 0.7));
-				updateHitbox();
-				antialiasing = true;
+			case 0:
+				x += swagWidth * 0;
+				notetolookfor = 0;
+				animation.play('purpleScroll');
+			case 1:
+				notetolookfor = 1;
+				x += swagWidth * 1;
+				animation.play('blueScroll');
+			case 2:
+				notetolookfor = 2;
+				x += swagWidth * 2;
+				animation.play('greenScroll');
+			case 3:
+				notetolookfor = 3;
+				x += swagWidth * 3;
+				animation.play('redScroll');
 		}
-		else
-		{
-			switch (daStage)
-			{
-				default:
-					var style = musthit ? PlayState.instance.boyfriend.noteStyle : PlayState.instance.dad.noteStyle;
-					var dumbasspath:String = 'notes/' + style;
-					frames = Paths.getSparrowAtlas(dumbasspath);
 
-					animation.addByPrefix('greenScroll', 'green0');
-					animation.addByPrefix('redScroll', 'red0');
-					animation.addByPrefix('blueScroll', 'blue0');
-					animation.addByPrefix('purpleScroll', 'purple0');
-
-					animation.addByPrefix('purpleholdend', 'pruple end hold');
-					animation.addByPrefix('greenholdend', 'green hold end');
-					animation.addByPrefix('redholdend', 'red hold end');
-					animation.addByPrefix('blueholdend', 'blue hold end');
-
-					animation.addByPrefix('purplehold', 'purple hold piece');
-					animation.addByPrefix('greenhold', 'green hold piece');
-					animation.addByPrefix('redhold', 'red hold piece');
-					animation.addByPrefix('bluehold', 'blue hold piece');
-
-					setGraphicSize(Std.int(width * 0.7));
-					updateHitbox();
-					antialiasing = true;
-			}
-		}
-		
-		switch (PlayState.SONG.song.toLowerCase())
-		{
-			case 'cheating':
-				switch (noteData)
-				{
-					case 0:
-						x += swagWidth * 3;
-						notetolookfor = 3;
-						animation.play('purpleScroll');
-					case 1:
-						x += swagWidth * 1;
-						notetolookfor = 1;
-						animation.play('blueScroll');
-					case 2:
-						x += swagWidth * 0;
-						notetolookfor = 0;
-						animation.play('greenScroll');
-					case 3:
-						notetolookfor = 2;
-						x += swagWidth * 2;
-						animation.play('redScroll');
-				}
-				flipY = (Math.round(Math.random()) == 0); //fuck you
-				flipX = (Math.round(Math.random()) == 1);
-
-			default:
-				switch (noteData)
-				{
-					case 0:
-						x += swagWidth * 0;
-						notetolookfor = 0;
-						animation.play('purpleScroll');
-					case 1:
-						notetolookfor = 1;
-						x += swagWidth * 1;
-						animation.play('blueScroll');
-					case 2:
-						notetolookfor = 2;
-						x += swagWidth * 2;
-						animation.play('greenScroll');
-					case 3:
-						notetolookfor = 3;
-						x += swagWidth * 3;
-						animation.play('redScroll');
-				}
-		}
 		if (Type.getClassName(Type.getClass(FlxG.state)).contains("PlayState"))
 			{
 				var state:PlayState = cast(FlxG.state,PlayState);
@@ -195,18 +140,6 @@ class Note extends FlxSprite
 						});
 				}
 			}
-		if (PlayState.SONG.song.toLowerCase() == 'unfairness')
-		{
-			var rng:FlxRandom = new FlxRandom();
-			if (rng.int(0,120) == 1)
-			{
-				LocalScrollSpeed = 0.1;
-			}
-			else
-			{
-				LocalScrollSpeed = rng.float(1,3);
-			}
-		}
 		
 
 		// trace(prevNote);
@@ -239,9 +172,6 @@ class Note extends FlxSprite
 			updateHitbox();
 
 			x -= width / 2;
-
-			if (PlayState.curStage.startsWith('school'))
-				x += 30;
 
 			if (prevNote.isSustainNote)
 			{
