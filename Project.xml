@@ -40,23 +40,16 @@
 
 	<classpath name="source" />
 	
-	<define name="PRELOAD_ALL" unless="web" />
+	<!-- i copied some of this path stuff from codename engine's project.xml because i dont know shiit -->
+	<define name="PRELOAD_ALL" unless="web"/>
 	<define name="NO_PRELOAD_ALL" unless="PRELOAD_ALL"/>
-	
-	<section if="PRELOAD_ALL">
-		<library name="songs"    preload="true" />
-		<library name="shared"   preload="true" />
-	</section>
-	
-	<section if="NO_PRELOAD_ALL">
-		<library name="songs"    preload="false" />
-		<library name="shared"   preload="false" />
-	</section>
-	
-	<assets path="assets/songs"    library="songs"    exclude="*.ogg" if="web"/>
-	<assets path="assets/songs"    library="songs"    exclude="*.mp3" unless="web"/>
-	<assets path="assets/shared"   library="shared"   exclude="*.ogg" if="web"/>
-	<assets path="assets/shared"   library="shared"   exclude="*.mp3" unless="web"/>
+
+	<library name="assets"    preload="true"  if="PRELOAD_ALL"/>
+	<library name="assets"    preload="false" if="NO_PRELOAD_ALL"/>
+
+	<assets path="assets/"    rename="assets"	exclude="*.ogg" if="web"/>
+	<assets path="assets/"    rename="assets"	exclude="*.mp3" unless="web"/>
+
 	
 	<assets path='example_mods' rename='mods' embed='false'/>
 	<assets path='art/readme.txt' rename='PLEASE READ.txt' />
@@ -64,8 +57,7 @@
 	
 	<assets path="CHANGELOG.md" rename='changelog.txt'/>
 
-	<!-- dont embed fonts lol -->
-	<assets path="assets/fonts"/>
+	
 	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxedev set='webgl' />
@@ -74,7 +66,6 @@
 	<haxelib name="flixel-ui" />
 	<haxelib name="hscript-insanity" />
 	<haxelib name="actuate" />
-	<haxelib name="extension-webm" if="desktop" />
 	<haxelib name="hxvlc" if="desktop || android" />
 	<haxelib name="faxe" if='switch'/>
 	<haxelib name="polymod"/>

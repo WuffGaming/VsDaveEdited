@@ -7,7 +7,6 @@ haxelib --global run hmm setup
 hmm install (NOTE DONT COPY: IF YOU RUN INTO AN ERROR, RERUN THE COMMAND!)
 haxelib run lime rebuild cpp -clean
 haxelib run lime setup
-lime rebuild extension-webm windows
 
 You should be able to build with "Lime Test Windows" and enjoy!
 
