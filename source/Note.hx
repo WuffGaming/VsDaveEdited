@@ -68,9 +68,9 @@ class Note extends FlxSprite
 
 		this.noteData = noteData;
 
-		var daStage:String = PlayState.curStage;
-
-		var style = musthit ? PlayState.instance.boyfriend.noteStyle : PlayState.instance.dad.noteStyle;
+		var style:String = 'normal';
+		if (PlayState.instance != null)
+			style = musthit ? PlayState.instance.boyfriend.noteStyle : PlayState.instance.dad.noteStyle;
 		var dumbasspath:String = 'ui/game/notes/' + style;
 		frames = Paths.getSparrowAtlas(dumbasspath);
 
