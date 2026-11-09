@@ -127,9 +127,34 @@ class Paths
 		return getPath('fonts/$key', FONT, library);
 	}
 
-		static public function loadJSON(key:String, ?library:String):Dynamic
+	static public function loadJSON(key:String, ?library:String):Dynamic
 	{
 		var rawJson = Assets.getText(Paths.json(key, library)).trim();
+
+		// Perform cleanup on files that have bad data at the end.
+		while (!rawJson.endsWith("}"))
+		{
+			rawJson = rawJson.substr(0, rawJson.length - 1);
+		}
+
+		try
+		{
+			// Attempt to parse and return the JSON data.
+			return Json.parse(rawJson);
+		}
+		catch (e)
+		{
+			trace("AN ERROR OCCURRED parsing a JSON file. " + key);
+			trace(e.message);
+
+			// Return null.
+			return null;
+		}
+	}
+
+	static public function loadSongJSON(key:String, ?library:String):Dynamic
+	{
+		var rawJson = Assets.getText(Paths.songJson(key, library)).trim();
 
 		// Perform cleanup on files that have bad data at the end.
 		while (!rawJson.endsWith("}"))

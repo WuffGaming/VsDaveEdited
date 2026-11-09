@@ -26,19 +26,21 @@ class DialogueBox extends FlxSpriteGroup
 	var curCharacter:String = '';
 	var curMod:String = '';
 
-	var dialogueList:Array<String> = [];
+	var dialogueList:Array<DialogueSequence>;
+
+	var dialogueSound:String = 'pixelText';
 
 	// SECOND DIALOGUE FOR THE PIXEL SHIT INSTEAD???
 	var swagDialogue:FlxTypeText;
 
 	var dropText:FlxText;
 
+	var dialogueData:Dialogue;
+
 	public var finishThing:Void->Void;
 
-	var portraitLeft:FlxSprite;
-	var portraitRight:FlxSprite;
+	var curPortrait:FlxSprite;
 
-	var bfPortraitSizeMultiplier:Float = 1.5;
 	var textBoxSizeFix:Float = 7;
 
 	var handSelect:FlxSprite;
@@ -50,35 +52,59 @@ class DialogueBox extends FlxSpriteGroup
 
 	public static var randomNumber:Int;
 
-	public function new(talkingRight:Bool = true, ?dialogueList:Array<String>)
+	public function new(talkingRight:Bool = true, dialogueJson:String)
 	{
 		super();
+
+		dialogueData = cast Paths.loadSongJSON(dialogueJson);
+
+		dialogueList = dialogueData.sequences;
 
 		bgFade = new FlxSprite(-200, -200).makeGraphic(Std.int(FlxG.width * 1.3), Std.int(FlxG.height * 1.3), 0xFFB3DFd8);
 		bgFade.scrollFactor.set();
 		bgFade.alpha = 0;
 		add(bgFade);
 
-		if(PlayState.SONG.song.toLowerCase()=='senpai' || PlayState.SONG.song.toLowerCase()=='roses' || PlayState.SONG.song.toLowerCase()=='thorns')
-		{
-			new FlxTimer().start(0.83, function(tmr:FlxTimer)
+		FlxTween.tween(bgFade, {alpha: 0.7}, 4.15);
+		var curBox = 'default';
+		if (dialogueData.box != null && Assets.exists(Paths.json('dialogue/boxes/${dialogueData.box}')))
+			curBox = dialogueData.box;
+
+		var boxData:Box = cast Paths.loadJSON('dialogue/boxes/$curBox');
+		var boxOffset = boxData.offset;
+		if (boxOffset == null)
+			boxOffset = [0, 0];
+		box = new FlxSprite(-20 + boxOffset[0], 400 + boxOffset[1]);
+		box.frames = Paths.getSparrowAtlas('ui/dialogue/boxes/' + boxData.sprite);
+		box.setGraphicSize(Std.int(box.width / textBoxSizeFix));
+		box.updateHitbox();
+		
+		if (boxData.animations != null) {
+			for (anim in boxData.animations)
+			{
+				var frameRate = anim.frameRate == null ? 24 : anim.frameRate;
+				var looped = anim.looped == null ? false : anim.looped;
+				var flipx = anim.flipX == null ? false : anim.flipX;
+				var flipy = anim.flipY == null ? false : anim.flipY;
+
+				if (anim.frameIndices != null)
 				{
-					bgFade.alpha += (1 / 5) * 0.7;
-					if (bgFade.alpha > 0.7)
-						bgFade.alpha = 0.7;
-				}, 5);
+					box.animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", frameRate, looped, flipx, flipy);
+				}
+				else
+				{
+					box.animation.addByPrefix(anim.name, anim.prefix, frameRate, looped, flipx, flipy);
+				}
+			}
 		}
 		else
 		{
-			FlxTween.tween(bgFade, {alpha: 0.7}, 4.15);
+			box.animation.addByPrefix('open', 'Speech Bubble Normal Open', 24, false);
+			box.animation.addByPrefix('idle', 'speech bubble normal', 24, true);
 		}
-		switch (PlayState.SONG.song.toLowerCase())
-		{
-			case 'senpai' | 'roses' | 'thorns':
-				box = new FlxSprite(-20, 45);
-			default:
-				box = new FlxSprite(-20, 400);
-		}
+		box.antialiasing = true;
+		if (boxData.antialiasing != null)
+			box.antialiasing = boxData.antialiasing;
 
 		blackScreen = new FlxSprite(0, 0).makeGraphic(5000, 5000, FlxColor.BLACK);
 		blackScreen.screenCenter();
@@ -86,62 +112,32 @@ class DialogueBox extends FlxSpriteGroup
 		add(blackScreen);
 		
 		var hasDialog = true;
-		box.frames = Paths.getSparrowAtlas('speech_bubble_talking');
-		box.setGraphicSize(Std.int(box.width / textBoxSizeFix));
-		box.updateHitbox();
-		box.animation.addByPrefix('normalOpen', 'Speech Bubble Normal Open', 24, false);
-		box.animation.addByPrefix('normal', 'speech bubble normal', 24, true);
-		box.antialiasing = true;
-
-		this.dialogueList = dialogueList;
 		
 		if (!hasDialog)
 			return;
-		var portraitLeftCharacter:String = 'dave';
-		var portraitRightCharacter:String = 'bf';
 
-		portraitLeft = new FlxSprite();
-		portraitRight = new FlxSprite();
+		curPortrait = new FlxSprite(220, 450);
+		curPortrait.visible = false;
+		add(curPortrait);
 
-		var leftPortrait:Portrait = getPortrait(portraitLeftCharacter);
-
-		portraitLeft.frames = Paths.getSparrowAtlas(leftPortrait.portraitPath);
-		portraitLeft.animation.addByPrefix('enter', leftPortrait.portraitPrefix, 24, false);
-		portraitLeft.updateHitbox();
-		portraitLeft.scrollFactor.set();
-
-		portraitLeft.setPosition(276.95, 170);
-		portraitLeft.visible = true;
-
-		var rightPortrait:Portrait = getPortrait(portraitRightCharacter);
-		
-		portraitRight.frames = Paths.getSparrowAtlas(rightPortrait.portraitPath);
-		portraitRight.animation.addByPrefix('enter', rightPortrait.portraitPrefix, 24, false);
-		portraitRight.updateHitbox();
-		portraitRight.scrollFactor.set();
-		
-		portraitRight.visible = false;
-				
-		add(portraitLeft);
-		add(portraitRight);
-
-		box.animation.play('normalOpen');
+		box.animation.play('open');
 		box.setGraphicSize(Std.int(box.width * PlayState.daPixelZoom * 0.9));
 		box.updateHitbox();
 		add(box);
 
 		box.screenCenter(X);
-		portraitLeft.screenCenter(X);
 
 		dropText = new FlxText(242, 502, Std.int(FlxG.width * 0.6), "", 32);
-		dropText.font = 'Comic Sans MS Bold';
-		dropText.color = 0xFF00137F;
+		dropText.font = Paths.font(dialogueData.font == null ? 'comic.ttf' : dialogueData.font);
+		var shit:Null<String> = dialogueData.textShadowColor == null ? '0xFF00137F' : dialogueData.textShadowColor;
+		dropText.color = FlxColor.fromString(shit);
 		add(dropText);
 
 		swagDialogue = new FlxTypeText(240, 500, Std.int(FlxG.width * 0.6), "", 32);
-		swagDialogue.font = 'Comic Sans MS Bold';
-		swagDialogue.color = 0xFF000000;
-		swagDialogue.sounds = [FlxG.sound.load(Paths.sound('pixelText'), 0.6)];
+		swagDialogue.font = Paths.font(dialogueData.font == null ? 'comic.ttf' : dialogueData.font);
+		var biggershit:Null<String> = dialogueData.textColor == null ? '0xFF000000' : dialogueData.textColor;
+		swagDialogue.color = FlxColor.fromString(biggershit);
+		swagDialogue.sounds = [FlxG.sound.load(Paths.sound(dialogueSound), 0.6)];
 		add(swagDialogue);
 
 	}
@@ -155,23 +151,14 @@ class DialogueBox extends FlxSpriteGroup
 		{
 			curshader.shader.uTime.value[0] += elapsed;
 		}
-		// HARD CODING CUZ IM STUPDI
-		if (PlayState.SONG.song.toLowerCase() == 'roses')
-			portraitLeft.visible = false;
-		if (PlayState.SONG.song.toLowerCase() == 'thorns')
-		{
-			portraitLeft.color = FlxColor.BLACK;
-			swagDialogue.color = FlxColor.WHITE;
-			dropText.color = FlxColor.BLACK;
-		}
 
 		dropText.text = swagDialogue.text;
 
 		if (box.animation.curAnim != null)
 		{
-			if (box.animation.curAnim.name == 'normalOpen' && box.animation.curAnim.finished)
+			if (box.animation.curAnim.name == 'open' && box.animation.curAnim.finished)
 			{
-				box.animation.play('normal');
+				box.animation.play('idle');
 				dialogueOpened = true;
 			}
 		}
@@ -197,8 +184,7 @@ class DialogueBox extends FlxSpriteGroup
 
 					FlxTween.tween(box, {alpha: 0}, 1.2);
 					FlxTween.tween(bgFade, {alpha: 0}, 1.2);
-					FlxTween.tween(portraitLeft, {alpha: 0}, 1.2);
-					FlxTween.tween(portraitRight, {alpha: 0}, 1.2);
+					FlxTween.tween(curPortrait, {alpha: 0}, 1.2);
 					FlxTween.tween(swagDialogue, {alpha: 0}, 1.2);
 					FlxTween.tween(dropText, {alpha: 0}, 1.2);
 
@@ -224,55 +210,75 @@ class DialogueBox extends FlxSpriteGroup
 
 	function startDialogue():Void
 	{
-		cleanDialog();
-
-		swagDialogue.resetText(dialogueList[0]);
-		swagDialogue.start(0.04, true);
+		curCharacter = dialogueList[0].character == null ? 'dave' : dialogueList[0].character;
+		swagDialogue.resetText(dialogueList[0].text);
+		var bullshitDelay:Null<Float> = dialogueList[0].delay == null ? 0.04 : dialogueList[0].delay;
+		swagDialogue.start(bullshitDelay, true);
 		curshader = null;
+
+		for (text in [dropText, swagDialogue])
+			text.font = Paths.font(dialogueList[0].font == null ? (dialogueData.font == null ? 'comic.ttf' : dialogueData.font) : dialogueList[0].font);
+
+		if (dialogueList[0].events != null)
+			for (event in dialogueList[0].events)
+				causeEvent(event);
+		
 		if (curCharacter != 'generic')
 		{
-			var portrait:Portrait = getPortrait(curCharacter);
-			var left:Bool = true;
-			if (left) // temp
-			{
-				portraitLeft.frames = Paths.getSparrowAtlas(portrait.portraitPath);
-				portraitLeft.animation.addByPrefix('enter', portrait.portraitPrefix, 24, false);
-				portraitLeft.updateHitbox();
-				portraitLeft.scrollFactor.set();
-				portraitRight.visible = false;
-				if (!portraitLeft.visible)
-				{
-					portraitLeft.visible = true;
-				}
-			}
-			else
-			{
-				portraitRight.frames = Paths.getSparrowAtlas(portrait.portraitPath);
-				portraitRight.animation.addByPrefix('enter', portrait.portraitPrefix, 24, false);
-				portraitLeft.updateHitbox();
-				portraitLeft.scrollFactor.set();
-				portraitLeft.visible = false;
-				if (!portraitRight.visible)
-				{
-					portraitRight.visible = true;
-				}
-			}
-			switch (curCharacter)
-			{
-				case 'dave' | 'bambi' | 'tristan' | 'insanityEndDave': //guys its the funny bambi character
-					portraitLeft.setPosition(220, 220);
-				case 'bf' | 'gf': //create boyfriend & genderbent boyfriend
-					portraitRight.setPosition(570, 220);
-			}
-			box.flipX = portraitLeft.visible;
-			portraitLeft.x -= 150;
+			curPortrait.visible = true;
+			var pos = dialogueList[0].position.toLowerCase() == null ? 'left' : dialogueList[0].position.toLowerCase();
+			changePortrait(curCharacter, pos);
+			swagDialogue.sounds = [FlxG.sound.load(Paths.sound(dialogueSound), 0.6)];
 		}
 		else
 		{
-			portraitLeft.visible = false;
-			portraitRight.visible = false;
+			curPortrait.visible = false;
+			swagDialogue.sounds = [FlxG.sound.load(Paths.sound('pixelText'), 0.6)];
 		}
-		switch (curMod)
+	}
+
+	function changePortrait(character:String, side:String)
+	{
+		curPortrait.loadGraphic(Paths.image('ui/dialogue/portraits/$character'));
+		curPortrait.offset.set(0, 0);
+		
+		if (Assets.exists(Paths.json('dialogue/boxes/$character'))) {
+			var portraitData:PortraitChar = cast Paths.loadJSON('dialogue/boxes/$character');
+
+			curPortrait.antialiasing = true;
+			if (portraitData.antialiasing != null) curPortrait.antialiasing = portraitData.antialiasing;
+
+			var bullshit:Array<Float> = portraitData.offset == null ? [0,0] : portraitData.offset; // OH MY GOD
+			curPortrait.offset.set(bullshit[0], bullshit[1]);
+			dialogueSound = portraitData.dialogueSound == null ? 'pixelText' : portraitData.dialogueSound;
+		}
+		curPortrait.flipX = false;
+		switch(side.toLowerCase()) {
+			case 'right':
+				box.flipX = false;
+				curPortrait.flipX = true;
+				curPortrait.setPosition(920, 220);
+				curPortrait.alpha = 0;
+				FlxTween.tween(curPortrait, {x: curPortrait.x - 150, alpha: 1}, 0.15);
+			case 'middle':
+				box.flipX = false;
+				curPortrait.setPosition(70, 220);
+				curPortrait.screenCenter(X);
+				curPortrait.y += 150;
+				curPortrait.alpha = 0;
+				
+				FlxTween.tween(curPortrait, {y: curPortrait.y - 150, alpha: 1}, 0.15);
+			default:
+				box.flipX = true;
+				curPortrait.setPosition(70, 220);
+				curPortrait.alpha = 0;
+				FlxTween.tween(curPortrait, {x: curPortrait.x + 150, alpha: 1}, 0.15);
+
+		}
+	}
+
+	function causeEvent(event) {
+		switch (event)
 		{
 			case 'distort':
 				PlayState.screenshader.Enabled = true;
@@ -286,71 +292,46 @@ class DialogueBox extends FlxSpriteGroup
 				shad.waveSpeed = 2;
 				if (curCharacter != 'generic')
 				{
-					portraitLeft.shader = shad.shader;
-					portraitRight.shader = shad.shader;
+					curPortrait.shader = shad.shader;
 				}
 			case 'to_black':
 				FlxTween.tween(blackScreen, {alpha:1}, 0.25);
 		}
 	}
-	function getPortrait(character:String):Portrait
-	{
-		var portrait:Portrait = new Portrait('', '', '');
-
-		return portrait;
-	}
-
-	function cleanDialog():Void
-	{
-		var splitName:Array<String> = dialogueList[0].split(":");
-		curCharacter = splitName[1];
-		curMod = splitName[0];
-		dialogueList[0] = dialogueList[0].substr(splitName[1].length + splitName[0].length + 2).trim();
-	}
-}
-class Portrait
-{
-	public var portraitPath:String;
-	public var portraitLibraryPath:String = '';
-	public var portraitPrefix:String;
-	public function new (portraitPath:String, portraitLibraryPath:String = '', portraitPrefix:String)
-	{
-		this.portraitPath = portraitPath;
-		this.portraitLibraryPath = portraitLibraryPath;
-		this.portraitPrefix = portraitPrefix;
-	}
 }
 
 typedef PortraitChar = {
-	var antialiasing:Bool; // Yeah
+	var antialiasing:Null<Bool>; // Yeah
 
-	var dialogueSounds:Array<String>; // What sounds does the Portrait use?
+	var dialogueSound:String; // What sound does the Portrait use?
 
 	var offset:Array<Float>; // Portrait offsets.
 }
 
 typedef Box = {
-	var sprite:String; // Where the box's spritesheet is located at.
+	var sprite:Null<String>; // Where the box's spritesheet is located at.
 
-	var antialiasing:Bool; // I think you get this one.
+	var antialiasing:Null<Bool>; // I think you get this one.
 
 	var animations:Array<SpriteDefs.AnimationData>; // Box's animations.
+
+	var offset:Array<Float>; // Box Offsets
 }
 
 typedef DialogueSequence = {
-	var character:String; // Character to be used for the dialogue sequence.
-	var position:String; // Position of the character. 'LEFT', 'MIDDLE', or 'RIGHT'
-	var font:String; // Possible override font.
-	var text:String; // Text within the dialogue sequence.
-	var delay:Float; // Delay between each character.
+	var character:Null<String>; // Character to be used for the dialogue sequence.
+	var position:Null<String>; // Position of the character. 'LEFT', 'MIDDLE', or 'RIGHT'
+	var font:Null<String>; // Possible override font.
+	var text:Null<String>; // Text within the dialogue sequence.
+	var delay:Null<Float>; // Delay between each character.
 	var events:Array<String>; // Every event that happens during a sequence.
 }
 
 typedef Dialogue = {
-	var box:String; // Box variant that will be used for the Dialogue Sequences
-	var music:String; // The song that plays during the Dialogue Sequences.
-	var textColor:FlxColor; // Color of the text
-	var textShadowColor:FlxColor; // Ditto for the drop shadow.
-	var font:String; // Default font to be used for each sequence.
+	var box:Null<String>; // Box variant that will be used for the Dialogue Sequences
+	var music:Null<String>; // The song that plays during the Dialogue Sequences.
+	var textColor:Null<String>; // Color of the text
+	var textShadowColor:Null<String>; // Ditto for the drop shadow.
+	var font:Null<String>; // Default font to be used for each sequence.
 	var sequences:Array<DialogueSequence>; // Every Dialogue Sequence that will occur.
 }

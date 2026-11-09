@@ -154,7 +154,7 @@ class PlayState extends MusicBeatState
 	private var camHUD:FlxCamera;
 	private var camGame:FlxCamera;
 
-	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
+	var dialogue:String = '';
 
 	public static var shakingChars = [];
 
@@ -264,13 +264,9 @@ class PlayState extends MusicBeatState
 		Conductor.changeBPM(SONG.bpm);
 
 		
-		var defaultDialoguePath = 'ingame/' + SONG.song.toLowerCase() + '/dialogue';
-		switch (SONG.song.toLowerCase())
-		{
-			// TODO: UNHARDCODE THIS LMAO
-			case 'house':
-				dialogue = CoolUtil.coolTextFile(Paths.songTxt(defaultDialoguePath));
-		}
+		var defaultDialoguePath = 'ingame/' + SONG.song + '/dialogue';
+		if (Assets.exists(Paths.songJson(defaultDialoguePath)))
+			dialogue = defaultDialoguePath;
 
 		backgroundSprites = createBackgroundSprites(SONG.stage);
 
@@ -448,8 +444,8 @@ class PlayState extends MusicBeatState
 		if (isStoryMode || FlxG.save.data.freeplayCuts)
 		{
 			// find dialogue
-			if (Assets.exists(Paths.songJson('ingame/${SONG.song}/dialogue')))
-				schoolIntro(doof);
+			if (Assets.exists(Paths.songJson(defaultDialoguePath)))
+				startDialogue(doof);
 			else
 				startCountdown();
 		}
@@ -514,7 +510,7 @@ class PlayState extends MusicBeatState
 		return sprites;
 	}
 
-	function schoolIntro(?dialogueBox:DialogueBox, isStart:Bool = true):Void
+	function startDialogue(?dialogueBox:DialogueBox, isStart:Bool = true):Void
 	{
 		inCutscene = true;
 		camFollow.setPosition(boyfriend.getGraphicMidpoint().x - 200, dad.getGraphicMidpoint().y - 10);
