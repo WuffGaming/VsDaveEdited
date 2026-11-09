@@ -109,7 +109,6 @@ class FreeplayState extends MusicBeatState
 		{
 			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].songName, true, false);
 			songText.isMenuItem = true;
-			songText.itemType = 'D-Shape';
 			songText.targetY = i;
 			grpSongs.add(songText);
 
@@ -376,4 +375,17 @@ class SongMetadata
 		this.week = week;
 		this.songCharacter = songCharacter;
 	}
+}
+
+typedef CategoryData = {
+	var icon:String; // Path to category's icon.
+	var songs:Array<CategorySong>; // Every song in the category.
+}
+
+typedef CategorySong = {
+	var name:String; // Name of the song in the category.
+	var displayName:String; // Optional display name for the song.
+	var color:String; // Color of the song in the category.
+	var icon:String; // Icon Name of the song in the category.
+	var characterSelect:Bool; // Does category let you select custom characters?
 }

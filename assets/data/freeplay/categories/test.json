@@ -1,0 +1,23 @@
+{
+    "icon": "test",
+    "songs": [
+        {
+            "name": "House",
+            "color": "0xFF4965FF",
+            "icon": "dave"
+        },
+        {
+            "name": "House",
+            "displayName": "test",
+            "color": "0xFF4965FF",
+            "icon": "bf"
+        },
+        {
+            "name": "House",
+            "displayName": "no select test",
+            "color": "0xFF4965FF",
+            "icon": "dave",
+            "characterSelect": false
+        }
+    ]
+}
