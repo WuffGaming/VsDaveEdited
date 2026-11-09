@@ -59,6 +59,10 @@ class DialogueBox extends FlxSpriteGroup
 		dialogueData = cast Paths.loadSongJSON(dialogueJson);
 
 		dialogueList = dialogueData.sequences;
+		if (dialogueData.music != null) {
+			FlxG.sound.playMusic(Paths.music(dialogueData.music), 0);
+			FlxG.sound.music.fadeIn(1, 0, 0.8);
+		}
 
 		bgFade = new FlxSprite(-200, -200).makeGraphic(Std.int(FlxG.width * 1.3), Std.int(FlxG.height * 1.3), 0xFFB3DFd8);
 		bgFade.scrollFactor.set();
@@ -182,11 +186,10 @@ class DialogueBox extends FlxSpriteGroup
 						
 					FlxG.sound.music.fadeOut(2.2, 0);
 
-					FlxTween.tween(box, {alpha: 0}, 1.2);
-					FlxTween.tween(bgFade, {alpha: 0}, 1.2);
-					FlxTween.tween(curPortrait, {alpha: 0}, 1.2);
-					FlxTween.tween(swagDialogue, {alpha: 0}, 1.2);
-					FlxTween.tween(dropText, {alpha: 0}, 1.2);
+					for (crap in [box, bgFade, curPortrait, swagDialogue, dropText]) {
+						FlxTween.cancelTweensOf(crap);
+						FlxTween.tween(crap, {alpha: 0}, 1.2);
+					}
 
 
 					new FlxTimer().start(1.2, function(tmr:FlxTimer)
