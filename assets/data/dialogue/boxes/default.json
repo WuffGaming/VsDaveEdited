@@ -1,0 +1,14 @@
+{
+    "sprite": "default",
+    "animations": [
+        {
+            "name": "idle",
+            "prefix": "speech bubble normal",
+            "looped": "true"
+        },
+        {
+            "name": "open",
+            "prefix": "Speech Bubble Normal Open"
+        }
+    ]
+}

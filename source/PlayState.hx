@@ -414,15 +414,6 @@ class PlayState extends MusicBeatState
 			add(creditsWatermark);
 			creditsWatermark.cameras = [camHUD];
 		}
-		switch (curSong.toLowerCase())
-		{
-			case 'splitathon' | 'old-splitathon':
-				preload('splitathon/Bambi_WaitWhatNow');
-				preload('splitathon/Bambi_ChillingWithTheCorn');
-			case 'insanity':
-				preload('dave/redsky');
-				preload('dave/redsky_insanity');
-		}
 
 		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 150, healthBarBG.y + 40, 0, "", 20);
 		if (!FlxG.save.data.accuracyDisplay)
@@ -451,22 +442,16 @@ class PlayState extends MusicBeatState
 		kadeEngineWatermark.cameras = [camHUD];
 		doof.cameras = [camDialogue];
 
-		// if (SONG.song == 'South')
-		// FlxG.camera.alpha = 0.7;
-		// UI_camera.zoom = 1;
-
 		// cameras = [FlxG.cameras.list[1]];
 		startingSong = true;
 
 		if (isStoryMode || FlxG.save.data.freeplayCuts)
 		{
-			switch (curSong.toLowerCase())
-			{
-				//case 'house' | 'insanity' | 'furiosity' | 'polygonized' | 'supernovae' | 'glitch' | 'blocked' | 'corn-theft' | 'maze' | 'splitathon' | 'cheating' | 'unfairness':
-					//schoolIntro(doof);
-				default:
-					startCountdown();
-			}
+			// find dialogue
+			if (Assets.exists(Paths.songJson('ingame/${SONG.song}/dialogue')))
+				schoolIntro(doof);
+			else
+				startCountdown();
 		}
 		else
 		{
@@ -1130,21 +1115,6 @@ class PlayState extends MusicBeatState
 
 		FlxG.watch.addQuick("beatShit", curBeat);
 		FlxG.watch.addQuick("stepShit", curStep);
-
-		if (curSong.toLowerCase() == 'furiosity')
-		{
-			switch (curBeat)
-			{
-				case 127:
-					camZooming = true;
-				case 159:
-					camZooming = false;
-				case 191:
-					camZooming = true;
-				case 223:
-					camZooming = false;
-			}
-		}
 
 		if (health <= 0)
 		{
@@ -2003,52 +1973,6 @@ class PlayState extends MusicBeatState
 		{
 			FlxG.camera.zoom += 0.015;
 			camHUD.zoom += 0.03;
-		}
-		switch (curSong.toLowerCase())
-		{
-			case 'furiosity':
-				if ((curBeat >= 128 && curBeat < 160) || (curBeat >= 192 && curBeat < 224))
-					{
-						if (camZooming)
-							{
-								FlxG.camera.zoom += 0.015;
-								camHUD.zoom += 0.03;
-							}
-					}
-			case 'polygonized':
-				switch (curBeat)
-				{
-					case 608:
-						for (bgSprite in backgroundSprites)
-						{
-							FlxTween.tween(bgSprite, {alpha: 0}, 1);
-						}
-						for (bgSprite in normalDaveBG)
-						{
-							FlxTween.tween(bgSprite, {alpha: 1}, 1);
-						}
-						canFloat = false;
-						var position = dad.getPosition();
-						FlxG.camera.flash(FlxColor.WHITE, 0.25);
-						remove(dad);
-						dad = new Character(position.x, position.y, 'dave', false);
-						add(dad);
-						FlxTween.color(dad, 0.6, dad.color, nightColor);
-						FlxTween.color(boyfriend, 0.6, boyfriend.color, nightColor);
-						FlxTween.color(gf, 0.6, gf.color, nightColor);
-						FlxTween.linearMotion(dad, dad.x, dad.y, 350, 260, 0.6, true);
-				}
-			case 'mealie':
-				switch (curStep)
-				{
-					case 1776:
-						var position = dad.getPosition();
-						FlxG.camera.flash(FlxColor.WHITE, 0.25);
-						remove(dad);
-						dad = new Character(position.x, position.y, 'bambi-angey', false);
-						dad.color = nightColor;
-						add(dad);
-				}
 		}
 		if (shakeCam)
 		{

@@ -1,0 +1,47 @@
+{
+    "box": "default",
+    "music": "a-new-day",
+    "textColor": "0xFF000000",
+    "textShadowColor": "0xFF00137F",
+    "sequences": [
+        {
+            "character": "bf",
+            "position": "right",
+            "text": "test",
+            "delay": 0.04
+        },
+        {
+            "character": "bf",
+            "position": "left",
+            "text": "yadayada",
+            "delay": 0.04
+        },
+        {
+            "character": "bf",
+            "position": "middle",
+            "text": "ok cool",
+            "delay": 0.04
+        },
+        {
+            "character": "null",
+            "position": "right",
+            "text": "ok what if the portrait doesnt exist",
+            "delay": 0.04
+        },
+        {
+            "character": "null",
+            "position": "right",
+            "text": "ok if you made it this far you're good",
+            "delay": 0.4
+        },
+        {
+            "text": "my surprise attack is something with only text"
+        },
+        {
+            "character": "generic",
+            "text": "the dialogue system has been replaced so good job lol",
+            "delay": 0.04,
+            "events": ["to_black"]
+        }
+    ]
+}

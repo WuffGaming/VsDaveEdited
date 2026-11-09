@@ -15,27 +15,7 @@ typedef IconData =
 
 	var flip:Null<Bool>;
 
-	var animations:Array<IconAnimationData>;
-}
-
-typedef IconAnimationData = // taken from character.hx
-{
-	var name:String; // Name of animation. Should be something like "Normal" or "Losing"
-	var prefix:String; // Name of animation in XML
-
-	/**
-	 * Whether this animation is looped.
-	 * @default false
-	 */
-	var ?looped:Bool;
-
-	/**
-	 * The frame rate of this animation.
-	 * @default 24
-	 */
-	var ?frameRate:Int; // Framerate of this specific animation.
-
-	var ?frameIndices:Array<Int>; // If using indices, specify said indices. Plays full animation if null.
+	var animations:Array<SpriteDefs.AnimationData>;
 }
 
 class HealthIcon extends FlxSprite
@@ -101,16 +81,17 @@ class HealthIcon extends FlxSprite
 				frames = Paths.getSparrowAtlas(iconPath + curIcon);
 				for (anim in data.animations)
 				{
-					var frameRate = anim.frameRate == null ? 24 : anim.frameRate;
-					var looped = anim.looped == null ? false : anim.looped;
+					var frameRate = anim.frameRate ?? 24;
+					var looped = anim.looped ?? false;
+					var flipY = anim.flipY ?? false;
 
 					if (anim.frameIndices != null)
 					{
-						animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", frameRate, looped, isPlayer);
+						animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", frameRate, looped, isPlayer, flipY);
 					}
 					else
 					{
-						animation.addByPrefix(anim.name, anim.prefix, frameRate, looped, isPlayer);
+						animation.addByPrefix(anim.name, anim.prefix, frameRate, looped, isPlayer, flipY);
 					}
 				}
 				animation.play('normal', true);
