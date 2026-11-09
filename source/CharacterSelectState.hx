@@ -35,7 +35,6 @@ class CharacterSelectState extends MusicBeatState
 {
 	public var char:Boyfriend;
 	public var current:Int = 0;
-	public var currentReal:Int = 0;
 	public var curForm:Int = 0;
 	public var notemodtext:FlxText;
 	public var characterText:FlxText;
@@ -63,16 +62,9 @@ class CharacterSelectState extends MusicBeatState
 	
 	public var characters:Array<CharacterInSelect> = 
 	[
-		new CharacterInSelect(['bf', 'bf-pixel', 'bf-christmas'], [1, 1, 1, 1], ["Boyfriend", "Pixel Boyfriend", "Christmas Boyfriend"]),
-		new CharacterInSelect(['what-lmao'], [0, 0, 0, 0], ["IF YOU SEE THIS CHRACTER, REPORT IT TO THE DEVS!"]),
-		new CharacterInSelect(['tristan', 'tristan-beta'], [2, 0.5, 0.5, 0.5], ["Tristan", 'Tristan (Beta)']),
-		new CharacterInSelect(['dave', 'dave-annoyed', 'dave-splitathon'], [0.25, 0.25, 2, 2], ["Dave", "Dave (Insanity)", 'Dave (Splitathon)']),
+		new CharacterInSelect(['bf'], [1, 1, 1, 1], ["Boyfriend"]),
+		new CharacterInSelect(['dave'], [0.25, 0.25, 2, 2], ["Dave"]),
 		//these are the canon bambis' names according to marcello, dont change them back
-		new CharacterInSelect(['bambi', 'bambi-new', 'bambi-splitathon', 'bambi-angey', 'bambi-old', 'bambi-bevel'], [0, 0, 3, 0], ["Mr. Bambi", 'Bambi (Farmer)', 'Bambi (Splitathon)', 'Bambie', 'Bambi (Joke)', 'Bambi (Bevel)']),
-		new CharacterInSelect(['dave-angey'], [2, 2, 0.25, 0.25], ["3D Dave"]),
-		new CharacterInSelect(['tristan-golden'], [0.25, 0.25, 0.25, 2], ["Golden Tristan"]),
-		new CharacterInSelect(['bambi-3d', 'bambi-unfair'], [0, 3, 0, 0], ["3D Bambi", 'Unfair Bambi']),
-		//currentReal order should be 0, 1 (skipped anyways), 3, 4, 2, 5, 7, 6
 	];
 	public function new() 
 	{
@@ -91,17 +83,17 @@ class CharacterSelectState extends MusicBeatState
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD);
 
-		currentSelectedCharacter = characters[currentReal];
+		currentSelectedCharacter = characters[current];
 
 		FlxG.sound.playMusic(Paths.music("goodEnding"),1,true);
 
-		var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('dave/sky_night'));
+		var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stages/dave/sky'));
 		bg.antialiasing = true;
 		bg.scrollFactor.set(0.9, 0.9);
 		bg.active = false;
 		add(bg);
 	
-		var stageHills:FlxSprite = new FlxSprite(-225, -125).loadGraphic(Paths.image('dave/hills_night'));
+		var stageHills:FlxSprite = new FlxSprite(-225, -125).loadGraphic(Paths.image('stages/dave/hills'));
 		stageHills.setGraphicSize(Std.int(stageHills.width * 1.25));
 		stageHills.updateHitbox();
 		stageHills.antialiasing = true;
@@ -109,7 +101,7 @@ class CharacterSelectState extends MusicBeatState
 		stageHills.active = false;
 		add(stageHills);
 	
-		var gate:FlxSprite = new FlxSprite(-225, -125).loadGraphic(Paths.image('dave/gate_night'));
+		var gate:FlxSprite = new FlxSprite(-225, -125).loadGraphic(Paths.image('stages/dave/gate'));
 		gate.setGraphicSize(Std.int(gate.width * 1.2));
 		gate.updateHitbox();
 		gate.antialiasing = true;
@@ -117,7 +109,7 @@ class CharacterSelectState extends MusicBeatState
 		gate.active = false;
 		add(gate);
 		
-		var stageFront:FlxSprite = new FlxSprite(-225, -125).loadGraphic(Paths.image('dave/grass_night'));
+		var stageFront:FlxSprite = new FlxSprite(-225, -125).loadGraphic(Paths.image('stages/dave/grass'));
 		stageFront.setGraphicSize(Std.int(stageFront.width * 1.2));
 		stageFront.updateHitbox();
 		stageFront.antialiasing = true;
@@ -164,7 +156,7 @@ class CharacterSelectState extends MusicBeatState
 		funnyIconMan.visible = false;
 		add(funnyIconMan);
 
-		var tutorialThing:FlxSprite = new FlxSprite(-130, -90).loadGraphic(Paths.image('charSelectGuide'));
+		var tutorialThing:FlxSprite = new FlxSprite(-130, -90).loadGraphic(Paths.image('characterSelect/charSelectGuide'));
 		tutorialThing.setGraphicSize(Std.int(tutorialThing.width * 1.5));
 		tutorialThing.antialiasing = true;
 		tutorialThing.cameras = [camHUD];
@@ -179,9 +171,9 @@ class CharacterSelectState extends MusicBeatState
 		for (i in 0...4)
 		{
 			// FlxG.log.add(i);
-			var babyArrow:FlxSprite = new FlxSprite(0, 0);
+			var babyArrow:StrumNote = new StrumNote(0, 0);
 
-			babyArrow.frames = Paths.getSparrowAtlas('notes/default');
+			babyArrow.frames = Paths.getSparrowAtlas('ui/game/notes/default');
 			babyArrow.animation.addByPrefix('green', 'arrowUP');
 			babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
 			babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
@@ -284,64 +276,21 @@ class CharacterSelectState extends MusicBeatState
 		}
 		if (FlxG.keys.justPressed.LEFT && !selectedCharacter)
 		{
-			//currentReal order should be 0, 1 (skipped anyways), 3, 4, 2, 5, 7, 6
 			curForm = 0;
 			current--;
 			if (current < 0)
-			{
 				current = characters.length - 1;
-			}
-			if(current == 1)
-			{
-				current = 0;
-			}
-			switch(current)
-			{
-				case 2:
-					currentReal = 3;
-				case 3:
-					currentReal = 4;
-				case 4:
-					currentReal = 2;
-				case 6:
-					currentReal = 7;
-				case 7:
-					currentReal = 6;
-				default:
-					currentReal = current;
-			}
 			UpdateBF();
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		}
 
 		if (FlxG.keys.justPressed.RIGHT && !selectedCharacter)
 		{
-			//currentReal order should be 0, 1 (skipped anyways), 3, 4, 2, 5, 7, 6
 			curForm = 0;
 			current++;
 			if (current > characters.length - 1)
-			{
 				current = 0;
-			}
-			if(current == 1)
-			{
-				current = 2;
-			}
-			switch(current)
-			{
-				case 2:
-					currentReal = 3;
-				case 3:
-					currentReal = 4;
-				case 4:
-					currentReal = 2;
-				case 6:
-					currentReal = 7;
-				case 7:
-					currentReal = 6;
-				default:
-					currentReal = current;
-			}
+
 			UpdateBF();
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		}
@@ -350,7 +299,7 @@ class CharacterSelectState extends MusicBeatState
 			curForm--;
 			if (curForm < 0)
 			{
-				curForm = characters[currentReal].names.length - 1;
+				curForm = characters[current].names.length - 1;
 			}
 			UpdateBF();
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
@@ -359,7 +308,7 @@ class CharacterSelectState extends MusicBeatState
 		if (FlxG.keys.justPressed.UP && !selectedCharacter)
 		{
 			curForm++;
-			if (curForm > characters[currentReal].names.length - 1)
+			if (curForm > characters[current].names.length - 1)
 			{
 				curForm = 0;
 			}
@@ -371,7 +320,7 @@ class CharacterSelectState extends MusicBeatState
 	public function UpdateBF()
 	{
 		funnyIconMan.color = FlxColor.WHITE;
-		currentSelectedCharacter = characters[currentReal];
+		currentSelectedCharacter = characters[current];
 		characterText.text = currentSelectedCharacter.polishedNames[curForm];
 		char.destroy();
 		char = new Boyfriend(FlxG.width / 2, FlxG.height / 2, currentSelectedCharacter.names[curForm]);

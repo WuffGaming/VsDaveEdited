@@ -45,16 +45,6 @@ class ExtrasMenuState extends MusicBeatState
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
-	public static var bgPaths:Array<String> = 
-	[
-		'backgrounds/SUSSUS AMOGUS',
-		'backgrounds/SwagnotrllyTheMod',
-		'backgrounds/Olyantwo',
-		'backgrounds/morie',
-		'backgrounds/mantis',
-		'backgrounds/mamakotomi',
-		'backgrounds/T5mpler'
-	];
 
 	override function create()
 	{
@@ -76,7 +66,7 @@ class ExtrasMenuState extends MusicBeatState
 
 		daRealEngineVer = engineVers[FlxG.random.int(0, 2)];
 		
-		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(randomizeBG());
+		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(MainMenuState.randomizeBG());
 		bg.scrollFactor.set();
 		bg.setGraphicSize(Std.int(bg.width * 1.1));
 		bg.updateHitbox();
@@ -272,10 +262,5 @@ class ExtrasMenuState extends MusicBeatState
 
 			spr.updateHitbox();
 		});
-	}
-	public static function randomizeBG():flixel.system.FlxAssets.FlxGraphicAsset
-	{
-		var chance:Int = FlxG.random.int(0, bgPaths.length - 1);
-		return Paths.image(bgPaths[chance]);
 	}
 }

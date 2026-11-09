@@ -26,7 +26,7 @@ class FreeplayState extends MusicBeatState
 	var curSelected:Int = 0;
 	var curDifficulty:Int = 1;
 
-	var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('backgrounds/SUSSUS AMOGUS'));
+	var bg:FlxSprite = new FlxSprite();
 
 	var scoreText:FlxText;
 	var diffText:FlxText;
@@ -41,7 +41,7 @@ class FreeplayState extends MusicBeatState
 
 	private var curIcon:FlxSprite;
 
-	private var categoryList:Array<String> = ["Dave", "Joke", "Extra", 'Base'];
+	private var categoryList:Array<String> = ["Test"];
 
 	private var curCategory:Int = 0;
 
@@ -74,7 +74,7 @@ class FreeplayState extends MusicBeatState
 		bg.color = 0xFF4965FF;
 		add(bg);
 
-		curIcon = new FlxSprite(0,0).loadGraphic(Paths.image('week_icons_' + (categoryList[curCategory].toLowerCase())));
+		curIcon = new FlxSprite(0,0).loadGraphic(Paths.image('freeplay/categories/' + (categoryList[curCategory].toLowerCase())));
 
 		curIcon.centerOffsets(false);
 		curIcon.x = (FlxG.width / 2) - 256;
@@ -95,20 +95,8 @@ class FreeplayState extends MusicBeatState
 	{
 		switch (categoryList[curCategory].toLowerCase())
 		{
-			case 'base':
-				addWeek(['Tutorial'], 0, ['gf']);
-			case 'dave':
-				addWeek(['House', 'Insanity', 'Polygonized'], 1, ['dave', 'dave', 'dave-3d']);
-				addWeek(['Bonus-Song'], 1,['dave']);
-				addWeek(['Blocked','Corn-Theft','Maze',], 2, ['bambi']);
-				addWeek(['Splitathon'], 3,['dave-bambi']);
-			case 'joke':
-				addWeek(['Supernovae', 'Glitch', 'Vs-Dave-Thanksgiving'], 2, ['bambi-joke']);
-				addWeek(['Cheating'], 2, ['bambi-3d']);
-				addWeek(['Unfairness'], 2, ['bambi-unfair']);
-			case 'extra':
-				addWeek(['Mealie'], 2, ['bambi-mad']);
-				addWeek(['Furiosity'], 1, ['dave-3d']);
+			case 'test':
+				addWeek(['House'], 1, ['dave']);
 		}
 	}
 
@@ -178,7 +166,7 @@ class FreeplayState extends MusicBeatState
 		nameAlpha = new Alphabet(40,(FlxG.height / 2) - 282,categoryList[curCategory],true,false);
 		nameAlpha.screenCenter(X);
 		add(nameAlpha);
-		curIcon.loadGraphic(Paths.image('week_icons_' + (categoryList[curCategory].toLowerCase())));
+		curIcon.loadGraphic(Paths.image('freeplay/categories/' + (categoryList[curCategory].toLowerCase())));
 	}
 
 	override function beatHit()
@@ -309,26 +297,16 @@ class FreeplayState extends MusicBeatState
 	function updateDifficultyText()
 	{
 		var stupidBitch = curChar;
-		if(stupidBitch.toLowerCase() == 'bf-pixel')
+		switch (curDifficulty)
 		{
-			stupidBitch = 'bf';
-		}
-		switch (songs[curSelected].week)
-		{
+			case 0:
+				diffText.text = "EASY" + " - " + stupidBitch.toUpperCase();
+			case 1:
+				diffText.text = 'NORMAL' + " - " + stupidBitch.toUpperCase();
+			case 2:
+				diffText.text = "HARD" + " - " + stupidBitch.toUpperCase();
 			case 3:
-				diffText.text = 'FINALE' + " - " + stupidBitch.toUpperCase();
-			default:
-				switch (curDifficulty)
-				{
-					case 0:
-						diffText.text = "EASY" + " - " + stupidBitch.toUpperCase();
-					case 1:
-						diffText.text = 'NORMAL' + " - " + stupidBitch.toUpperCase();
-					case 2:
-						diffText.text = "HARD" + " - " + stupidBitch.toUpperCase();
-					case 3:
-						diffText.text = "LEGACY" + " - " + stupidBitch.toUpperCase();
-				}
+				diffText.text = "LEGACY" + " - " + stupidBitch.toUpperCase();
 		}
 	}
 

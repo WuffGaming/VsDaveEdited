@@ -45,16 +45,22 @@ class MainMenuState extends MusicBeatState
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
-	public static var bgPaths:Array<String> = 
-	[
-		'backgrounds/SUSSUS AMOGUS',
-		'backgrounds/SwagnotrllyTheMod',
-		'backgrounds/Olyantwo',
-		'backgrounds/morie',
-		'backgrounds/mantis',
-		'backgrounds/mamakotomi',
-		'backgrounds/T5mpler'
-	];
+	public static var bgPaths:Array<String> = getBackgrounds();
+
+	public static function getBackgrounds():Array<String> 
+	{
+		var shit:Array<String> = [];
+		var bgs = FileSystem.readDirectory('assets/images/backgrounds/');
+
+		for (bg in bgs)
+		{
+			if (bg.endsWith('.png'))
+			{
+				shit.push(bg.replace('.png', ''));
+			}
+		}
+		return shit;
+	}
 
 	override function create()
 	{
@@ -98,7 +104,7 @@ class MainMenuState extends MusicBeatState
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
 
-		var tex = Paths.getSparrowAtlas('FNF_main_menu_assets');
+		var tex = Paths.getSparrowAtlas('mainMenu/FNF_main_menu_assets');
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
@@ -264,6 +270,6 @@ class MainMenuState extends MusicBeatState
 	public static function randomizeBG():flixel.system.FlxAssets.FlxGraphicAsset
 	{
 		var chance:Int = FlxG.random.int(0, bgPaths.length - 1);
-		return Paths.image(bgPaths[chance]);
+		return Paths.image('backgrounds/' + bgPaths[chance]);
 	}
 }

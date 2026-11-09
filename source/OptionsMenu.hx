@@ -32,7 +32,7 @@ class OptionsMenu extends MusicBeatState
 		#if desktop
 		DiscordClient.changePresence("In the Options Menu", null);
 		#end
-		var menuBG:FlxSprite = new FlxSprite().loadGraphic(Paths.image('backgrounds/SUSSUS AMOGUS'));
+		var menuBG:FlxSprite = new FlxSprite();
 		controlsStrings = CoolUtil.coolStringFile((FlxG.save.data.dfjk ? 'DFJK' : 'WASD') + "\n" + (FlxG.save.data.newInput ? "Ghost Tapping" : "No Ghost Tapping") + "\n" + (FlxG.save.data.downscroll ? 'Downscroll' : 'Upscroll') + "\nAccuracy " + (FlxG.save.data.accuracyDisplay ? "off" : "on") + "\n" + (FlxG.save.data.eyesores ? 'Eyesores Enabled' : 'Eyesores Disabled') + "\n" + (FlxG.save.data.donoteclick ? "Hitsounds On" : "Hitsounds Off") + "\n" + (FlxG.save.data.freeplayCuts ? "Freeplay Cutscenes On" : "Freeplay Cutscenes Off"));
 		
 		trace(controlsStrings);
@@ -73,7 +73,7 @@ class OptionsMenu extends MusicBeatState
 		super.update(elapsed);
 
 			if (controls.BACK)
-				FlxG.switchState(new MainMenuState());
+				FlxG.switchState(()->new MainMenuState());
 			if (controls.UP_P)
 				changeSelection(-1);
 			if (controls.DOWN_P)
