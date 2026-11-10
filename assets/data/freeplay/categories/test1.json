@@ -1,5 +1,6 @@
 {
     "icon": "test",
+    "displayName": "wow this is a category",
     "songs": [
         {
             "name": "House",

@@ -157,11 +157,12 @@ class FreeplayState extends MusicBeatState
 		{
 			curCategory = 0;
 		}
+		var categoryData:CategoryData = cast Paths.loadJSON('freeplay/categories/' + categoryList[curCategory].toLowerCase());
 		nameAlpha.destroy();
-		nameAlpha = new Alphabet(40,(FlxG.height / 2) - 282,categoryList[curCategory],true,false);
+		nameAlpha = new Alphabet(40,(FlxG.height / 2) - 282,(categoryData.displayName == null ? categoryList[curCategory] : categoryData.displayName),true,false);
 		nameAlpha.screenCenter(X);
 		add(nameAlpha);
-		curIcon.loadGraphic(Paths.image('freeplay/categories/' + (categoryList[curCategory].toLowerCase())));
+		curIcon.loadGraphic(Paths.image('freeplay/categories/' + (categoryData.icon == null ? categoryList[curCategory].toLowerCase() : categoryData.icon)));
 	}
 
 	override function beatHit()
@@ -349,7 +350,8 @@ class SongMetadata
 }
 
 typedef CategoryData = {
-	var icon:Null<String>; // Path to category's icon. Unused currently
+	var icon:Null<String>; // Path to category's icon.
+	var displayName:Null<String>; // Display name for the category.
 	var songs:Array<CategorySong>; // Every song in the category.
 }
 
