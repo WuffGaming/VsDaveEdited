@@ -16,7 +16,6 @@ import lime.utils.Assets;
 #if desktop
 import Discord.DiscordClient;
 #end
-using StringTools;
 
 class FreeplayState extends MusicBeatState
 {
@@ -37,24 +36,17 @@ class FreeplayState extends MusicBeatState
 	private var curPlaying:Bool = false;
 	private var curChar:String = "unknown";
 
-	private var InMainFreeplayState:Bool = false;
+	private var inFreeplay:Bool = false;
 
 	private var curIcon:FlxSprite;
 
-	private var categoryList:Array<String> = ["Test"];
+	private var categoryList:Array<String> = CoolUtil.coolTextFile(Paths.txt('freeplay/categoryList'));
 
 	private var curCategory:Int = 0;
 
 	private var nameAlpha:Alphabet;
 
 	var loadingPack:Bool = false;
-
-	var songColors:Array<FlxColor> = [
-    	0xFFca1f6f, // GF
-		0xFF4965FF, // DAVE
-		0xFF00B515, // MISTER BAMBI RETARD
-		0xFF00FFFF //SPLIT THE THONNNNN
-    ];
 
 	private var iconArray:Array<HealthIcon> = [];
 
@@ -91,23 +83,27 @@ class FreeplayState extends MusicBeatState
 		super.create();
 	}
 
-	public function LoadProperPack()
+	public function loadPackSongs()
 	{
-		switch (categoryList[curCategory].toLowerCase())
-		{
-			case 'test':
-				addWeek(['House'], 1, ['dave']);
+		var categoryData:CategoryData = cast Paths.loadJSON('freeplay/categories/' + categoryList[curCategory].toLowerCase());
+		for (song in categoryData.songs) {
+			var name:String = song.name == null ? 'House' : song.name;
+			var displayName = song.displayName == null ? name : song.displayName;
+			var color:FlxColor = song.color == null ? 0xFF4965FF : FlxColor.fromString(song.color);
+			var icon:String = song.icon == null ? 'face' : song.icon;
+			var charSelect:Bool = song.characterSelect == null ? true : song.characterSelect;
+			addSong(name, displayName, color, icon, charSelect);
 		}
 	}
 
-	public function GoToActualFreeplay()
+	public function toSongList()
 	{
 		grpSongs = new FlxTypedGroup<Alphabet>();
 		add(grpSongs);
 
 		for (i in 0...songs.length)
 		{
-			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].songName, true, false);
+			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, songs[i].displayName, true, false);
 			songText.isMenuItem = true;
 			songText.targetY = i;
 			grpSongs.add(songText);
@@ -145,12 +141,12 @@ class FreeplayState extends MusicBeatState
 
 	}
 
-	public function addSong(songName:String, weekNum:Int, songCharacter:String)
+	public function addSong(songName:String, displayName:String, color:FlxColor, songCharacter:String, charSelect:Bool)
 	{
-		songs.push(new SongMetadata(songName, weekNum, songCharacter));
+		songs.push(new SongMetadata(songName, displayName, color, songCharacter, charSelect));
 	}
 
-	public function UpdatePackSelection(change:Int)
+	public function updatePackSelection(change:Int)
 	{
 		curCategory += change;
 		if (curCategory == -1)
@@ -174,48 +170,33 @@ class FreeplayState extends MusicBeatState
 		FlxTween.tween(FlxG.camera, {zoom:1.05}, 0.3, {ease: FlxEase.quadOut, type: BACKWARD});
 	}
 
-	public function addWeek(songs:Array<String>, weekNum:Int, ?songCharacters:Array<String>)
-	{
-		if (songCharacters == null)
-			songCharacters = ['bf'];
-
-		var num:Int = 0;
-		for (song in songs)
-		{
-			addSong(song, weekNum, songCharacters[num]);
-
-			if (songCharacters.length != 1)
-				num++;
-		}
-	}
-
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
 
-		if (!InMainFreeplayState) 
+		if (!inFreeplay) 
 		{
 			if (controls.LEFT_P)
 			{
-				UpdatePackSelection(-1);
+				updatePackSelection(-1);
 			}
 			if (controls.RIGHT_P)
 			{
-				UpdatePackSelection(1);
+				updatePackSelection(1);
 			}
 			if (controls.ACCEPT && !loadingPack)
 			{
 				loadingPack = true;
-				LoadProperPack();
+				loadPackSongs();
 				FlxTween.tween(curIcon, {alpha: 0}, 0.3);
 				FlxTween.tween(nameAlpha, {alpha: 0}, 0.3);
 				new FlxTimer().start(0.5, function(Dumbshit:FlxTimer)
 				{
 					curIcon.visible = false;
 					nameAlpha.visible = false;
-					GoToActualFreeplay();
-					InMainFreeplayState = true;
+					toSongList();
+					inFreeplay = true;
 					loadingPack = false;
 				});
 			}
@@ -265,10 +246,7 @@ class FreeplayState extends MusicBeatState
 			PlayState.SONG = Song.loadFromJson(songs[curSelected].songName.toLowerCase(), chartOfSong);
 			PlayState.isStoryMode = false;
 			PlayState.storyDifficulty = curDifficulty;
-
-			PlayState.storyWeek = songs[curSelected].week;
-			LoadingState.loadAndSwitchState(new CharacterSelectState());
-			//LoadingState.loadAndSwitchState(new PlayState());
+			LoadingState.loadAndSwitchState((songs[curSelected].charSelect ? new CharacterSelectState() : new PlayState()));
 		}
 	}
 
@@ -281,10 +259,6 @@ class FreeplayState extends MusicBeatState
 		if (curDifficulty > 2)
 			curDifficulty = 0;
 
-		if (songs[curSelected].week == 3)
-		{
-			curDifficulty = 1;
-		}
 		#if !switch
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
 		#end
@@ -304,8 +278,6 @@ class FreeplayState extends MusicBeatState
 				diffText.text = 'NORMAL' + " - " + stupidBitch.toUpperCase();
 			case 2:
 				diffText.text = "HARD" + " - " + stupidBitch.toUpperCase();
-			case 3:
-				diffText.text = "LEGACY" + " - " + stupidBitch.toUpperCase();
 		}
 	}
 
@@ -325,11 +297,6 @@ class FreeplayState extends MusicBeatState
 
 		if (curDifficulty > 2)
 			curDifficulty = 0;
-
-		if (songs[curSelected].week == 3)
-		{
-			curDifficulty = 1;
-		}
 
 		curChar = Highscore.getChar(songs[curSelected].songName, curDifficulty);
 		updateDifficultyText();
@@ -359,33 +326,37 @@ class FreeplayState extends MusicBeatState
 				item.alpha = 1;
 			}
 		}
-		FlxTween.color(bg, 0.25, bg.color, songColors[songs[curSelected].week]);
+		FlxTween.color(bg, 0.25, bg.color, songs[curSelected].color);
 	}
 }
 
 class SongMetadata
 {
 	public var songName:String = "";
-	public var week:Int = 0;
+	public var displayName:String = "";
+	public var color:FlxColor = 0xFF4965FF;
 	public var songCharacter:String = "";
+	public var charSelect:Bool = true;
 
-	public function new(song:String, week:Int, songCharacter:String)
+	public function new(song:String, displayName:String, color:FlxColor, songCharacter:String, charSelect:Bool)
 	{
 		this.songName = song;
-		this.week = week;
+		this.displayName = displayName;
+		this.color = color;
 		this.songCharacter = songCharacter;
+		this.charSelect = charSelect;
 	}
 }
 
 typedef CategoryData = {
-	var icon:String; // Path to category's icon.
+	var icon:Null<String>; // Path to category's icon. Unused currently
 	var songs:Array<CategorySong>; // Every song in the category.
 }
 
 typedef CategorySong = {
-	var name:String; // Name of the song in the category.
-	var displayName:String; // Optional display name for the song.
-	var color:String; // Color of the song in the category.
-	var icon:String; // Icon Name of the song in the category.
-	var characterSelect:Bool; // Does category let you select custom characters?
+	var name:Null<String>; // Name of the song in the category.
+	var displayName:Null<String>; // Optional display name for the song.
+	var color:Null<String>; // Color of the song in the category.
+	var icon:Null<String>; // Icon Name of the song in the category.
+	var characterSelect:Null<Bool>; // Does category let you select custom characters?
 }
