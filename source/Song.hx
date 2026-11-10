@@ -32,9 +32,9 @@ class Song
 	public var speed:Float = 1;
 
 	public var player1:String = 'bf';
-	public var player2:String = 'dad';
-	public var gf:String;
-	public var stage:String;
+	public var player2:String = 'dave';
+	public var gf:String = 'gf';
+	public var stage:String = 'daveHouse';
 
 	public function new(song, notes, bpm)
 	{

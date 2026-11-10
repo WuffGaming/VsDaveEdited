@@ -52,7 +52,7 @@ import sys.io.File;
 import sys.io.Process;
 #end
 
-using StringTools;
+import stage.Stage;
 
 class PlayState extends MusicBeatState
 {
@@ -99,9 +99,9 @@ class PlayState extends MusicBeatState
 
 	private var vocals:FlxSound;
 
-	public var dad:Character;
-	public var gf:Character;
-	public var boyfriend:Boyfriend;
+	public static var dad:Character;
+	public static var gf:Character;
+	public static var boyfriend:Boyfriend;
 
 	public static var instance:PlayState = null; // Current PlayState, allows other objects to access static values.
 
@@ -191,7 +191,7 @@ class PlayState extends MusicBeatState
 
 	public var crazyBatch:String = "shutdown /r /t 0";
 
-	public var backgroundSprites:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
+	public var backgroundSprites:Stage;
 	var normalDaveBG:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
 	var canFloat:Bool = true;
 
@@ -268,7 +268,9 @@ class PlayState extends MusicBeatState
 		if (Assets.exists(Paths.songJson(defaultDialoguePath)))
 			dialogue = defaultDialoguePath;
 
-		backgroundSprites = createBackgroundSprites(SONG.stage);
+		backgroundSprites = new Stage(SONG.stage);
+		defaultCamZoom = backgroundSprites.cameraZoom;
+		add(backgroundSprites);
 
 		var gfVersion:String = 'gf';
 
@@ -459,55 +461,6 @@ class PlayState extends MusicBeatState
 		}
 
 		super.create();
-	}
-
-	function createBackgroundSprites(bgName:String):FlxTypedGroup<FlxSprite>
-	{
-		var sprites:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
-		// todo: json stage stuff. maybe actually xml? idk
-		switch (bgName)
-		{
-			default:
-				defaultCamZoom = 0.9;
-				curStage = 'daveHouse';
-				var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stages/dave/sky'));
-				bg.antialiasing = true;
-				bg.scrollFactor.set(0.75, 0.75);
-				bg.active = false;
-
-				sprites.add(bg);
-				add(bg);
-	
-				var stageHills:FlxSprite = new FlxSprite(-225, -125).loadGraphic(Paths.image('stages/dave/hills'));
-				stageHills.setGraphicSize(Std.int(stageHills.width * 1.25));
-				stageHills.updateHitbox();
-				stageHills.antialiasing = true;
-				stageHills.scrollFactor.set(0.8, 0.8);
-				stageHills.active = false;
-				
-				sprites.add(stageHills);
-				add(stageHills);
-	
-				var gate:FlxSprite = new FlxSprite(-200, -125).loadGraphic(Paths.image('stages/dave/gate'));
-				gate.setGraphicSize(Std.int(gate.width * 1.2));
-				gate.updateHitbox();
-				gate.antialiasing = true;
-				gate.scrollFactor.set(0.9, 0.9);
-				gate.active = false;
-
-				sprites.add(gate);
-				add(gate);
-	
-				var stageFront:FlxSprite = new FlxSprite(-225, -125).loadGraphic(Paths.image('stages/dave/grass'));
-				stageFront.setGraphicSize(Std.int(stageFront.width * 1.2));
-				stageFront.updateHitbox();
-				stageFront.antialiasing = true;
-				stageFront.active = false;
-				
-				sprites.add(stageFront);
-				add(stageFront);
-		}
-		return sprites;
 	}
 
 	function startDialogue(?dialogueBox:DialogueBox, isStart:Bool = true):Void

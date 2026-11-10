@@ -1,0 +1,31 @@
+{
+    "cameraZoom": 0.9,
+    "props": [
+        {
+            "name": "bg",
+            "path": "stages/dave/sky",
+            "position": [-600, -200],
+            "scroll": [0.75, 0.75]
+        },
+        {
+            "name": "hills",
+            "path": "stages/dave/hills",
+            "position": [-225, -125],
+            "graphicSize": 1.25,
+            "scroll": [0.8, 0.8]
+        },
+        {
+            "name": "gate",
+            "path": "stages/dave/gate",
+            "position": [-200, -125],
+            "graphicSize": 1.2,
+            "scroll": [0.9, 0.9]
+        },
+        {
+            "name": "front",
+            "path": "stages/dave/grass",
+            "graphicSize": 1.2,
+            "position": [-225, -125]
+        }
+    ]
+}
