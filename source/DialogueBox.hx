@@ -48,8 +48,6 @@ class DialogueBox extends FlxSpriteGroup
 
 	var debug:Bool = false;
 
-	var curshader:Dynamic;
-
 	public static var randomNumber:Int;
 
 	public function new(talkingRight:Bool = true, dialogueJson:String)
@@ -151,10 +149,6 @@ class DialogueBox extends FlxSpriteGroup
 
 	override function update(elapsed:Float)
 	{
-		if (curshader != null)
-		{
-			curshader.shader.uTime.value[0] += elapsed;
-		}
 
 		dropText.text = swagDialogue.text;
 
@@ -217,7 +211,6 @@ class DialogueBox extends FlxSpriteGroup
 		swagDialogue.resetText(dialogueList[0].text);
 		var bullshitDelay:Null<Float> = dialogueList[0].delay == null ? 0.04 : dialogueList[0].delay;
 		swagDialogue.start(bullshitDelay, true);
-		curshader = null;
 
 		for (text in [dropText, swagDialogue])
 			text.font = Paths.font(dialogueList[0].font == null ? (dialogueData.font == null ? 'comic.ttf' : dialogueData.font) : dialogueList[0].font);
@@ -284,20 +277,6 @@ class DialogueBox extends FlxSpriteGroup
 	function causeEvent(event) {
 		switch (event)
 		{
-			case 'distort':
-				PlayState.screenshader.Enabled = true;
-			case 'undistort':
-				PlayState.screenshader.Enabled = false;
-			case 'distortbg':
-				var shad:Shaders.DistortBGEffect = new Shaders.DistortBGEffect();
-				curshader = shad;
-				shad.waveAmplitude = 0.1;
-				shad.waveFrequency = 5;
-				shad.waveSpeed = 2;
-				if (curCharacter != 'generic')
-				{
-					curPortrait.shader = shad.shader;
-				}
 			case 'to_black':
 				FlxTween.tween(blackScreen, {alpha:1}, 0.25);
 		}

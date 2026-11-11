@@ -1,0 +1,18 @@
+{
+    "weekName": "Test Week 123%$*)!*",
+    "weekTitle": "ass",
+    "weekColor": "0xFF4965FF",
+    "songList": [
+        "House",
+        "House",
+        "House"
+    ],
+    "props": [
+        {
+            "name": "banner",
+            "path": "weekImages/imageTest",
+            "position": [0, 0],
+            "antialiasing": false
+        }
+    ]
+}

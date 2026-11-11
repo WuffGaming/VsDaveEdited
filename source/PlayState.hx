@@ -73,18 +73,7 @@ class PlayState extends MusicBeatState
 	var howManyPlayerNotes:Int = 0;
 	var howManyEnemyNotes:Int = 0;
 
-	public var stupidx:Float = 0;
-	public var stupidy:Float = 0; // stupid velocities for cutscene
-	public var updatevels:Bool = false;
-
-	public var hasTriggeredDumbshit:Bool = false;
-	var AUGHHHH:String;
-	var AHHHHH:String;
-
 	public static var curmult:Array<Float> = [1, 1, 1, 1];
-
-	public var curbg:FlxSprite;
-	public static var screenshader:Shaders.PulseEffect = new PulseEffect();
 
 	public var elapsedtime:Float = 0;
 
@@ -136,8 +125,6 @@ class PlayState extends MusicBeatState
 
 	public static var eyesoreson = true;
 
-	private var STUPDVARIABLETHATSHOULDNTBENEEDED:FlxSprite;
-
 	private var healthBarBG:FlxSprite;
 	private var healthBar:FlxBar;
 
@@ -145,18 +132,13 @@ class PlayState extends MusicBeatState
 	private var shakeCam:Bool = false;
 	private var startingSong:Bool = false;
 
-	public static var amogus:Int = 0;
-
 	private var iconP1:HealthIcon;
 	private var iconP2:HealthIcon;
-	private var BAMBICUTSCENEICONHURHURHUR:HealthIcon;
 	private var camDialogue:FlxCamera;
 	private var camHUD:FlxCamera;
 	private var camGame:FlxCamera;
 
 	var dialogue:String = '';
-
-	public static var shakingChars = [];
 
 	var notestuffs:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
 	var fc:Bool = true;
@@ -164,12 +146,7 @@ class PlayState extends MusicBeatState
 	var talking:Bool = true;
 	var songScore:Int = 0;
 	var scoreTxt:FlxText;
-
-	var GFScared:Bool = false;
-
-	var scaryBG:FlxSprite;
-	var showScary:Bool = false;
-
+	
 	public static var campaignScore:Int = 0;
 
 	var defaultCamZoom:Float = 1.05;
@@ -178,24 +155,12 @@ class PlayState extends MusicBeatState
 
 	public static var theFunne:Bool = true;
 
-	var funneEffect:FlxSprite;
 	var inCutscene:Bool = false;
 
 	public static var timeCurrently:Float = 0;
 	public static var timeCurrentlyR:Float = 0;
 
-	public static var warningNeverDone:Bool = false;
-
-	public var thing:FlxSprite = new FlxSprite(0, 250);
-	public var splitathonExpressionAdded:Bool = false;
-
-	public var crazyBatch:String = "shutdown /r /t 0";
-
 	public var backgroundSprites:Stage;
-	var normalDaveBG:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
-	var canFloat:Bool = true;
-
-	var nightColor:FlxColor = 0xFF878787;
 
 	override public function create()
 	{
@@ -278,11 +243,6 @@ class PlayState extends MusicBeatState
 		{
 			gfVersion = SONG.gf;
 		}
-
-		screenshader.waveAmplitude = 1;
-		screenshader.waveFrequency = 2;
-		screenshader.waveSpeed = 1;
-		screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
 
 		gf = new Character(400, 130, gfVersion);
 		gf.scrollFactor.set(0.95, 0.95);
@@ -906,37 +866,6 @@ class PlayState extends MusicBeatState
 	override public function update(elapsed:Float)
 	{
 		elapsedtime += elapsed;
-		if (curbg != null)
-		{
-			if (curbg.active) // only the furiosity background is active
-			{
-				var shad = cast(curbg.shader, Shaders.GlitchShader);
-				shad.uTime.value[0] += elapsed;
-			}
-		}
-
-		//welcome to 3d sinning avenue
-		for (character in [dad, boyfriend, gf]) {
-			if (character.canFloat)
-				character.y += (Math.sin(elapsedtime) * 0.6);
-		}
-			
-		FlxG.game.setFilters([new ShaderFilter(screenshader.shader)]); // this is very stupid but doesn't effect memory all that much so
-		if (shakeCam && eyesoreson)
-		{
-			// var shad = cast(FlxG.camera.screen.shader,Shaders.PulseShader);
-			FlxG.camera.shake(0.015, 0.015);
-		}
-		screenshader.shader.uTime.value[0] += elapsed;
-		if (shakeCam && eyesoreson)
-		{
-			screenshader.shader.uampmul.value[0] = 1;
-		}
-		else
-		{
-			screenshader.shader.uampmul.value[0] -= (elapsed / 2);
-		}
-		screenshader.Enabled = shakeCam && eyesoreson;
 
 		if (FlxG.keys.justPressed.NINE)
 		{
@@ -982,8 +911,6 @@ class PlayState extends MusicBeatState
 			switch (curSong.toLowerCase())
 			{
 				default:
-					shakeCam = false;
-					screenshader.Enabled = false;
 					FlxG.switchState(()->new ChartingState());
 					#if desktop
 					DiscordClient.changePresence("Chart Editor", null, null, true);
@@ -1077,9 +1004,6 @@ class PlayState extends MusicBeatState
 	
 				vocals.stop();
 				FlxG.sound.music.stop();
-	
-				screenshader.shader.uampmul.value[0] = 0;
-				screenshader.Enabled = false;
 			}
 
 			openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition()
@@ -1152,11 +1076,6 @@ class PlayState extends MusicBeatState
 							case 'RIGHT':
 								fuckingDumbassBullshitFuckYou = 'LEFT';
 						}
-					}
-					if(dad.curCharacter == 'bambi-unfair' || dad.curCharacter == 'bambi-3d')
-					{
-						FlxG.camera.shake(0.0075, 0.1);
-						camHUD.shake(0.0045, 0.1);
 					}
 					dad.playAnim('sing' + fuckingDumbassBullshitFuckYou + altAnim, true);
 					dadStrums.forEach(function(sprite:StrumNote) {
@@ -1257,16 +1176,6 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-
-	function THROWPHONEMARCELLO(e:FlxTimer = null):Void
-	{
-		STUPDVARIABLETHATSHOULDNTBENEEDED.animation.play("throw_phone");
-		new FlxTimer().start(5.5, function(timer:FlxTimer)
-		{ 
-			FlxG.switchState(()->new FreeplayState());
-		});
-	}
-
 	function endSong():Void
 	{
 		inCutscene = false;
@@ -1295,16 +1204,12 @@ class PlayState extends MusicBeatState
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
 
-				// if ()
-				StoryMenuState.weekUnlocked[Std.int(Math.min(storyWeek + 1, StoryMenuState.weekUnlocked.length - 1))] = true;
-
 				if (SONG.validScore)
 				{
 					Highscore.saveWeekScore(storyWeek, campaignScore,
 						storyDifficulty, characteroverride == "none" || characteroverride == "bf" ? "bf" : characteroverride);
 				}
-
-				FlxG.save.data.weekUnlocked = StoryMenuState.weekUnlocked;
+				
 				FlxG.save.flush();
 			}
 			else
