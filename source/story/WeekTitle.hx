@@ -16,7 +16,7 @@ class WeekTitle extends FlxSpriteGroup
 	public function new(x:Float, y:Float, weekAsset:String = '')
 	{
 		super(x, y);
-		week = new FlxSprite().loadGraphic(Paths.image('storyMenu/weekTitles/' + weekAsset));
+		week = new FlxSprite().loadGraphic(Paths.image('storyMenus/weekTitles/' + weekAsset));
 		add(week);
 		week.antialiasing = true;
 	}

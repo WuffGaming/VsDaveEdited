@@ -11,7 +11,7 @@
         {
             "name": "banner",
             "path": "weekImages/imageTest",
-            "position": [0, 0],
+            "position": [0, 56],
             "antialiasing": false
         }
     ]

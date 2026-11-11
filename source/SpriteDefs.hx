@@ -28,7 +28,7 @@ typedef AnimationData =
 	var flipY:Null<Bool>;
 }
 
-// moved here for storyMenu
+// moved here for storyMenus
 typedef PropData =
 {
 	var position:Array<Float>; // Where is prop located?
