@@ -60,7 +60,7 @@ class DialogueBox extends FlxSpriteGroup
 
 		dialogueList = dialogueData.sequences;
 		if (dialogueData.music != null) {
-			FlxG.sound.playMusic(Paths.music(dialogueData.music), 0);
+			FlxG.sound.playMusic(Paths.externmusic(dialogueData.music), 0);
 			FlxG.sound.music.fadeIn(1, 0, 0.8);
 		}
 
@@ -91,9 +91,9 @@ class DialogueBox extends FlxSpriteGroup
 				var flipx = anim.flipX == null ? false : anim.flipX;
 				var flipy = anim.flipY == null ? false : anim.flipY;
 
-				if (anim.frameIndices != null)
+				if (anim.indices != null)
 				{
-					box.animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", frameRate, looped, flipx, flipy);
+					box.animation.addByIndices(anim.name, anim.prefix, anim.indices, "", frameRate, looped, flipx, flipy);
 				}
 				else
 				{
@@ -256,6 +256,7 @@ class DialogueBox extends FlxSpriteGroup
 			dialogueSound = portraitData.dialogueSound == null ? 'pixelText' : portraitData.dialogueSound;
 		}
 		curPortrait.flipX = false;
+		FlxTween.cancelTweensOf(curPortrait);
 		switch(side.toLowerCase()) {
 			case 'right':
 				box.flipX = false;

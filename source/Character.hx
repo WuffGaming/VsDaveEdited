@@ -4,49 +4,9 @@ import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.graphics.frames.FlxAtlasFrames;
 
-typedef CharacterData =
-{
-	var path:String; // Path to the character's asset.
-
-	var globalOffset:Array<Float>; // Offsets added directly to the pre-existing offset. Kept in for compatability reasons.
-	var gameOffset:Array<Float>; // Proper offset
-	var camOffset:Array<Float>; // Camera offset
-
-	var ?bopper:Bool; // Does the character bop left and right?
-
-	var ?nativelyPlayable:Bool; // Can the character be played natively?
-
-	var ?flipX:Bool; // Flip the character sprite?
-
-	var ?causeCameraShake:Bool; // Does camera shake when character shakes?
-
-	var ?vsliceHold:Bool; // Does the character have Vslice-like holding of the note?
-
-	var ?antialiasing:Bool; // Alias the character?
-
-	var ?scaleSize:Bool; // Should you change the scale of the character or do setGraphicSize?
-
-	var scale:Null<Float>; // Changes scale/graphicsize by amount.
-
-	var floater:Null<Bool>; // Does the character float? Will be deprecated for scripting in the future.
-
-	var noteStyle:String; // What style of notes should the character use?
-
-	var altIcon:String; // Easter egg icon when you press 9 on the keyboard
-
-	var icon:String; // What icon should be used?
-
-	var deathSkin:String; // What skin is used when character dies?
-
-	var animations:Array<SpriteDefs.AnimationData>; // Array of all animations. Offsets are handled in the data/offsets
-}
-
-
-
 class Character extends FlxSprite
 {
 	public var animOffsets:Map<String, Array<Dynamic>>;
-	public var debugMode:Bool = false;
 
 	public var isPlayer:Bool = false;
 	public var curCharacter:String = 'bf';
@@ -61,7 +21,7 @@ class Character extends FlxSprite
 	public var deadForm:String = 'bf-dead';
 
 	public var canFloat:Bool = false;
-	public var bopper:Bool = false;
+	public var bopDance:Bool = false;
 
 	public var nativelyPlayable:Bool = false;
 
@@ -69,6 +29,8 @@ class Character extends FlxSprite
 	public var gameOffset:Array<Float> = [0, 0];
 	public var camOffset:Array<Float> = [0, 0];
 	public var charScale:Float = 1;
+
+	public var danced:Bool = false; // has danced?
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
@@ -92,16 +54,14 @@ class Character extends FlxSprite
 
 	public function parseDataFile()
 	{
-		var path:String = Paths.json('characters/${curCharacter}');
-		if (!Assets.exists(path))
+		if (!Assets.exists(Paths.json('characters/${curCharacter}')))
 			curCharacter = 'bf';
-		trace('PARSING CHARACTER: ' + curCharacter);
-		var rawJson = Assets.getText(Paths.json('characters/${curCharacter}'));
-		var jsonData:CharacterData = cast Json.parse(rawJson);
-		var data:CharacterData = cast jsonData;
 
-		// do dances use DanceLeft / DanceRight?
-		bopper = data.bopper == null ? false : data.bopper;
+		trace('PARSING CHARACTER: ' + curCharacter);
+		
+		var data:CharacterData = cast Paths.loadJSON('characters/$curCharacter');
+
+		bopDance = data.bopper == null ? false : data.bopper;
 
 		antialiasing = data.antialiasing == null ? true : data.antialiasing;
 
@@ -109,12 +69,7 @@ class Character extends FlxSprite
 
 		flipX = data.flipX == null ? false : data.flipX;
 
-		if (data.causeCameraShake)
-			PlayState.shakingChars.push(curCharacter);
-
 		useVSliceSustains = data.vsliceHold == null ? false : data.vsliceHold;
-
-		canFloat = data.floater == null ? false : data.floater; // add easy
 
 		charScale = data.scale == null ? 1 : data.scale; // add normal
 
@@ -141,9 +96,9 @@ class Character extends FlxSprite
 				var flipx = anim.flipX == null ? false : anim.flipX;
 				var flipy = anim.flipY == null ? false : anim.flipY;
 
-				if (anim.frameIndices != null)
+				if (anim.indices != null)
 				{
-					animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", frameRate, looped, flipx, flipy);
+					animation.addByIndices(anim.name, anim.prefix, anim.indices, "", frameRate, looped, flipx, flipy);
 				}
 				else
 				{
@@ -164,7 +119,7 @@ class Character extends FlxSprite
 		gameOffset = data.gameOffset == null ? globalOffset : data.gameOffset; // we already checked for if globalOffset is null so we can just use that Lol
 		camOffset = data.camOffset == null ? [0,0] : data.camOffset;
 
-		playAnim(data.bopper ? 'danceRight' : 'idle');
+		playAnim(bopDance ? 'danceRight' : 'idle');
 	}
 
 	override function update(elapsed:Float)
@@ -194,13 +149,11 @@ class Character extends FlxSprite
 			}
 		}
 
-		if (bopper && animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
+		if (bopDance && animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
 			playAnim('danceRight');
 
 		super.update(elapsed);
 	}
-
-	private var danced:Bool = false;
 
 	/**
 	 * FOR DANCING SHIT
@@ -209,7 +162,7 @@ class Character extends FlxSprite
 	{
 		if (canDance)
 		{
-			if (bopper)
+			if (bopDance)
 			{
 				danced = !danced;
 
@@ -225,16 +178,11 @@ class Character extends FlxSprite
 
 	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
-		if (animation.getByName(AnimName) == null)
-		{
-			return; //why wasn't this a thing in the first place
-		}
-		if(AnimName.toLowerCase() == 'idle' && !canDance)
-		{
+		if (animation.getByName(AnimName) == null || AnimName.toLowerCase().startsWith('idle') && !canDance)
 			return;
-		}
 		animation.play(AnimName, Force, Reversed, Frame);
 	
+		// offset crud
 		var daOffset = animOffsets.get(AnimName);
 		if (animOffsets.exists(AnimName))
 		{
@@ -263,8 +211,14 @@ class Character extends FlxSprite
 		}
 		else
 			offset.set(0, 0);
+
+		// loop crud
+		if (animation.exists(AnimName + '-loop') && animation.finished)
+		{
+			animation.play(AnimName + '-loop', Force, Reversed, Frame);
+		}
 	
-		if (bopper)
+		if (bopDance)
 		{
 			if (AnimName == 'singLEFT')
 			{
@@ -286,4 +240,37 @@ class Character extends FlxSprite
 	{
 		animOffsets[name] = [x, y];
 	}
+}
+
+typedef CharacterData =
+{
+	var path:String; // Path to the character's asset.
+
+	var globalOffset:Array<Float>; // Offsets added directly to the pre-existing offset. Kept in for compatability reasons.
+	var gameOffset:Array<Float>; // Proper offset
+	var camOffset:Array<Float>; // Camera offset
+
+	var ?bopper:Bool; // Does the character bop left and right?
+
+	var ?nativelyPlayable:Bool; // Can the character be played natively?
+
+	var ?flipX:Bool; // Flip the character sprite?
+
+	var ?vsliceHold:Bool; // Does the character have Vslice-like holding of the note?
+
+	var ?antialiasing:Bool; // Alias the character?
+
+	var ?scaleSize:Bool; // Should you change the scale of the character or do setGraphicSize?
+
+	var scale:Null<Float>; // Changes scale/graphicsize by amount.
+
+	var noteStyle:String; // What style of notes should the character use?
+
+	var altIcon:String; // Easter egg icon when you press 9 on the keyboard
+
+	var icon:String; // What icon should be used?
+
+	var deathSkin:String; // What skin is used when character dies?
+
+	var animations:Array<SpriteDefs.AnimationData>; // Array of all animations. Offsets are handled in the data/offsets
 }

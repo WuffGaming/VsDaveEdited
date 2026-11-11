@@ -85,9 +85,9 @@ class HealthIcon extends FlxSprite
 					var looped = anim.looped ?? false;
 					var flipY = anim.flipY ?? false;
 
-					if (anim.frameIndices != null)
+					if (anim.indices != null)
 					{
-						animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", frameRate, looped, isPlayer, flipY);
+						animation.addByIndices(anim.name, anim.prefix, anim.indices, "", frameRate, looped, isPlayer, flipY);
 					}
 					else
 					{

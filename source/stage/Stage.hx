@@ -7,7 +7,7 @@ import flixel.util.FlxColor;
 import flixel.group.FlxGroup;
 
 class Stage extends FlxGroup {
-    public var propNames:Map<String, FlxSprite> = new Map<String, FlxSprite>();
+    public var propNames:Map<String, Dynamic> = new Map<String, Dynamic>();
 
     public var cameraZoom:Float = 1.05;
 
@@ -37,9 +37,9 @@ class Stage extends FlxGroup {
                         var frameRate = anim.frameRate == null ? 24 : anim.frameRate;
                         var looped = anim.looped == null ? true : anim.looped;
 
-                        if (anim.frameIndices != null)
+                        if (anim.indices != null)
                         {
-                            propSprite.animation.addByIndices(anim.name, anim.prefix, anim.frameIndices, "", frameRate, looped, anim.flipX);
+                            propSprite.animation.addByIndices(anim.name, anim.prefix, anim.indices, "", frameRate, looped, anim.flipX);
                         }
                         else
                         {
@@ -123,7 +123,7 @@ class Stage extends FlxGroup {
         }
     }
 
-    public function addProp(prop:FlxSprite, ?name:String = null):Void
+    public function addProp(prop:Dynamic, ?name:String = null):Void
 	{
 		if (name != null)
 		{
@@ -132,7 +132,7 @@ class Stage extends FlxGroup {
 		this.add(prop);
 	}
 
-    public function getProp(prop):FlxSprite
+    public function getProp(prop):Dynamic
 	{
 		return this.propNames.get(prop);
 	}

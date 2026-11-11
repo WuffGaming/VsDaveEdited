@@ -17,7 +17,7 @@ typedef AnimationData =
 	 */
 	var ?frameRate:Int; // Framerate of this specific animation.
 
-	var ?frameIndices:Array<Int>; // If using indices, specify said indices. Plays full animation if null.
+	var ?indices:Array<Int>; // If using indices, specify said indices. Plays full animation if null.
 
 	var offset:Array<Int>; // Offset of Animation
 
