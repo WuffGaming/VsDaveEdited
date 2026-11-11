@@ -1209,7 +1209,7 @@ class PlayState extends MusicBeatState
 					Highscore.saveWeekScore(storyWeek, campaignScore,
 						storyDifficulty, characteroverride == "none" || characteroverride == "bf" ? "bf" : characteroverride);
 				}
-				
+
 				FlxG.save.flush();
 			}
 			else
