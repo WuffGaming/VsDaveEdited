@@ -54,11 +54,6 @@ class ExtrasMenuState extends MusicBeatState
 		}
 
 		persistentUpdate = persistentDraw = true;
-		
-		if (FlxG.save.data.eyesores == null)
-		{
-			FlxG.save.data.eyesores = true;
-		}
 
 		#if desktop
 		DiscordClient.changePresence("In the Menus", null);
@@ -128,7 +123,7 @@ class ExtrasMenuState extends MusicBeatState
 		// NG.core.calls.event.logEvent('swag').send();
 
 
-		if (FlxG.save.data.dfjk)
+		if (Settings.data.dfjk)
 			controls.setKeyboardScheme(KeyboardScheme.Solo, true);
 		else
 			controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
@@ -163,7 +158,7 @@ class ExtrasMenuState extends MusicBeatState
 
 			if (controls.BACK)
 			{
-				FlxG.switchState(new MainMenuState());
+				FlxG.switchState(()->new MainMenuState());
 			}
 
 			if (controls.ACCEPT)
@@ -205,17 +200,17 @@ class ExtrasMenuState extends MusicBeatState
                                 switch (daChoice)
                                 {
                                     case 'story mode':
-                                        FlxG.switchState(new StoryMenuState());
+                                        FlxG.switchState(()->new StoryMenuState());
                                         trace("Story Menu Selected");
                                     case 'freeplay':
-                                        FlxG.switchState(new FreeplayState());
+                                        FlxG.switchState(()->new FreeplayState());
                                         trace("Freeplay Menu Selected");
                                     case 'options':
-                                        FlxG.switchState(new OptionsMenu());
+                                        FlxG.switchState(()->new options.OptionsMenu());
                                     case 'ost':
-                                        FlxG.switchState(new MusicPlayerState());
+                                        FlxG.switchState(()->new MusicPlayerState());
                                     case 'credits':
-                                        FlxG.switchState(new CreditsMenuState());
+                                        FlxG.switchState(()->new CreditsMenuState());
                                 }
                             });
                         }

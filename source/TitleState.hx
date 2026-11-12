@@ -60,9 +60,9 @@ class TitleState extends MusicBeatState
 
 		super.create();
 			
-		FlxG.save.bind('funkin', 'ninjamuffin99');
+		FlxG.save.bind('edited', 'daveandbambi');
 
-		SaveDataHandler.initSave();
+		Settings.load();
 
 		Highscore.load();
 
@@ -225,7 +225,7 @@ class TitleState extends MusicBeatState
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
 
-				FlxG.switchState(OutdatedSubState.leftState ? new MainMenuState() : new OutdatedSubState());
+				FlxG.switchState(()->OutdatedSubState.leftState ? new MainMenuState() : new OutdatedSubState());
 
 			});
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);

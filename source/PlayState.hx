@@ -165,10 +165,10 @@ class PlayState extends MusicBeatState
 	override public function create()
 	{
 		instance = this;
-		theFunne = FlxG.save.data.newInput;
+		theFunne = Settings.data.newInput;
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
-		eyesoreson = FlxG.save.data.eyesores;
+		eyesoreson = Settings.data.eyesores;
 
 		sicks = 0;
 		bads = 0;
@@ -284,7 +284,7 @@ class PlayState extends MusicBeatState
 		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
 		strumLine.scrollFactor.set();
 
-		if (FlxG.save.data.downscroll)
+		if (Settings.data.downscroll)
 			strumLine.y = FlxG.height - 165;
 
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
@@ -318,7 +318,7 @@ class PlayState extends MusicBeatState
 		FlxG.fixedTimestep = false;
 
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('ui/game/healthBar'));
-		if (FlxG.save.data.downscroll)
+		if (Settings.data.downscroll)
 			healthBarBG.y = 50;
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
@@ -374,7 +374,7 @@ class PlayState extends MusicBeatState
 		}
 
 		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 150, healthBarBG.y + 40, 0, "", 20);
-		if (!FlxG.save.data.accuracyDisplay)
+		if (!Settings.data.accuracyDisplay)
 			scoreTxt.x = healthBarBG.x + healthBarBG.width / 2;
 		scoreTxt.setFormat(Paths.font("comic.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
@@ -403,7 +403,7 @@ class PlayState extends MusicBeatState
 		// cameras = [FlxG.cameras.list[1]];
 		startingSong = true;
 
-		if (isStoryMode || FlxG.save.data.freeplayCuts)
+		if (isStoryMode || Settings.data.freeplayCuts)
 		{
 			// find dialogue
 			if (Assets.exists(Paths.songJson(defaultDialoguePath)))
@@ -882,7 +882,7 @@ class PlayState extends MusicBeatState
 
 		super.update(elapsed);
 
-		if (FlxG.save.data.accuracyDisplay)
+		if (Settings.data.accuracyDisplay)
 		{
 			scoreTxt.text = "Score:" + songScore + " | Misses:" + misses + " | Accuracy:" + truncateFloat(accuracy, 2) + "% ";
 		}
@@ -1102,7 +1102,7 @@ class PlayState extends MusicBeatState
 					notes.remove(daNote, true);
 					daNote.destroy();
 				}
-				if (FlxG.save.data.downscroll)
+				if (Settings.data.downscroll)
 					daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (-0.45 * FlxMath.roundDecimal(SONG.speed * daNote.LocalScrollSpeed, 2)));
 				else
 					daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed * daNote.LocalScrollSpeed, 2)));
@@ -1112,7 +1112,7 @@ class PlayState extends MusicBeatState
 
 				var strumliney = daNote.MyStrum != null ? daNote.MyStrum.y : strumLine.y;
 
-				if (daNote.y >= strumliney + 106 && FlxG.save.data.downscroll || daNote.y < -daNote.height && (!FlxG.save.data.downscroll))
+				if (daNote.y >= strumliney + 106 && Settings.data.downscroll || daNote.y < -daNote.height && (!Settings.data.downscroll))
 				{
 					if (daNote.isSustainNote && daNote.wasGoodHit)
 					{
@@ -1210,7 +1210,7 @@ class PlayState extends MusicBeatState
 						storyDifficulty, characteroverride == "none" || characteroverride == "bf" ? "bf" : characteroverride);
 				}
 
-				FlxG.save.flush();
+				Settings.save();
 			}
 			else
 				nextSong();
@@ -1698,7 +1698,7 @@ class PlayState extends MusicBeatState
 			if (!note.isSustainNote)
 			{
 				popUpScore(note.strumTime, note.noteData);
-				if (FlxG.save.data.donoteclick)
+				if (Settings.data.donoteclick)
 				{
 					FlxG.sound.play(Paths.sound('note_click'));
 				}

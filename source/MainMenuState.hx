@@ -70,11 +70,6 @@ class MainMenuState extends MusicBeatState
 		}
 
 		persistentUpdate = persistentDraw = true;
-		
-		if (FlxG.save.data.eyesores == null)
-		{
-			FlxG.save.data.eyesores = true;
-		}
 
 		#if desktop
 		DiscordClient.changePresence("In the Menus", null);
@@ -144,7 +139,7 @@ class MainMenuState extends MusicBeatState
 		// NG.core.calls.event.logEvent('swag').send();
 
 
-		if (FlxG.save.data.dfjk)
+		if (Settings.data.dfjk)
 			controls.setKeyboardScheme(KeyboardScheme.Solo, true);
 		else
 			controls.setKeyboardScheme(KeyboardScheme.Duo(true), true);
@@ -213,7 +208,7 @@ class MainMenuState extends MusicBeatState
 								case 'freeplay':
 									FlxG.switchState(()->new FreeplayState());
 								case 'options':
-									FlxG.switchState(()->new OptionsMenu());
+									FlxG.switchState(()->new options.OptionsMenu());
 								case 'extras':
 									FlxG.switchState(()->new ExtrasMenuState());
 								case 'ost':

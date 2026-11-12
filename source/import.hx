@@ -9,4 +9,6 @@ import json.JSONData;
 import json.patch.JSONPatch;
 import lime.utils.Assets;
 
+import options.Flags;
+
 using StringTools;
