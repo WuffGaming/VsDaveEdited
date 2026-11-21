@@ -47,6 +47,8 @@ import flash.system.System;
 import Discord.DiscordClient;
 #end
 
+import crowplexus.iris.Iris;
+
 #if sys 
 import sys.io.File;
 import sys.io.Process;
@@ -132,11 +134,11 @@ class PlayState extends MusicBeatState
 	private var shakeCam:Bool = false;
 	private var startingSong:Bool = false;
 
-	private var iconP1:HealthIcon;
-	private var iconP2:HealthIcon;
-	private var camDialogue:FlxCamera;
-	private var camHUD:FlxCamera;
-	private var camGame:FlxCamera;
+	public var iconP1:HealthIcon;
+	public var iconP2:HealthIcon;
+	public var camDialogue:FlxCamera;
+	public var camHUD:FlxCamera;
+	public var camGame:FlxCamera;
 
 	var dialogue:String = '';
 
@@ -145,26 +147,29 @@ class PlayState extends MusicBeatState
 
 	var talking:Bool = true;
 	var songScore:Int = 0;
-	var scoreTxt:FlxText;
+	public static var scoreTxt:FlxText;
 	
 	public static var campaignScore:Int = 0;
 
-	var defaultCamZoom:Float = 1.05;
+	public static var defaultCamZoom:Float = 1.05;
 
 	public static var daPixelZoom:Float = 6;
 
 	public static var theFunne:Bool = true;
 
-	var inCutscene:Bool = false;
+	public var inCutscene:Bool = false;
 
 	public static var timeCurrently:Float = 0;
 	public static var timeCurrentlyR:Float = 0;
 
 	public var backgroundSprites:Stage;
 
+	public var loadedScripts:Array<Iris> = [];
+
 	override public function create()
 	{
 		instance = this;
+		super.create();
 		theFunne = Settings.data.newInput;
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
@@ -208,7 +213,21 @@ class PlayState extends MusicBeatState
 			+ " | Misses: "
 			+ misses, iconRPC);
 		#end
-		// var gameCam:FlxCamera = FlxG.camera;
+
+		// ok lets add scripts before anything else
+
+		var scriptPaths:Array<String> = Paths.getScriptArray(SONG.song);
+
+		for(path in scriptPaths)
+		{
+			var newScript:Iris = new Iris(Paths.script('$path'), {name: path, autoRun: true, autoPreset: true});
+			loadedScripts.push(newScript);
+		}
+		setScript("this", instance);
+		callScript("preCreate");
+
+
+
 		camGame = new FlxCamera();
 		camHUD = new FlxCamera();
 		camHUD.bgColor.alpha = 0;
@@ -274,6 +293,7 @@ class PlayState extends MusicBeatState
 		for (char in [gf, dad,boyfriend]) {
 			add(char);
 		}
+		callScript("create");
 
 		var doof:DialogueBox = new DialogueBox(false, dialogue);
 		doof.scrollFactor.set();
@@ -419,8 +439,7 @@ class PlayState extends MusicBeatState
 					startCountdown();
 			}
 		}
-
-		super.create();
+		callScript("postCreate");
 	}
 
 	function startDialogue(?dialogueBox:DialogueBox, isStart:Bool = true):Void
@@ -1894,5 +1913,26 @@ class PlayState extends MusicBeatState
 	{
 		iconP1.y = healthBar.y - (iconP1.height / 2);
 		iconP2.y = healthBar.y - (iconP2.height / 2);
+	}
+
+	// sorry doida
+	public function callScript(fun:String, ?args:Array<Dynamic>)
+	{
+		for(script in loadedScripts) {
+			@:privateAccess {
+				var ny: Dynamic = script.interp.variables.get(fun);
+				try {
+					if(ny != null && Reflect.isFunction(ny))
+						script.call(fun, args);
+				} catch(e) {
+					trace('error parsing script: ' + e, ERROR);
+				}
+			}
+		}
+	}
+	public function setScript(name:String, value:Dynamic, allowOverride:Bool = true)
+	{
+		for(script in loadedScripts)
+			script.set(name, value, allowOverride);
 	}
 }

@@ -127,6 +127,54 @@ class Paths
 		return getPath('fonts/$key', FONT, library);
 	}
 
+	public static function script(key:String, ?library:String):String
+		return Assets.getText(getPath(key, library));
+
+	// i modified this from doida engine
+	public static function getScriptArray(?song:String):Array<String>
+	{
+		var arr:Array<String> = [];
+		for(folder in ["scripts", 'songs/ingame', 'songs/ingame/$song', 'songs/ingame/$song/scripts', "data/scripts"])
+		{
+			for(file in readDir(folder, [".hx", ".hxc"], false))
+				arr.push('$folder/$file');
+		}
+		return arr;
+	}
+
+	// this is also taken from doida engine
+	public static function readDir(dir:String, ?typeArr:Array<String>, ?removeType:Bool = true, ?library:String):Array<String>
+	{
+		var swagList:Array<String> = [];
+		
+		try {
+			#if desktop
+			var rawList = sys.FileSystem.readDirectory(getPath(dir, library));
+			for(i in 0...rawList.length)
+			{
+				if(typeArr?.length > 0)
+				{
+					for(type in typeArr) {
+						if(rawList[i].endsWith(type)) {
+							// cleans it
+							if(removeType)
+								rawList[i] = rawList[i].replace(type, "");
+							swagList.push(rawList[i]);
+						}
+					}
+				}
+				else
+					swagList.push(rawList[i]);
+			}
+			#end
+		} catch(e) {}
+		
+		trace('read dir ${(swagList.length > 0) ? '$swagList' : 'EMPTY'} at ${getPath(dir, library)}');
+		return swagList;
+	}
+
+	
+
 	static public function loadJSON(key:String, ?library:String):Dynamic
 	{
 		var rawJson = Assets.getText(Paths.json(key, library)).trim();

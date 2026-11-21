@@ -26,7 +26,7 @@ import openfl.Assets;
 import Discord.DiscordClient;
 #end
 
-using StringTools;
+import modding.PolymodHandler;
 
 class TitleState extends MusicBeatState
 {
@@ -48,6 +48,9 @@ class TitleState extends MusicBeatState
 		FlxSprite.defaultAntialiasing = true;
 			
         FlxG.mouse.visible = false; 
+
+		PolymodHandler.loadMods();
+
 		PlayerSettings.init();
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
