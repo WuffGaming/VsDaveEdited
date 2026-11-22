@@ -47,12 +47,12 @@ class Character extends FlxSprite
 		if (Assets.exists(s, TEXT)) {
 			script = new Iris(Assets.getText(s), {name: curCharacter, autoRun: true, autoPreset: true});
 		}
+		setScript("this", this);
 		callScript("create");
 
 		parseDataFile();
 		dance();
 
-		setScript("character", this);
 		setScript("curCharacter", curCharacter);
 		setScript("isPlayer", isPlayer);
 		setScript("icon", icon);
@@ -204,12 +204,14 @@ class Character extends FlxSprite
 			else
 				playAnim('idle', true);
 		}
+		callScript("postDance", [danced]);
 	}
 
 	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
 		if (animation.getByName(AnimName) == null || AnimName.toLowerCase().startsWith('idle') && !canDance)
 			return;
+		callScript("onPlayAnim", [AnimName, Force, Reversed, Frame]);
 		animation.play(AnimName, Force, Reversed, Frame);
 	
 		// offset crud
@@ -264,6 +266,7 @@ class Character extends FlxSprite
 				danced = !danced;
 			}
 		}
+		callScript("postPlayAnim", [AnimName, Force, Reversed, Frame]);
 	}
 
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)

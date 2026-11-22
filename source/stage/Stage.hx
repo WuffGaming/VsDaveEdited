@@ -5,25 +5,44 @@ import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.group.FlxGroup;
+import crowplexus.iris.Iris;
 
 class Stage extends FlxGroup {
     public var propNames:Map<String, Dynamic> = new Map<String, Dynamic>();
 
     public var cameraZoom:Float = 1.05;
 
+    var script:Iris;
+
     public function new(name:String) {
         super();
 
+        var s = Paths.file('datas/stages/${name}.hx');
+		if (Assets.exists(s, TEXT)) {
+			script = new Iris(Assets.getText(s), {name: name, autoRun: true, autoPreset: true});
+		}
+        setScript("this", this);
+		callScript("create");
         generateStage(name);
         if (PlayState.instance != null) {
             generatePlayStateOffsets(name);
         }
+        setScript("PlayState", PlayState);
+        setScript("curStage", name);
+        setScript("propNames", propNames);
+        callScript("postCreate");
+    }
+
+    override function update(elapsed:Float) {
+        callScript("update", [elapsed]);
+        callScript("postUpdate", [elapsed]);
     }
 
     public function generateStage(name) {
         var data:StageData = cast Paths.loadJSON('stages/${name}');
-
+        callScript("onParseFile", [data]);
         cameraZoom = data.cameraZoom;
+        setScript("cameraZoom", cameraZoom);
         for (prop in data.props)
         {
             var propSprite:FlxSprite = new FlxSprite(prop.position[0], prop.position[1]);
@@ -86,10 +105,12 @@ class Stage extends FlxGroup {
             propSprite.updateHitbox();
             addProp(propSprite, prop.name);
         }
+        callScript("postParseFile", [data]);
     }
 
     public function generatePlayStateOffsets(name) {
         var data:StageData = cast Paths.loadJSON('stages/${name}');
+        setScript("onPlayStateOffsets", [data]);
         if (data.bfOffset != null)
         {
             PlayState.boyfriend.x += data.bfOffset[0];
@@ -121,6 +142,7 @@ class Stage extends FlxGroup {
             PlayState.dad.scrollFactor.x = data.dadScroll[0];
             PlayState.dad.scrollFactor.x = data.dadScroll[1];
         }
+        setScript("postPlayStateOffsets", [data]);
     }
 
     public function addProp(prop:Dynamic, ?name:String = null):Void
@@ -130,6 +152,9 @@ class Stage extends FlxGroup {
 			propNames.set(name, prop);
 		}
 		this.add(prop);
+        if (script != null) {
+            setScript(name, prop);
+        }
 	}
 
     public function getProp(prop):Dynamic
@@ -137,6 +162,25 @@ class Stage extends FlxGroup {
 		return this.propNames.get(prop);
 	}
 
+	public function callScript(fun:String, ?args:Array<Dynamic>)
+	{
+		if(script != null) {
+			@:privateAccess {
+				var ny: Dynamic = script.interp.variables.get(fun);
+				try {
+					if(ny != null && Reflect.isFunction(ny))
+						script.call(fun, args);
+				} catch(e) {
+					trace('error parsing script: ' + e);
+				}
+			}
+		}
+	}
+	public function setScript(name:String, value:Dynamic, allowOverride:Bool = true)
+	{
+		if(script != null)
+			script.set(name, value, allowOverride);
+	}
 }
 
 typedef StageData =

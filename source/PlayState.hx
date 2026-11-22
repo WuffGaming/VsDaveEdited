@@ -72,23 +72,20 @@ class PlayState extends MusicBeatState
 	public static var goods:Int = 0;
 	public static var sicks:Int = 0;
 
-	var howManyPlayerNotes:Int = 0;
-	var howManyEnemyNotes:Int = 0;
-
 	public static var curmult:Array<Float> = [1, 1, 1, 1];
 
 	public var elapsedtime:Float = 0;
 
-	var focusOnDadGlobal:Bool = true;
+	public var focusOnDadGlobal:Bool = true;
 
-	var storyDifficultyText:String = "";
-	var iconRPC:String = "";
-	var detailsText:String = "";
-	var detailsPausedText:String = "";
+	public var storyDifficultyText:String = "";
+	public var iconRPC:String = "";
+	public var detailsText:String = "";
+	public var detailsPausedText:String = "";
 
-	var boyfriendOldIcon:String = 'bf-old';
+	public var boyfriendOldIcon:String = 'bf-old';
 
-	private var vocals:FlxSound;
+	public var vocals:FlxSound;
 
 	public static var dad:Character;
 	public static var gf:Character;
@@ -96,43 +93,43 @@ class PlayState extends MusicBeatState
 
 	public static var instance:PlayState = null; // Current PlayState, allows other objects to access static values.
 
-	private var notes:FlxTypedGroup<Note>;
-	private var unspawnNotes:Array<Note> = [];
+	public var notes:FlxTypedGroup<Note>;
+	public var unspawnNotes:Array<Note> = [];
 
-	private var strumLine:FlxSprite;
-	private var curSection:Int = 0;
+	public var strumLine:FlxSprite;
+	public var curSection:Int = 0;
 
-	private var camFollow:FlxObject;
+	public var camFollow:FlxObject;
 
-	private static var prevCamFollow:FlxObject;
+	public static var prevCamFollow:FlxObject;
 
-	private var strumLineNotes:FlxTypedGroup<FlxSprite>;
+	public var strumLineNotes:FlxTypedGroup<FlxSprite>;
 
 	public var playerStrums:FlxTypedGroup<StrumNote>;
 	public var dadStrums:FlxTypedGroup<StrumNote>;
 
-	private var camZooming:Bool = false;
+	public var camZooming:Bool = false;
 	private var curSong:String = "";
 
-	private var gfSpeed:Int = 1;
-	private var health:Float = 1;
-	private var combo:Int = 0;
+	public var gfSpeed:Int = 1;
+	public var health:Float = 1;
+	public var combo:Int = 0;
 
 	public var misses:Int = 0;
 
 	public var accuracy:Float = 0.00;
-	private var totalNotesHit:Float = 0;
-	private var totalPlayed:Int = 0;
-	private var ss:Bool = false;
+	public var totalNotesHit:Float = 0;
+	public var totalPlayed:Int = 0;
+	public var ss:Bool = false;
 
 	public static var eyesoreson = true;
 
 	public static var healthBarBG:FlxSprite;
 	public static var healthBar:FlxBar;
 
-	private var generatedMusic:Bool = false;
-	private var shakeCam:Bool = false;
-	private var startingSong:Bool = false;
+	public var generatedMusic:Bool = false;
+	public var shakeCam:Bool = false;
+	public var startingSong:Bool = false;
 
 	public var iconP1:HealthIcon;
 	public var iconP2:HealthIcon;
@@ -140,17 +137,18 @@ class PlayState extends MusicBeatState
 	public var camHUD:FlxCamera;
 	public var camGame:FlxCamera;
 
-	var dialogue:String = '';
+	public var dialogue:String = '';
 
-	var notestuffs:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
-	var fc:Bool = true;
+	public var notestuffs:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
+	public var fc:Bool = true;
 
-	var talking:Bool = true;
+	public var talking:Bool = true;
 	public var songScore:Int = 0;
 
 	public static var scoreTxt:FlxText;
 
 	public static var kadeEngineWatermark:FlxText;
+	public static var creditsWatermark:FlxText;
 	
 	public static var campaignScore:Int = 0;
 
@@ -161,6 +159,8 @@ class PlayState extends MusicBeatState
 	public static var theFunne:Bool = true;
 
 	public var inCutscene:Bool = false;
+
+	public var doIconBounce:Bool = true; // for icons
 
 	public static var timeCurrently:Float = 0;
 	public static var timeCurrentlyR:Float = 0;
@@ -234,6 +234,10 @@ class PlayState extends MusicBeatState
 		}
 
 		setScript("this", instance);
+		setScript("PlayState", PlayState);
+		setScript("camHUD", camHUD);
+		setScript("camGame", camGame);
+		setScript("camDialogue", camDialogue);
 
 		callScript("preCreate");
 
@@ -304,6 +308,13 @@ class PlayState extends MusicBeatState
 		for (char in [gf, dad,boyfriend]) {
 			add(char);
 		}
+		setScript("boyfriend", boyfriend);
+		setScript("gf", gf);
+		setScript("dad", dad);
+		setScript("formoverride", formoverride);
+		setScript("backgroundSprites", backgroundSprites);
+		setScript("defaultCamZoom", defaultCamZoom);
+		setScript("camZooming", camZooming);
 		callScript("create");
 
 		var doof:DialogueBox = new DialogueBox(false, dialogue);
@@ -386,17 +397,14 @@ class PlayState extends MusicBeatState
 		}
 		// Add Kade Engine watermark
 		kadeEngineWatermark = new FlxText(4, textYPos, 0,
-		SONG.song
-		+ " "
-		+ (!curSong.toLowerCase().endsWith('splitathon') ? (storyDifficulty == 3 ? "Legacy" : storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy") : "Finale")
-		+ " - " + engineName + "Engine (KE 1.2)", 16);
+		SONG.song + " " + (storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy") + " - " + engineName + "Engine (KE 1.2)", 16);
 		kadeEngineWatermark.setFormat(Paths.font("comic.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		kadeEngineWatermark.scrollFactor.set();
 		kadeEngineWatermark.borderSize = 1.25;
 		add(kadeEngineWatermark);
 		if (creditsText)
 		{
-			var creditsWatermark = new FlxText(4, healthBarBG.y + 50, 0, credits, 16);
+			creditsWatermark = new FlxText(4, healthBarBG.y + 50, 0, credits, 16);
 			creditsWatermark.setFormat(Paths.font("comic.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			creditsWatermark.scrollFactor.set();
 			creditsWatermark.borderSize = 1.25;
@@ -443,12 +451,18 @@ class PlayState extends MusicBeatState
 		}
 		else
 		{
-			switch (curSong.toLowerCase())
-			{
-				default:
-					startCountdown();
-			}
+			startCountdown();
 		}
+		setScript("scoreTxt", scoreTxt);
+		setScript("kadeEngineWatermark", kadeEngineWatermark);
+		setScript("creditsText", creditsText);
+		setScript("credits", credits);
+		setScript("iconP1", iconP1);
+		setScript("iconP2", iconP2);
+		setScript("isStoryMode", isStoryMode);
+		setScript("creditsWatermark", creditsWatermark);
+		setScript("healthBarBG", healthBarBG);
+		setScript("healthBar", healthBar);
 		callScript("postCreate");
 	}
 
@@ -779,7 +793,6 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
-			callScript("onPause");
 			if (FlxG.sound.music != null)
 			{
 				FlxG.sound.music.pause();
@@ -928,9 +941,11 @@ class PlayState extends MusicBeatState
 			persistentUpdate = false;
 			persistentDraw = true;
 			paused = true;
+			var doGitaroo:Bool = true;
+			callScript("onPause", [doGitaroo]);
 
 			// 1 / 1000 chance for Gitaroo Man easter egg
-			if (FlxG.random.bool(0.1))
+			if (FlxG.random.bool(0.1) && doGitaroo)
 			{
 				// gitaroo man easter egg
 				FlxG.switchState(()->new GitarooPause());
@@ -941,29 +956,28 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.SEVEN)
 		{
-			switch (curSong.toLowerCase())
-			{
-				default:
-					FlxG.switchState(()->new ChartingState());
-					#if desktop
-					DiscordClient.changePresence("Chart Editor", null, null, true);
-					#end
+			var chartEditor:Bool = true;
+			callScript("onChartEditor", [chartEditor]);
+			if (chartEditor) {
+				FlxG.switchState(()->new ChartingState());
+				#if desktop
+				DiscordClient.changePresence("Chart Editor", null, null, true);
+				#end
 			}
 		}
 
-		// FlxG.watch.addQuick('VOL', vocals.amplitudeLeft);
-		// FlxG.watch.addQuick('VOLRight', vocals.amplitudeRight);
+		if (doIconBounce) {
+			iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.8)),Std.int(FlxMath.lerp(150, iconP1.height, 0.8)));
+			iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.8)),Std.int(FlxMath.lerp(150, iconP2.height, 0.8)));
 
-		iconP1.setGraphicSize(Std.int(FlxMath.lerp(150, iconP1.width, 0.8)),Std.int(FlxMath.lerp(150, iconP1.height, 0.8)));
-		iconP2.setGraphicSize(Std.int(FlxMath.lerp(150, iconP2.width, 0.8)),Std.int(FlxMath.lerp(150, iconP2.height, 0.8)));
+			iconP1.updateHitbox();
+			iconP2.updateHitbox();
 
-		iconP1.updateHitbox();
-		iconP2.updateHitbox();
+			var iconOffset:Int = 26;
 
-		var iconOffset:Int = 26;
-
-		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
-		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
+			iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
+			iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
+		}
 
 		if (health > 2)
 			health = 2;
@@ -1183,7 +1197,7 @@ class PlayState extends MusicBeatState
 		callScript("postUpdate", [elapsed]);
 	}
 
-	function ZoomCam(focusondad:Bool):Void
+	public function ZoomCam(focusondad:Bool):Void
 	{
 		callScript("onZoomCam", [focusondad]);
 		var bfplaying:Bool = false;
@@ -1284,7 +1298,6 @@ class PlayState extends MusicBeatState
 	private function popUpScore(strumtime:Float, notedata:Int):Void
 	{
 		var noteDiff:Float = Math.abs(strumtime - Conductor.songPosition);
-		// boyfriend.playAnim('hey');
 		vocals.volume = 1;
 
 		var placement:String = Std.string(combo);
@@ -1292,7 +1305,6 @@ class PlayState extends MusicBeatState
 		var coolText:FlxText = new FlxText(0, 0, 0, placement, 32);
 		coolText.screenCenter();
 		coolText.x = FlxG.width * 0.55;
-		//
 
 		var rating:FlxSprite = new FlxSprite();
 		var score:Int = 350;
@@ -1801,6 +1813,7 @@ class PlayState extends MusicBeatState
 	override function stepHit()
 	{
 		super.stepHit();
+		setScript("curStep", curStep);
 		callScript("stepHit", [curStep]);
 
 		if (FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
@@ -1833,15 +1846,11 @@ class PlayState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
+		setScript("curBeat", curBeat);
 		callScript("beatHit", [curBeat]);
 
 		if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null)
 		{
-			if (curBeat % 4 == 0)
-			{
-				// trace(PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection);
-			}
-
 			if (!PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection)
 			{
 				focusOnDadGlobal = true;
@@ -1887,11 +1896,15 @@ class PlayState extends MusicBeatState
 		var funny:Float = (healthBar.percent * 0.01) + 0.01;
 
 		//health icon bounce but epic
-		iconP1.setGraphicSize(Std.int(iconP1.width + (50 * funny)),Std.int(iconP2.height - (25 * funny)));
-		iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))),Std.int(iconP2.height - (25 * (2 - funny))));
+		
+		callScript("onIconBounce", [doIconBounce]);
+		if (doIconBounce) {
+			iconP1.setGraphicSize(Std.int(iconP1.width + (50 * funny)),Std.int(iconP2.height - (25 * funny)));
+			iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))),Std.int(iconP2.height - (25 * (2 - funny))));
 
-		iconP1.updateHitbox();
-		iconP2.updateHitbox();
+			iconP1.updateHitbox();
+			iconP2.updateHitbox();
+		}
 
 		if (curBeat % gfSpeed == 0)
 		{
