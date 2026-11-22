@@ -1,23 +1,24 @@
 {
-    "icon": "test",
     "songs": [
         {
-            "name": "House",
-            "color": "0xFF4965FF",
-            "icon": "dave"
+            "name": "Supernovae",
+            "color": "0xFF00B515",
+            "icon": "bambi-joke"
         },
         {
-            "name": "House",
-            "displayName": "test",
-            "color": "0xFF4965FF",
-            "icon": "bf"
+            "name": "Glitch",
+            "color": "0xFF00B515",
+            "icon": "bambi-joke"
         },
         {
-            "name": "House",
-            "displayName": "no select test",
-            "color": "0xFF4965FF",
-            "icon": "dave",
-            "characterSelect": false
+            "name": "Cheating",
+            "color": "0xFF00B515",
+            "icon": "bambi-3d"
+        },
+        {
+            "name": "Unfairness",
+            "color": "0xFF00B515",
+            "icon": "bambi-unfair"
         }
     ]
 }

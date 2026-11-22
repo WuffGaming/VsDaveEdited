@@ -1,0 +1,14 @@
+{
+    "songs": [
+        {
+            "name": "Mealie",
+            "color": "0xFF00B515",
+            "icon": "bambi-mad"
+        },
+        {
+            "name": "Furiosity",
+            "color": "0xFF4965FF",
+            "icon": "dave-3d"
+        }
+    ]
+}

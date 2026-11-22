@@ -54,7 +54,9 @@ class DialogueBox extends FlxSpriteGroup
 	{
 		super();
 
-		dialogueData = cast Paths.loadSongJSON(dialogueJson);
+		if (Assets.exists(Paths.songJson(dialogueJson)))
+			dialogueData = cast Paths.loadSongJSON(dialogueJson);
+		else return;
 
 		dialogueList = dialogueData.sequences;
 		if (dialogueData.music != null) {

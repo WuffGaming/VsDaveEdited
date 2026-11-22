@@ -1,0 +1,44 @@
+{
+    "songs": [
+        {
+            "name": "House",
+            "color": "0xFF4965FF",
+            "icon": "dave"
+        },
+        {
+            "name": "Insanity",
+            "color": "0xFF4965FF",
+            "icon": "dave"
+        },
+        {
+            "name": "Polygonized",
+            "color": "0xFF4965FF",
+            "icon": "dave-3d"
+        },
+        {
+            "name": "Bonus-Song",
+            "color": "0xFF4965FF",
+            "icon": "dave"
+        },
+        {
+            "name": "Blocked",
+            "color": "0xFF00B515",
+            "icon": "bambi"
+        },
+        {
+            "name": "Corn-Theft",
+            "color": "0xFF00B515",
+            "icon": "bambi"
+        },
+        {
+            "name": "Maze",
+            "color": "0xFF00B515",
+            "icon": "bambi"
+        },
+        {
+            "name": "Splitathon",
+            "color": "0xFF00FFFF",
+            "icon": "dave-bambi"
+        }
+    ]
+}

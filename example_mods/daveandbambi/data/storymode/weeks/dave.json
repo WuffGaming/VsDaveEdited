@@ -1,18 +1,17 @@
 {
-    "weekName": "Test Week 123%$*)!*",
-    "weekTitle": "ass",
+    "weekName": "Dave's Fun Rapping Battle!",
+    "weekTitle": "dave",
     "weekColor": "0xFF4965FF",
     "songList": [
         "House",
-        "House",
-        "House"
+        "Insanity",
+        "Polygonized"
     ],
     "props": [
         {
             "name": "banner",
-            "path": "weekImages/imageTest",
-            "position": [0, 56],
-            "antialiasing": false
+            "path": "DaveHouse",
+            "position": [0, 56]
         }
     ]
 }

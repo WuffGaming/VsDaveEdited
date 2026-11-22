@@ -1,18 +1,17 @@
 {
-    "weekName": "Test Week 123%$*)!*",
-    "weekTitle": "ass",
-    "weekColor": "0xFF4965FF",
+    "weekName": "Mr. Bambi's Fun Corn Maze!",
+    "weekTitle": "bambi",
+    "weekColor": "0xFF00B515",
     "songList": [
-        "House",
-        "House",
-        "House"
+        "Blocked",
+        "Corn-Theft",
+        "Maze"
     ],
     "props": [
         {
             "name": "banner",
-            "path": "weekImages/imageTest",
-            "position": [0, 56],
-            "antialiasing": false
+            "path": "bamboi",
+            "position": [0, 56]
         }
     ]
 }

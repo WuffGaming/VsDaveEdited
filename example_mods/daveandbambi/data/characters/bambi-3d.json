@@ -1,0 +1,38 @@
+{
+  "path": "characters/bambi/bambi_angryboy",
+  "globalOffset": [150, 450],
+  "gameOffset": [0, 0],
+  "camOffset": [0, 0],
+  "icon": "bambi-3d",
+  "antialiasing": false,
+  "floater": true,
+  "scale": 0.98,
+  "noteStyle": "3d",
+  "animations": [
+    {
+      "name": "idle",
+      "prefix": "DaveAngry idle dance",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singUP",
+      "prefix": "DaveAngry Sing Note UP",
+      "offset": [20, -10]
+    },
+    {
+      "name": "singLEFT",
+      "prefix": "DaveAngry Sing Note LEFT",
+      "offset": [0, -10]
+    },
+    {
+      "name": "singRIGHT",
+      "prefix": "DaveAngry Sing Note RIGHT",
+      "offset": [80, -20]
+    },
+    {
+      "name": "singDOWN",
+      "prefix": "DaveAngry Sing Note DOWN",
+      "offset": [0, 10]
+    }
+  ]
+}

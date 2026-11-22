@@ -1,0 +1,33 @@
+{
+  "path": "characters/bambi/bambimaddddd",
+  "gameOffset": [100, 450],
+  "camOffset": [0, 0],
+  "icon": "bambi-mad",
+  "animations": [
+    {
+      "name": "idle",
+      "prefix": "idle",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singUP",
+      "prefix": "up",
+      "offset": [0, 20]
+    },
+    {
+      "name": "singLEFT",
+      "prefix": "left",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singRIGHT",
+      "prefix": "right",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singDOWN",
+      "prefix": "down",
+      "offset": [0, 0]
+    }
+  ]
+}

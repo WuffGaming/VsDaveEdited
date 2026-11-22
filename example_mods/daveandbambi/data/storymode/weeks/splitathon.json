@@ -1,18 +1,15 @@
 {
-    "weekName": "Test Week 123%$*)!*",
-    "weekTitle": "ass",
-    "weekColor": "0xFF4965FF",
+    "weekName": "The Finale",
+    "weekTitle": "splitathon",
+    "weekColor": "0xFF00FFFF",
     "songList": [
-        "House",
-        "House",
-        "House"
+        "Splitathon"
     ],
     "props": [
         {
             "name": "banner",
-            "path": "weekImages/imageTest",
-            "position": [0, 56],
-            "antialiasing": false
+            "path": "splitathon",
+            "position": [0, 56]
         }
     ]
 }

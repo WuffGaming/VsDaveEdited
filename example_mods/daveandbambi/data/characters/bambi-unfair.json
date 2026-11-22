@@ -1,0 +1,38 @@
+{
+  "path": "characters/bambi/unfair_bambi",
+  "globalOffset": [195, 585],
+  "gameOffset": [0, 0],
+  "camOffset": [0, 0],
+  "icon": "bambi-3d",
+  "antialiasing": false,
+  "floater": true,
+  "scale": 1.3,
+  "noteStyle": "3d",
+  "animations": [
+    {
+      "name": "idle",
+      "prefix": "idle",
+      "offset": [0, 0]
+    },
+    {
+      "name": "singUP",
+      "prefix": "singUP",
+      "offset": [140,70]
+    },
+    {
+      "name": "singLEFT",
+      "prefix": "singLEFT",
+      "offset": [250,0]
+    },
+    {
+      "name": "singRIGHT",
+      "prefix": "singRIGHT",
+      "offset": [-180,-60]
+    },
+    {
+      "name": "singDOWN",
+      "prefix": "singDOWN",
+      "offset": [150,50]
+    }
+  ]
+}

@@ -39,7 +39,14 @@ class Stage extends FlxGroup {
     }
 
     public function generateStage(name) {
-        var data:StageData = cast Paths.loadJSON('stages/${name}');
+        var data:StageData;
+        
+        if (Assets.exists(Paths.json('stages/$name')))
+            data = cast Paths.loadJSON('stages/$name');
+        else if (Assets.exists(Paths.json('stages/daveHouse')))
+            data = cast Paths.loadJSON('stages/daveHouse');
+        else return;
+        
         callScript("onParseFile", [data]);
         cameraZoom = data.cameraZoom;
         setScript("cameraZoom", cameraZoom);
@@ -109,7 +116,14 @@ class Stage extends FlxGroup {
     }
 
     public function generatePlayStateOffsets(name) {
-        var data:StageData = cast Paths.loadJSON('stages/${name}');
+        var data:StageData;
+        
+        if (Assets.exists(Paths.json('stages/$name')))
+            data = cast Paths.loadJSON('stages/$name');
+        else if (Assets.exists(Paths.json('stages/daveHouse')))
+            data = cast Paths.loadJSON('stages/daveHouse');
+        else return;
+        
         setScript("onPlayStateOffsets", [data]);
         if (data.bfOffset != null)
         {
