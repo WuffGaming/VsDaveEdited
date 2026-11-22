@@ -207,7 +207,7 @@ class DialogueBox extends FlxSpriteGroup
 
 	function startDialogue():Void
 	{
-		curCharacter = dialogueList[0].character == null ? 'dave' : dialogueList[0].character;
+		curCharacter = dialogueList[0].character == null ? 'test' : dialogueList[0].character;
 		swagDialogue.resetText(dialogueList[0].text);
 		var bullshitDelay:Null<Float> = dialogueList[0].delay == null ? 0.04 : dialogueList[0].delay;
 		swagDialogue.start(bullshitDelay, true);

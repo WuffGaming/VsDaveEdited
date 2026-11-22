@@ -5,19 +5,20 @@
     "textShadowColor": "0xFF00137F",
     "sequences": [
         {
-            "character": "bf",
+            "character": "test",
             "position": "right",
             "text": "test",
             "delay": 0.04
         },
         {
-            "character": "bf",
+            "character": "test",
             "position": "left",
             "text": "yadayada",
+	        "font": "barcode.ttf",
             "delay": 0.04
         },
         {
-            "character": "bf",
+            "character": "test",
             "position": "middle",
             "text": "ok cool",
             "delay": 0.04

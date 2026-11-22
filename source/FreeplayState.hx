@@ -55,13 +55,13 @@ class FreeplayState extends MusicBeatState
 		#if desktop
 		DiscordClient.changePresence("In the Freeplay Menu", null);
 		#end
-		
-		var isDebug:Bool = false;
 
 		#if debug
-		isDebug = true;
+		for (cat in categoryList) {
+			trace(cat);
+		}
 		#end
-
+		
 		bg.loadGraphic(MainMenuState.randomizeBG());
 		bg.color = 0xFF4965FF;
 		add(bg);

@@ -82,7 +82,7 @@ class Character extends FlxSprite
 		if (!Assets.exists(Paths.json('characters/${curCharacter}')))
 			curCharacter = 'bf';
 
-		trace('PARSING CHARACTER: ' + curCharacter);
+		#if debug trace('PARSING CHARACTER: ' + curCharacter); #end
 		
 		var data:CharacterData = cast Paths.loadJSON('characters/$curCharacter');
 		callScript("onParseFile", [data]);

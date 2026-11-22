@@ -73,6 +73,7 @@ class StoryMenuState extends MusicBeatState
 		persistentUpdate = persistentDraw = true;
 
 		for (week in weekList) {
+			#if debug trace(week); #end
 			if (Assets.exists(Paths.json('storymode/weeks/$week'))) {
 				var weekData:StoryWeek = Paths.loadJSON('storymode/weeks/$week');
 				weekDatas.push(weekData);
