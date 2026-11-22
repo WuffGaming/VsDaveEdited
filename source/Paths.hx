@@ -2,7 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
-import openfl.utils.AssetType;
+import lime.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
 
 class Paths
@@ -16,37 +16,36 @@ class Paths
 		currentLevel = name.toLowerCase();
 	}
 
-	// TODO: idk bro
-	static function getPath(file:String, type:AssetType, library:Null<String>)
+	static function getPath(file:String, ?type:AssetType, library:Null<String>):String
 	{
 		if (library != null)
 			return getLibraryPath(file, library);
 
 		if (currentLevel != null)
 		{
-			var levelPath = getLibraryPathForce(file, currentLevel);
-			if (OpenFlAssets.exists(levelPath, type))
-				return levelPath;
-
-			levelPath = getLibraryPathForce(file, "shared");
-			if (OpenFlAssets.exists(levelPath, type))
+			var levelPath:String = getLibraryPathForce(file, currentLevel);
+			if (Assets.exists(levelPath, type))
 				return levelPath;
 		}
 
-		return getPreloadPath(file);
+		var levelPath:String = getLibraryPathForce(file, 'shared');
+		if (Assets.exists(levelPath, type))
+			return levelPath;
+
+		return 'assets/$file';
 	}
 
-	static public function getLibraryPath(file:String, library = "default")
+	public static function getLibraryPath(file:String, library = 'preload'):String
 	{
-		return if (library == "default") getPreloadPath(file); else getLibraryPathForce(file, library);
+		return if (library == 'preload' || library == 'default') getPreloadPath(file); else getLibraryPathForce(file, library);
 	}
 
-	inline static function getLibraryPathForce(file:String, library:String)
+	static inline function getLibraryPathForce(file:String, library:String):String
 	{
 		return '$library:assets/$library/$file';
 	}
 
-	inline static function getPreloadPath(file:String)
+	inline static public function getPreloadPath(file:String)
 	{
 		return 'assets/$file';
 	}
@@ -127,9 +126,6 @@ class Paths
 		return getPath('fonts/$key', FONT, library);
 	}
 
-	public static function script(key:String, ?library:String):String
-		return Assets.getText(getPath(key, library));
-
 	// i modified this from doida engine
 	public static function getScriptArray(?song:String):Array<String>
 	{
@@ -149,7 +145,7 @@ class Paths
 		
 		try {
 			#if desktop
-			var rawList = sys.FileSystem.readDirectory(getPath(dir, library));
+			var rawList = sys.FileSystem.readDirectory(getPath(dir, null, library));
 			for(i in 0...rawList.length)
 			{
 				if(typeArr?.length > 0)
@@ -169,7 +165,6 @@ class Paths
 			#end
 		} catch(e) {}
 		
-		trace('read dir ${(swagList.length > 0) ? '$swagList' : 'EMPTY'} at ${getPath(dir, library)}');
 		return swagList;
 	}
 

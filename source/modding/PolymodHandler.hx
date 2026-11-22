@@ -203,8 +203,6 @@ class PolymodHandler
 		var output:polymod.format.ParseRules = polymod.format.ParseRules.getDefault();
 		// Ensure TXT files have merge support.
 		output.addType('txt', TextFileFormat.LINES);
-        // HScript Crap
-        output.addType('hx', new polymod.format.ScriptParseFormat());
 
 		// You can specify the format of a specific file, with file extension.
 		// output.addFile("data/introText.txt", TextFileFormat.LINES)
@@ -246,8 +244,7 @@ class PolymodHandler
 	{
 		return {
 			assetLibraryPaths: [
-				'songs' => 'songs',
-				'videos' => 'videos',
+				'assets' => 'assets'
 			],
 			coreAssetRedirect: CORE_FOLDER,
 		}

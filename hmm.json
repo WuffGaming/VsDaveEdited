@@ -1,16 +1,25 @@
 {
   "dependencies": [
-    {
-      "name": "actuate",
-      "type": "haxelib",
-      "version": "1.9.0"
-    },
-    {
+{
       "name": "faxe",
       "type": "git",
       "dir": null,
       "ref": "master",
       "url": "https://github.com/ashea-code/faxe"
+    },
+    {
+      "name": "lime",
+      "type": "git",
+      "dir": null,
+      "ref": "02a798b836cd6cc31e37971526e80b0614fe179b",
+      "url": "https://github.com/FunkinCrew/lime"
+    },
+    {
+      "name": "openfl",
+      "type": "git",
+      "dir": null,
+      "ref": "5f89368628a67dd1d460cd3eed56b2ef2ab1679b",
+      "url": "https://github.com/FunkinCrew/openfl"
     },
     {
       "name": "flixel",
@@ -27,9 +36,16 @@
       "url": "https://github.com/FunkinCrew/flixel-addons"
     },
     {
-      "name": "flixel-ui",
+      "name": "hxcpp",
+      "type": "git",
+      "dir": null,
+      "ref": "8be3d0fbc0303d85448bf7e7519489f0566125e2",
+      "url": "https://github.com/FunkinCrew/hxcpp"
+    },
+    {
+      "name": "hxdiscord_rpc",
       "type": "haxelib",
-      "version": "2.6.4"
+      "version": "1.3.0"
     },
     {
       "name": "hscript-iris",
@@ -39,16 +55,14 @@
       "url": "https://github.com/pisayesiwsi/hscript-iris"
     },
     {
-      "name": "hxcpp",
-      "type": "git",
-      "dir": null,
-      "ref": "1f4661402afe66ae7bf6a94161148f5285da5c93",
-      "url": "https://github.com/FunkinCrew/hxcpp"
+      "name": "flixel-ui",
+      "type": "haxelib",
+      "version": "2.6.4"
     },
     {
-      "name": "hxdiscord_rpc",
+      "name": "actuate",
       "type": "haxelib",
-      "version": "1.3.0"
+      "version": "1.9.0"
     },
     {
       "name": "hxvlc",
@@ -66,24 +80,10 @@
       "version": "1.1.0"
     },
     {
-      "name": "lime",
-      "type": "git",
-      "dir": null,
-      "ref": "02a798b836cd6cc31e37971526e80b0614fe179b",
-      "url": "https://github.com/FunkinCrew/lime"
-    },
-    {
-      "name": "openfl",
-      "type": "git",
-      "dir": null,
-      "ref": "5f89368628a67dd1d460cd3eed56b2ef2ab1679b",
-      "url": "https://github.com/FunkinCrew/openfl"
-    },
-    {
       "name": "polymod",
       "type": "git",
       "dir": null,
-      "ref": "22d8aa49abe95755ec481535d29ba8c465176ef1",
+      "ref": "5caec0dfe2fc81431a0146d6c7307d0ee7deb711",
       "url": "https://github.com/FunkinCrew/polymod"
     },
     {
