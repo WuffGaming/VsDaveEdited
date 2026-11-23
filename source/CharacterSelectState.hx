@@ -1,4 +1,5 @@
 package;
+import stage.Stage;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -87,35 +88,8 @@ class CharacterSelectState extends MusicBeatState
 
 		FlxG.sound.playMusic(Paths.music("goodEnding"),1,true);
 
-		var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stages/dave/sky'));
-		bg.antialiasing = true;
-		bg.scrollFactor.set(0.9, 0.9);
-		bg.active = false;
-		add(bg);
-	
-		var stageHills:FlxSprite = new FlxSprite(-225, -125).loadGraphic(Paths.image('stages/dave/hills'));
-		stageHills.setGraphicSize(Std.int(stageHills.width * 1.25));
-		stageHills.updateHitbox();
-		stageHills.antialiasing = true;
-		stageHills.scrollFactor.set(1, 1);
-		stageHills.active = false;
-		add(stageHills);
-	
-		var gate:FlxSprite = new FlxSprite(-225, -125).loadGraphic(Paths.image('stages/dave/gate'));
-		gate.setGraphicSize(Std.int(gate.width * 1.2));
-		gate.updateHitbox();
-		gate.antialiasing = true;
-		gate.scrollFactor.set(0.925, 0.925);
-		gate.active = false;
-		add(gate);
-		
-		var stageFront:FlxSprite = new FlxSprite(-225, -125).loadGraphic(Paths.image('stages/dave/grass'));
-		stageFront.setGraphicSize(Std.int(stageFront.width * 1.2));
-		stageFront.updateHitbox();
-		stageFront.antialiasing = true;
-		stageFront.scrollFactor.set(0.9, 0.9);
-		stageFront.active = false;
-		add(stageFront);
+		var stage = new Stage('daveHouse', false);
+		add(stage);
 
 		FlxG.camera.zoom = 0.75;
 		camHUD.zoom = 0.75;

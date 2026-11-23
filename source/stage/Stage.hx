@@ -14,7 +14,7 @@ class Stage extends FlxGroup {
 
     var script:Iris;
 
-    public function new(name:String) {
+    public function new(name:String, ?offsets:Bool = true) {
         super();
 
         var s = Paths.file('datas/stages/${name}.hx');
@@ -24,7 +24,7 @@ class Stage extends FlxGroup {
         setScript("this", this);
 		callScript("create");
         generateStage(name);
-        if (PlayState.instance != null) {
+        if (PlayState.instance != null && offsets) {
             generatePlayStateOffsets(name);
         }
         setScript("PlayState", PlayState);
@@ -123,7 +123,7 @@ class Stage extends FlxGroup {
         else if (Assets.exists(Paths.json('stages/daveHouse')))
             data = cast Paths.loadJSON('stages/daveHouse');
         else return;
-        
+
         setScript("onPlayStateOffsets", [data]);
         if (data.bfOffset != null)
         {
