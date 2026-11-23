@@ -1099,6 +1099,7 @@
     "player2": "dave",
     "speed": 2.1,
     "song": "Bonus-Song",
+    "stage": "daveHouseNight",
     "sectionLengths": [],
     "validScore": true
   }

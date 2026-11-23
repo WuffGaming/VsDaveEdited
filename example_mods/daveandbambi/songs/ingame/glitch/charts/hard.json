@@ -17639,6 +17639,7 @@
     "player2": "bambi-old",
     "speed": 3.1,
     "song": "Glitch",
+    "stage":"daveHouseNight",
     "sectionLengths": [],
     "validScore": true
   }
