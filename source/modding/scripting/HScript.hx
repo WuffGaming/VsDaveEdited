@@ -2,13 +2,28 @@ package modding.scripting;
 
 import flixel.FlxG;
 import flixel.util.FlxColor;
+
 import crowplexus.iris.Iris;
 import crowplexus.iris.IrisConfig;
+import crowplexus.hscript.Expr.Error;
+import crowplexus.hscript.Printer;
 
 class HScript extends Iris {
     public function new(scriptCode: String, ?config: AutoIrisConfig) {
         super(scriptCode, config);
     }
+
+	public function safeExecute() {
+		try {
+			execute();
+		}
+		catch(e:Error) {
+			var pos = this.interp.posInfos();
+			Iris.error(Printer.errorToString(e, false), pos);
+			this.destroy();
+			throw e;
+		}
+	}
 
     override function preset() {
 		super.preset();
@@ -32,6 +47,7 @@ class HScript extends Iris {
 		set('Paths', Paths);
 		set('Conductor', Conductor);
 		set('Character', Character);
+		set('HealthIcon', HealthIcon);
 		set('Alphabet', Alphabet);
 		set('Note', Note);
         set('StrumNote', StrumNote);

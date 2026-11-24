@@ -26,7 +26,7 @@ class HScriptPack extends FlxGroup {
 
     public function runScripts() {
         for (script in loadedScripts) {
-            script.execute();
+            script.safeExecute();
         }
     }
 

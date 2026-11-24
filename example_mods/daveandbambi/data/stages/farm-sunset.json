@@ -3,7 +3,7 @@
     "props": [
         {
             "name": "sky",
-            "path": "stages/dave/sky",
+            "path": "stages/farm-sunset/sky_sunset",
             "position": [-700,0],
             "scroll": [0.9,0.7]
         },

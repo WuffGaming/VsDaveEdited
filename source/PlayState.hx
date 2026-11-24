@@ -239,6 +239,10 @@ class PlayState extends MusicBeatState
 		scriptPack.setScripts("camHUD", camHUD);
 		scriptPack.setScripts("camGame", camGame);
 		scriptPack.setScripts("camDialogue", camDialogue);
+		
+		scriptPack.setScripts("add", add);
+		scriptPack.setScripts("remove", remove);
+		scriptPack.setScripts("insert", insert);
 
 		scriptPack.callScripts("preCreate");
 
@@ -298,6 +302,13 @@ class PlayState extends MusicBeatState
 		scriptPack.setScripts("backgroundSprites", backgroundSprites);
 		scriptPack.setScripts("defaultCamZoom", defaultCamZoom);
 		scriptPack.setScripts("camZooming", camZooming);
+
+		scriptPack.setScripts("ZoomCam", ZoomCam);
+
+		scriptPack.setScripts("switchDad", switchDad);
+		scriptPack.setScripts("switchGf", switchGf);
+		scriptPack.setScripts("switchBf", switchBf);
+
 		scriptPack.callScripts("create");
 
 		var doof:DialogueBox = new DialogueBox(false, dialogue);
@@ -355,23 +366,9 @@ class PlayState extends MusicBeatState
 		healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		add(healthBar);
 
-		var credits:String;
-		switch (SONG.song.toLowerCase())
-		{
-			default:
-				credits = '';
-		}
+		var credits:String = '';
 		var randomThingy:Int = FlxG.random.int(0, 2);
-		var engineName:String = 'stupid';
-		switch(randomThingy)
-	    {
-			case 0:
-				engineName = 'Dave ';
-			case 1:
-				engineName = 'Bambi ';
-			case 2:
-				engineName = 'Tristan ';
-		}
+		var engineName:String = 'Dav:E';
 		var creditsText:Bool = credits != '';
 		var textYPos:Float = healthBarBG.y + 50;
 		if (creditsText)
@@ -380,7 +377,7 @@ class PlayState extends MusicBeatState
 		}
 		// Add Kade Engine watermark
 		kadeEngineWatermark = new FlxText(4, textYPos, 0,
-		SONG.song + " " + (storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy") + " - " + engineName + "Engine (KE 1.2)", 16);
+		SONG.song + " " + (storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy") + " - " + engineName + " Engine (KE 1.2)", 16);
 		kadeEngineWatermark.setFormat(Paths.font("comic.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		kadeEngineWatermark.scrollFactor.set();
 		kadeEngineWatermark.borderSize = 1.25;
@@ -1178,6 +1175,51 @@ class PlayState extends MusicBeatState
 			endSong();
 		#end
 		scriptPack.callScripts("postUpdate", [elapsed]);
+	}
+
+	public function switchDad(char:String, x:Float = 100, y:Float = 100, reposition:Bool = true)
+	{
+		scriptPack.callScripts("switchDad", [char, x, y, reposition]);
+		if (dad != null)
+			remove(dad);
+		dad = new Character(x, y, char, false);
+		if (reposition)
+		{
+			dad.x += dad.gameOffset[0];
+			dad.y += dad.gameOffset[1];
+		}
+		add(dad);
+		scriptPack.callScripts("postSwitchDad", [dad]);
+	}
+
+	public function switchBf(char:String, x:Float = 100, y:Float = 100, reposition:Bool = true)
+	{
+		scriptPack.callScripts("switchBf", [char, x, y, reposition]);
+		if (boyfriend != null)
+			remove(boyfriend);
+		boyfriend = new Boyfriend(x, y, char);
+		if (reposition)
+		{
+			boyfriend.x += boyfriend.gameOffset[0];
+			boyfriend.y += boyfriend.gameOffset[1];
+		}
+		add(boyfriend);
+		scriptPack.callScripts("postSwitchBf", [boyfriend]);
+	}
+
+	public function switchGf(char:String, x:Float = 100, y:Float = 100, reposition:Bool = true)
+	{
+		scriptPack.callScripts("switchGf", [char, x, y, reposition]);
+		if (gf != null)
+			remove(gf);
+		gf = new Character(x, y, char, false);
+		if (reposition)
+		{
+			gf.x += gf.gameOffset[0];
+			gf.y += gf.gameOffset[1];
+		}
+		add(gf);
+		scriptPack.callScripts("postSwitchGf", [gf]);
 	}
 
 	public function ZoomCam(focusondad:Bool):Void

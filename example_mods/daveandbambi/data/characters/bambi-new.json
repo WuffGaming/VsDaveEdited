@@ -1,6 +1,6 @@
 {
   "path": "characters/bambi/bambiRemake",
-  "gameOffset": [450, 200],
+  "gameOffset": [200, 450],
   "camOffset": [0, 0],
   "icon": "bambi",
   "animations": [

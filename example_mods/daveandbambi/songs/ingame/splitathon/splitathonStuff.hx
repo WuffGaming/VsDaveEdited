@@ -1,0 +1,152 @@
+// this is pretty much all copied from the source code
+// TODO: Fix a lot of this up and make it better lol
+
+var daveExpressionSplitathon:Character;
+
+var thing:FlxSprite = new FlxSprite(0, 250);
+var splitathonExpressionAdded:Bool = false;
+
+var BAMBICUTSCENEICONHURHURHUR:HealthIcon;
+
+var stupidx:Float = 0;
+var stupidy:Float = 0; // stupid velocities for cutscene
+var updatevels:Bool = false;
+var hasTriggeredDumbshit:Bool = false;
+
+var AUGHHHH:String;
+var AHHHHH:String;
+
+var nightColor = 0xFF878787;
+
+function stepHit(curStep:Int) {
+    switch (curStep)
+    {
+        case 16:
+            FlxG.camera.flash(FlxColor.WHITE, 1);
+            splitterThonDave('what');
+            switchDad("bambi-splitathon");
+            if (!hasTriggeredDumbshit)
+            {
+                throwThatBitchInThere('bambi', 'dave');
+            }
+        case 4750:
+            dad.canDance = false;
+            dad.playAnim('scared', true);
+            camHUD.shake(0.015, (Conductor.stepCrochet / 1000) * 50);
+        case 4800:
+            FlxG.camera.flash(FlxColor.WHITE, 1);
+            splitterThonDave('what');
+            switchDad("bambi-splitathon");
+            if (!hasTriggeredDumbshit)
+            {
+                throwThatBitchInThere('bambi', 'dave');
+            }
+        case 5824:
+            FlxG.camera.flash(FlxColor.WHITE, 1);
+            splitathonExpression('bambi-what', -100, 550);
+            switchDad("dave-splitathon");
+            if (!hasTriggeredDumbshit)
+            {
+                throwThatBitchInThere('dave', 'bambi');
+            }
+        case 6080:
+            FlxG.camera.flash(FlxColor.WHITE, 1);
+            splitterThonDave('happy');
+            switchDad("bambi-splitathon");
+            if (!hasTriggeredDumbshit)
+            {
+                throwThatBitchInThere('bambi', 'dave');
+            }
+        case 8384:
+            FlxG.camera.flash(FlxColor.WHITE, 1);
+            splitathonExpression('bambi-corn', -100, 550);
+            switchDad("dave-splitathon");
+            if (!hasTriggeredDumbshit)
+            {
+                throwThatBitchInThere('dave', 'bambi');
+            }
+        case 5823 | 6079 | 8383 | 8750:
+            //bullshit
+            hasTriggeredDumbshit = false;
+            updatevels = false;
+    }
+}
+
+function splitathonExpression(expression:String, x:Float, y:Float):Void
+{
+    if(daveExpressionSplitathon != null)
+    {
+        remove(daveExpressionSplitathon);
+    }
+    if (expression != 'lookup')
+    {
+        camFollow.setPosition(dad.getGraphicMidpoint().x + 100, boyfriend.getGraphicMidpoint().y + 150);
+    }
+    thing.color = nightColor;
+    thing.x = x;
+    thing.y = y;
+    remove(dad);
+
+    switch (expression)
+    {
+        case 'bambi-what':
+            thing.frames = Paths.getSparrowAtlas('stages/splitathon/Bambi_WaitWhatNow');
+            thing.animation.addByPrefix('uhhhImConfusedWhatsHappening', 'what', 24);
+            thing.animation.play('uhhhImConfusedWhatsHappening');
+        case 'bambi-corn':
+            thing.frames = Paths.getSparrowAtlas('stages/splitathon/Bambi_ChillingWithTheCorn');
+            thing.animation.addByPrefix('justGonnaChillHereEatinCorn', 'cool', 24);
+            thing.animation.play('justGonnaChillHereEatinCorn');
+    }
+    if (!splitathonExpressionAdded)
+    {
+        splitathonExpressionAdded = true;
+        add(thing);
+    }
+    thing.antialiasing = true;
+}
+
+//this is cuz splitathon dave expressions are now baked INTO the sprites! so cool! bonuses of this include:
+// - Not having to cache every expression
+// - Being able to reuse them for other things (ie. lookup for scared)
+function splitterThonDave(expression:String):Void
+{
+    //stupid bullshit cuz i dont wanna bother with removing thing erighkjrehjgt
+    thing.x = -9000;
+    thing.y = -9000;
+    if(daveExpressionSplitathon != null)
+        remove(daveExpressionSplitathon);
+    daveExpressionSplitathon = new Character(-100, 260, 'dave-splitathon');
+    add(daveExpressionSplitathon);
+    daveExpressionSplitathon.color = nightColor;
+    daveExpressionSplitathon.canDance = false;
+    daveExpressionSplitathon.playAnim(expression, true);
+}
+
+function throwThatBitchInThere(guyWhoComesIn:String = 'bambi', guyWhoFliesOut:String = 'dave')
+{
+    hasTriggeredDumbshit = true;
+    if(BAMBICUTSCENEICONHURHURHUR != null)
+    {
+        remove(BAMBICUTSCENEICONHURHURHUR);
+    }
+    BAMBICUTSCENEICONHURHURHUR = new HealthIcon(guyWhoComesIn, false);
+    BAMBICUTSCENEICONHURHURHUR.y = healthBar.y - (BAMBICUTSCENEICONHURHURHUR.height / 2);
+    add(BAMBICUTSCENEICONHURHURHUR);
+    BAMBICUTSCENEICONHURHURHUR.cameras = [camHUD];
+    BAMBICUTSCENEICONHURHURHUR.x = -100;
+    FlxTween.linearMotion(BAMBICUTSCENEICONHURHURHUR, -100, BAMBICUTSCENEICONHURHURHUR.y, iconP2.x, BAMBICUTSCENEICONHURHURHUR.y, 0.3, true, {ease: FlxEase.expoInOut});
+    AUGHHHH = guyWhoComesIn;
+    AHHHHH = guyWhoFliesOut;
+    new FlxTimer().start(0.3, FlingCharacterIconToOblivionAndBeyond);
+}
+
+function FlingCharacterIconToOblivionAndBeyond(e:FlxTimer = null):Void
+{
+    iconP2.changeIcon(AUGHHHH, true);
+    BAMBICUTSCENEICONHURHURHUR.changeIcon(AHHHHH, true, false, 1);
+    stupidx = -5;
+    stupidy = -5;
+    updatevels = true;
+    
+}
