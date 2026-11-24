@@ -2,7 +2,6 @@ package modding.scripting;
 
 import flixel.group.FlxGroup;
 import modding.scripting.HScript;
-import lime.utils.Assets;
 
 class HScriptPack extends FlxGroup {
     public var loadedScripts:Array<HScript> = [];
@@ -11,15 +10,14 @@ class HScriptPack extends FlxGroup {
         super();
         for(path in paths)
 		{
-			var s = Paths.file('$path', TEXT);
-			if (Assets.exists(s)) {
-				var newScript:HScript = new HScript(Assets.getText(s), {name: path, autoRun: false, autoPreset: true});
+			if (Assets.exists(path)) {
+				var newScript:HScript = new HScript(Assets.getText(path), {name: path, autoRun: false, autoPreset: true});
 				loadedScripts.push(newScript);
-				trace('loaded $s');
+				trace('loaded $path');
 			}
 			#if debug 
 			else
-				 trace('$s was null'); 
+				 trace('$path was null'); 
 			#end
 		}
     }

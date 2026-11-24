@@ -135,6 +135,7 @@ class Paths
 			for(file in readDir(folder, [".hx", ".hxc"], false))
 				arr.push('$folder/$file');
 		}
+		#if debug trace('got script array: ', arr); #end
 		return arr;
 	}
 
