@@ -6,7 +6,7 @@ import modding.scripting.HScript;
 class HScriptPack extends FlxGroup {
     public var loadedScripts:Array<HScript> = [];
 
-    public function new(paths:Array<String>) {
+    public function new(paths:Array<String>, ?autoRun:Bool = true) {
         super();
         for(path in paths)
 		{
@@ -20,6 +20,8 @@ class HScriptPack extends FlxGroup {
 				 trace('$path was null'); 
 			#end
 		}
+		if (autoRun)
+			runScripts();
     }
 
     public function runScripts() {

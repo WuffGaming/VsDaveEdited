@@ -147,7 +147,6 @@ class Paths
 		var returnList:Array<String> = [];
 
 		for (asset in assets) {
-			trace(asset);
 			if (asset.startsWith('mods')) {
 				assets.remove(asset);
 				continue;
