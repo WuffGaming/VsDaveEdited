@@ -133,7 +133,7 @@ class Paths
 		for(folder in ["scripts", 'songs/ingame', 'songs/ingame/$song', 'songs/ingame/$song/scripts', "data/scripts"])
 		{
 			for(file in readDir(folder, [".hx", ".hxc"], false))
-				arr.push('assets/$file');
+				arr.push('$file');
 		}
 		#if debug trace('got script array: ', arr); #end
 		return arr;
