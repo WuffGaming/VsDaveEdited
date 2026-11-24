@@ -216,15 +216,6 @@ class PlayState extends MusicBeatState
 			+ " | Misses: "
 			+ misses, iconRPC);
 		#end
-		scriptPack = new HScriptPack(Paths.getScriptArray(SONG.song.toLowerCase()));
-
-		scriptPack.setScripts("this", instance);
-		scriptPack.setScripts("PlayState", PlayState);
-		scriptPack.setScripts("camHUD", camHUD);
-		scriptPack.setScripts("camGame", camGame);
-		scriptPack.setScripts("camDialogue", camDialogue);
-
-		scriptPack.callScripts("preCreate");
 
 
 
@@ -243,6 +234,13 @@ class PlayState extends MusicBeatState
 
 		if (SONG == null)
 			SONG = Song.loadFromJson('house', 'hard');
+		scriptPack = new HScriptPack(Paths.getScriptArray(SONG.song.toLowerCase()));
+
+		scriptPack.setScripts("camHUD", camHUD);
+		scriptPack.setScripts("camGame", camGame);
+		scriptPack.setScripts("camDialogue", camDialogue);
+
+		scriptPack.callScripts("preCreate");
 
 		Conductor.mapBPMChanges(SONG);
 		Conductor.changeBPM(SONG.bpm);

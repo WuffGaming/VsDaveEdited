@@ -130,7 +130,7 @@ class Paths
 	public static function getScriptArray(?song:String):Array<String>
 	{
 		var arr:Array<String> = [];
-		for(folder in ["scripts", 'songs/ingame', 'songs/ingame/$song', 'songs/ingame/$song/scripts', "data/scripts"])
+		for(folder in ["scripts", 'songs/ingame/$song', "data/scripts"])
 		{
 			for(file in readDir(folder, [".hx", ".hxc"], false))
 				arr.push('$file');
@@ -140,6 +140,7 @@ class Paths
 	}
 
 	// aaaahhh
+	// note to self: this is recursive
 	public static function readDir(dir:String, ?typeArr:Array<String>, ?removeType:Bool = true, ?library:String):Array<String>
 	{
 		var assets:Array<String> = Assets.list();
