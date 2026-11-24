@@ -1,41 +1,41 @@
 package stage;
 
+import modding.scripting.HScriptPack;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.group.FlxGroup;
-import crowplexus.iris.Iris;
+
+
 
 class Stage extends FlxGroup {
     public var propNames:Map<String, Dynamic> = new Map<String, Dynamic>();
 
     public var cameraZoom:Float = 1.05;
 
-    var script:Iris;
+    public var scriptPack:HScriptPack;
 
     public function new(name:String, ?offsets:Bool = true) {
         super();
 
-        var s = Paths.file('datas/stages/${name}.hx');
-		if (Assets.exists(s, TEXT)) {
-			script = new Iris(Assets.getText(s), {name: name, autoRun: true, autoPreset: true});
-		}
-        setScript("this", this);
-		callScript("create");
+        scriptPack = new HScriptPack([Paths.file('datas/stages/${name}.hx'), Paths.file('datas/stages/${name}.hxc')]);
+
+		scriptPack.callScripts("create");
         generateStage(name);
         if (PlayState.instance != null && offsets) {
             generatePlayStateOffsets(name);
         }
-        setScript("PlayState", PlayState);
-        setScript("curStage", name);
-        setScript("propNames", propNames);
-        callScript("postCreate");
+        scriptPack.setScripts("curStage", name);
+        scriptPack.setScripts("propNames", propNames);
+        scriptPack.setScripts("getProp", getProp);
+        scriptPack.setScripts("addProp", addProp);
+        scriptPack.callScripts("postCreate");
     }
 
     override function update(elapsed:Float) {
-        callScript("update", [elapsed]);
-        callScript("postUpdate", [elapsed]);
+        scriptPack.callScripts("update", [elapsed]);
+        scriptPack.callScripts("postUpdate", [elapsed]);
     }
 
     public function generateStage(name) {
@@ -47,9 +47,9 @@ class Stage extends FlxGroup {
             data = cast Paths.loadJSON('stages/daveHouse');
         else return;
         
-        callScript("onParseFile", [data]);
+        scriptPack.callScripts("onParseFile", [data]);
         cameraZoom = data.cameraZoom;
-        setScript("cameraZoom", cameraZoom);
+        scriptPack.setScripts("cameraZoom", cameraZoom);
         for (prop in data.props)
         {
             var propSprite:FlxSprite = new FlxSprite(prop.position[0], prop.position[1]);
@@ -112,7 +112,7 @@ class Stage extends FlxGroup {
             propSprite.updateHitbox();
             addProp(propSprite, prop.name);
         }
-        callScript("postParseFile", [data]);
+        scriptPack.callScripts("postParseFile", [data]);
     }
 
     public function generatePlayStateOffsets(name) {
@@ -124,7 +124,7 @@ class Stage extends FlxGroup {
             data = cast Paths.loadJSON('stages/daveHouse');
         else return;
 
-        setScript("onPlayStateOffsets", [data]);
+        scriptPack.setScripts("onPlayStateOffsets", [data]);
         if (data.bfOffset != null)
         {
             PlayState.boyfriend.x += data.bfOffset[0];
@@ -156,7 +156,7 @@ class Stage extends FlxGroup {
             PlayState.dad.scrollFactor.x = data.dadScroll[0];
             PlayState.dad.scrollFactor.x = data.dadScroll[1];
         }
-        setScript("postPlayStateOffsets", [data]);
+        scriptPack.setScripts("postPlayStateOffsets", [data]);
     }
 
     public function addProp(prop:Dynamic, ?name:String = null):Void
@@ -166,34 +166,12 @@ class Stage extends FlxGroup {
 			propNames.set(name, prop);
 		}
 		this.add(prop);
-        if (script != null) {
-            setScript(name, prop);
-        }
+        scriptPack.setScripts(name, prop);
 	}
 
     public function getProp(prop):Dynamic
 	{
 		return this.propNames.get(prop);
-	}
-
-	public function callScript(fun:String, ?args:Array<Dynamic>)
-	{
-		if(script != null) {
-			@:privateAccess {
-				var ny: Dynamic = script.interp.variables.get(fun);
-				try {
-					if(ny != null && Reflect.isFunction(ny))
-						script.call(fun, args);
-				} catch(e) {
-					trace('error parsing script: ' + e);
-				}
-			}
-		}
-	}
-	public function setScript(name:String, value:Dynamic, allowOverride:Bool = true)
-	{
-		if(script != null)
-			script.set(name, value, allowOverride);
 	}
 }
 

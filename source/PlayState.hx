@@ -47,7 +47,7 @@ import flash.system.System;
 import Discord.DiscordClient;
 #end
 
-import crowplexus.iris.Iris;
+import modding.scripting.HScriptPack;
 
 #if sys 
 import sys.io.File;
@@ -167,7 +167,7 @@ class PlayState extends MusicBeatState
 
 	public var backgroundSprites:Stage;
 
-	public var loadedScripts:Array<Iris> = [];
+	public var scriptPack:HScriptPack;
 
 	override public function create()
 	{
@@ -216,30 +216,15 @@ class PlayState extends MusicBeatState
 			+ " | Misses: "
 			+ misses, iconRPC);
 		#end
+		scriptPack = new HScriptPack(Paths.getScriptArray(SONG.song.toLowerCase()));
 
-		// ok lets add scripts before anything else
+		scriptPack.setScripts("this", instance);
+		scriptPack.setScripts("PlayState", PlayState);
+		scriptPack.setScripts("camHUD", camHUD);
+		scriptPack.setScripts("camGame", camGame);
+		scriptPack.setScripts("camDialogue", camDialogue);
 
-		var scriptPaths:Array<String> = Paths.getScriptArray(SONG.song.toLowerCase());
-
-		for(path in scriptPaths)
-		{
-			var s = Paths.file('$path', TEXT);
-			if (Assets.exists(s)) {
-				var newScript:Iris = new Iris(Assets.getText(s), {name: path, autoRun: true, autoPreset: true});
-				loadedScripts.push(newScript);
-				trace('loaded $s');
-			}
-			else
-				trace('$s was null');
-		}
-
-		setScript("this", instance);
-		setScript("PlayState", PlayState);
-		setScript("camHUD", camHUD);
-		setScript("camGame", camGame);
-		setScript("camDialogue", camDialogue);
-
-		callScript("preCreate");
+		scriptPack.callScripts("preCreate");
 
 
 
@@ -308,14 +293,14 @@ class PlayState extends MusicBeatState
 		for (char in [gf, dad,boyfriend]) {
 			add(char);
 		}
-		setScript("boyfriend", boyfriend);
-		setScript("gf", gf);
-		setScript("dad", dad);
-		setScript("formoverride", formoverride);
-		setScript("backgroundSprites", backgroundSprites);
-		setScript("defaultCamZoom", defaultCamZoom);
-		setScript("camZooming", camZooming);
-		callScript("create");
+		scriptPack.setScripts("boyfriend", boyfriend);
+		scriptPack.setScripts("gf", gf);
+		scriptPack.setScripts("dad", dad);
+		scriptPack.setScripts("formoverride", formoverride);
+		scriptPack.setScripts("backgroundSprites", backgroundSprites);
+		scriptPack.setScripts("defaultCamZoom", defaultCamZoom);
+		scriptPack.setScripts("camZooming", camZooming);
+		scriptPack.callScripts("create");
 
 		var doof:DialogueBox = new DialogueBox(false, dialogue);
 		doof.scrollFactor.set();
@@ -453,22 +438,22 @@ class PlayState extends MusicBeatState
 		{
 			startCountdown();
 		}
-		setScript("scoreTxt", scoreTxt);
-		setScript("kadeEngineWatermark", kadeEngineWatermark);
-		setScript("creditsText", creditsText);
-		setScript("credits", credits);
-		setScript("iconP1", iconP1);
-		setScript("iconP2", iconP2);
-		setScript("isStoryMode", isStoryMode);
-		setScript("creditsWatermark", creditsWatermark);
-		setScript("healthBarBG", healthBarBG);
-		setScript("healthBar", healthBar);
-		callScript("postCreate");
+		scriptPack.setScripts("scoreTxt", scoreTxt);
+		scriptPack.setScripts("kadeEngineWatermark", kadeEngineWatermark);
+		scriptPack.setScripts("creditsText", creditsText);
+		scriptPack.setScripts("credits", credits);
+		scriptPack.setScripts("iconP1", iconP1);
+		scriptPack.setScripts("iconP2", iconP2);
+		scriptPack.setScripts("isStoryMode", isStoryMode);
+		scriptPack.setScripts("creditsWatermark", creditsWatermark);
+		scriptPack.setScripts("healthBarBG", healthBarBG);
+		scriptPack.setScripts("healthBar", healthBar);
+		scriptPack.callScripts("postCreate");
 	}
 
 	function startDialogue(?dialogueBox:DialogueBox, isStart:Bool = true):Void
 	{
-		callScript("onStartDialogue", [dialogueBox, isStart]);
+		scriptPack.callScripts("onStartDialogue", [dialogueBox, isStart]);
 		inCutscene = true;
 		camFollow.setPosition(boyfriend.getGraphicMidpoint().x - 200, dad.getGraphicMidpoint().y - 10);
 		var black:FlxSprite = new FlxSprite(-100, -100).makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.BLACK);
@@ -496,7 +481,7 @@ class PlayState extends MusicBeatState
 				startCountdown();
 			}
 		});
-		callScript("postStartDialogue", [dialogueBox, isStart]);
+		scriptPack.callScripts("postStartDialogue", [dialogueBox, isStart]);
 	}
 
 	var startTimer:FlxTimer;
@@ -504,7 +489,7 @@ class PlayState extends MusicBeatState
 
 	function startCountdown():Void
 	{
-		callScript("onCountdown");
+		scriptPack.callScripts("onCountdown");
 		inCutscene = false;
 
 		generateStaticArrows(0);
@@ -583,7 +568,7 @@ class PlayState extends MusicBeatState
 			}
 			swagCounter += 1;
 		}, 5);
-		callScript("onPostCountdown");
+		scriptPack.callScripts("onPostCountdown");
 	}
 
 	var previousFrameTime:Float = 0;
@@ -592,7 +577,7 @@ class PlayState extends MusicBeatState
 
 	function startSong():Void
 	{
-		callScript("onSongStart");
+		scriptPack.callScripts("onSongStart");
 		startingSong = false;
 
 		previousFrameTime = FlxG.game.ticks;
@@ -723,7 +708,7 @@ class PlayState extends MusicBeatState
 
 	private function generateStaticArrows(player:Int):Void
 	{
-		callScript("onGenerateStaticArrows", [player]);
+		scriptPack.callScripts("onGenerateStaticArrows", [player]);
 		for (i in 0...4)
 		{
 			// FlxG.log.add(i);
@@ -785,9 +770,9 @@ class PlayState extends MusicBeatState
 			babyArrow.x += ((FlxG.width / 2) * player);
 
 			strumLineNotes.add(babyArrow);
-			callScript("onStrumNoteCreation", [babyArrow]);
+			scriptPack.callScripts("onStrumNoteCreation", [babyArrow]);
 		}
-		callScript("onPostGenerateStaticArrows", [player]);
+		scriptPack.callScripts("onPostGenerateStaticArrows", [player]);
 	}
 	override function openSubState(SubState:FlxSubState)
 	{
@@ -814,14 +799,14 @@ class PlayState extends MusicBeatState
 			#end
 			if (!startTimer.finished)
 				startTimer.active = false;
-			callScript("postPause");
+			scriptPack.callScripts("postPause");
 		}
 
 		super.openSubState(SubState);
 	}
 
 	public override function destroy() {
-		callScript("onDestroy");
+		scriptPack.callScripts("onDestroy");
 		super.destroy();
 
 		instance = null;
@@ -831,7 +816,7 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
-			callScript("onUnpause");
+			scriptPack.callScripts("onUnpause");
 			if (FlxG.sound.music != null && !startingSong)
 			{
 				resyncVocals();
@@ -866,7 +851,7 @@ class PlayState extends MusicBeatState
 					DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ") ", iconRPC);
 					#end
 				}
-			callScript("postUnpause");
+			scriptPack.callScripts("postUnpause");
 		}
 
 		super.closeSubState();
@@ -911,7 +896,7 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
-		callScript("update", [elapsed]);
+		scriptPack.callScripts("update", [elapsed]);
 		super.update(elapsed);
 		elapsedtime += elapsed;
 
@@ -942,7 +927,7 @@ class PlayState extends MusicBeatState
 			persistentDraw = true;
 			paused = true;
 			var doGitaroo:Bool = true;
-			callScript("onPause", [doGitaroo]);
+			scriptPack.callScripts("onPause", [doGitaroo]);
 
 			// 1 / 1000 chance for Gitaroo Man easter egg
 			if (FlxG.random.bool(0.1) && doGitaroo)
@@ -957,7 +942,7 @@ class PlayState extends MusicBeatState
 		if (FlxG.keys.justPressed.SEVEN)
 		{
 			var chartEditor:Bool = true;
-			callScript("onChartEditor", [chartEditor]);
+			scriptPack.callScripts("onChartEditor", [chartEditor]);
 			if (chartEditor) {
 				FlxG.switchState(()->new ChartingState());
 				#if desktop
@@ -1194,12 +1179,12 @@ class PlayState extends MusicBeatState
 		if (FlxG.keys.justPressed.ONE)
 			endSong();
 		#end
-		callScript("postUpdate", [elapsed]);
+		scriptPack.callScripts("postUpdate", [elapsed]);
 	}
 
 	public function ZoomCam(focusondad:Bool):Void
 	{
-		callScript("onZoomCam", [focusondad]);
+		scriptPack.callScripts("onZoomCam", [focusondad]);
 		var bfplaying:Bool = false;
 		if (focusondad)
 		{
@@ -1223,13 +1208,13 @@ class PlayState extends MusicBeatState
 		{
 			camFollow.setPosition(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
 		}
-		callScript("postZoomCam", [focusondad]);
+		scriptPack.callScripts("postZoomCam", [focusondad]);
 	}
 
 	function endSong():Void
 	{
 		var canEnd:Bool = true;
-		callScript("onEndSong", [canEnd]);
+		scriptPack.callScripts("onEndSong", [canEnd]);
 		if (canEnd) {
 			inCutscene = false;
 			canPause = false;
@@ -1277,7 +1262,7 @@ class PlayState extends MusicBeatState
 	function nextSong()
 	{
 		var canContinue:Bool = true;
-		callScript("onNextSong", [canContinue]);
+		scriptPack.callScripts("onNextSong", [canContinue]);
 		var difficulty:String = "normal";
 
 		if (storyDifficulty == 0)
@@ -1360,7 +1345,7 @@ class PlayState extends MusicBeatState
 				score = cast(FlxMath.roundDecimal(cast(score, Float) * curmult[0], 0), Int);
 		}
 
-		callScript("onPopupScore", [daRating, score]);
+		scriptPack.callScripts("onPopupScore", [daRating, score]);
 
 		if (daRating != 'shit' || daRating != 'bad')
 		{
@@ -1389,7 +1374,7 @@ class PlayState extends MusicBeatState
 			comboSpr.updateHitbox();
 			rating.updateHitbox();
 
-			callScript("onRatingPopup", [rating, comboSpr]);
+			scriptPack.callScripts("onRatingPopup", [rating, comboSpr]);
 			songScore += score;
 
 			var seperatedScore:Array<Int> = [];
@@ -1425,7 +1410,7 @@ class PlayState extends MusicBeatState
 				if (combo >= 10 || combo == 0)
 					add(numScore);
 
-				callScript("onNumScorePopup", [numScore]);
+				scriptPack.callScripts("onNumScorePopup", [numScore]);
 
 				FlxTween.tween(numScore, {alpha: 0}, 0.2, {
 					onComplete: function(tween:FlxTween)
@@ -1646,7 +1631,7 @@ class PlayState extends MusicBeatState
 			var missAnimation:Bool = true;
 			var updateAccuracyOnMiss:Bool = true;
 
-			callScript("onMiss", [healthDetriment, scoreDetriment, missDetriment, gfSad, loseCombo, missSound, missAnimation, updateAccuracyOnMiss]);
+			scriptPack.callScripts("onMiss", [healthDetriment, scoreDetriment, missDetriment, gfSad, loseCombo, missSound, missAnimation, updateAccuracyOnMiss]);
 			health -= healthDetriment;
 			if (combo > 5 && gf.animOffsets.exists('sad') && gfSad)
 			{
@@ -1737,7 +1722,7 @@ class PlayState extends MusicBeatState
 		totalPlayed += 1;
 		accuracy = totalNotesHit / totalPlayed * 100;
 
-		callScript('onUpdateAccuracy', [accuracy]);
+		scriptPack.callScripts('onUpdateAccuracy', [accuracy]);
 	}
 
 	function noteCheck(keyP:Bool, note:Note):Void // sorry lol
@@ -1756,7 +1741,7 @@ class PlayState extends MusicBeatState
 	{
 		if (!note.wasGoodHit)
 		{
-			callScript("onGoodNoteHit", [note]);
+			scriptPack.callScripts("onGoodNoteHit", [note]);
 			if (!note.isSustainNote)
 			{
 				popUpScore(note.strumTime, note.noteData);
@@ -1813,8 +1798,8 @@ class PlayState extends MusicBeatState
 	override function stepHit()
 	{
 		super.stepHit();
-		setScript("curStep", curStep);
-		callScript("stepHit", [curStep]);
+		scriptPack.setScripts("curStep", curStep);
+		scriptPack.callScripts("stepHit", [curStep]);
 
 		if (FlxG.sound.music.time > Conductor.songPosition + 20 || FlxG.sound.music.time < Conductor.songPosition - 20)
 		{
@@ -1837,7 +1822,7 @@ class PlayState extends MusicBeatState
 			FlxG.sound.music.length
 			- Conductor.songPosition);
 		#end
-		callScript("postStepHit", [curStep]);
+		scriptPack.callScripts("postStepHit", [curStep]);
 	}
 
 	var lightningStrikeBeat:Int = 0;
@@ -1846,8 +1831,8 @@ class PlayState extends MusicBeatState
 	override function beatHit()
 	{
 		super.beatHit();
-		setScript("curBeat", curBeat);
-		callScript("beatHit", [curBeat]);
+		scriptPack.setScripts("curBeat", curBeat);
+		scriptPack.callScripts("beatHit", [curBeat]);
 
 		if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null)
 		{
@@ -1897,7 +1882,7 @@ class PlayState extends MusicBeatState
 
 		//health icon bounce but epic
 		
-		callScript("onIconBounce", [doIconBounce]);
+		scriptPack.callScripts("onIconBounce", [doIconBounce]);
 		if (doIconBounce) {
 			iconP1.setGraphicSize(Std.int(iconP1.width + (50 * funny)),Std.int(iconP2.height - (25 * funny)));
 			iconP2.setGraphicSize(Std.int(iconP2.width + (50 * (2 - funny))),Std.int(iconP2.height - (25 * (2 - funny))));
@@ -1937,7 +1922,7 @@ class PlayState extends MusicBeatState
 		if(curBeat % 2 == 0)
 			if (!boyfriend.animation.curAnim.name.startsWith("sing") && boyfriend.canDance && boyfriend.animation.curAnim != null)
 				boyfriend.dance();
-		callScript("postBeatHit", [curBeat]);
+		scriptPack.callScripts("postBeatHit", [curBeat]);
 	}
 
 	public function preload(graphic:String) //preload assets
@@ -1957,29 +1942,8 @@ class PlayState extends MusicBeatState
 
 	public function updateIcons()
 	{
-		callScript("onUpdateIcons", [iconP1, iconP2]);
+		scriptPack.callScripts("onUpdateIcons", [iconP1, iconP2]);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
 		iconP2.y = healthBar.y - (iconP2.height / 2);
-	}
-
-	// sorry doida
-	public function callScript(fun:String, ?args:Array<Dynamic>)
-	{
-		for(script in loadedScripts) {
-			@:privateAccess {
-				var ny: Dynamic = script.interp.variables.get(fun);
-				try {
-					if(ny != null && Reflect.isFunction(ny))
-						script.call(fun, args);
-				} catch(e) {
-					trace('error parsing script: ' + e);
-				}
-			}
-		}
-	}
-	public function setScript(name:String, value:Dynamic, allowOverride:Bool = true)
-	{
-		for(script in loadedScripts)
-			script.set(name, value, allowOverride);
 	}
 }

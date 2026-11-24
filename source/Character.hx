@@ -1,6 +1,6 @@
 package;
 
-import crowplexus.iris.Iris;
+import modding.scripting.HScriptPack;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -31,7 +31,7 @@ class Character extends FlxSprite
 
 	public var danced:Bool = false; // has danced?
 
-	var script:Iris;
+	public var scriptPack:HScriptPack;
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
@@ -43,38 +43,34 @@ class Character extends FlxSprite
 
 		antialiasing = true;
 
-		var s = Paths.file('datas/characters/${curCharacter}.hx');
-		if (Assets.exists(s, TEXT)) {
-			script = new Iris(Assets.getText(s), {name: curCharacter, autoRun: true, autoPreset: true});
-		}
-		setScript("this", this);
-		callScript("create");
+		scriptPack = new HScriptPack([Paths.file('datas/characters/${curCharacter}.hx'), Paths.file('datas/characters/${curCharacter}.hxc')]);
+		scriptPack.callScripts("create");
 
 		parseDataFile();
 		dance();
 
-		setScript("curCharacter", curCharacter);
-		setScript("isPlayer", isPlayer);
-		setScript("icon", icon);
-		setScript("altIcon", altIcon);
-		setScript("noteStyle", noteStyle);
-		setScript("holdTimer", holdTimer);
-		setScript("canDance", canDance);
-		setScript("useVSliceSustains", useVSliceSustains);
-		setScript("deadForm", deadForm);
-		setScript("bopDance", bopDance);
-		setScript("nativelyPlayable", nativelyPlayable);
-		setScript("globalOffset", globalOffset);
-		setScript("gameOffset", gameOffset);
-		setScript("camOffset", camOffset);
-		setScript("charScale", charScale);
-		setScript("danced", danced);
+		scriptPack.setScripts("curCharacter", curCharacter);
+		scriptPack.setScripts("isPlayer", isPlayer);
+		scriptPack.setScripts("icon", icon);
+		scriptPack.setScripts("altIcon", altIcon);
+		scriptPack.setScripts("noteStyle", noteStyle);
+		scriptPack.setScripts("holdTimer", holdTimer);
+		scriptPack.setScripts("canDance", canDance);
+		scriptPack.setScripts("useVSliceSustains", useVSliceSustains);
+		scriptPack.setScripts("deadForm", deadForm);
+		scriptPack.setScripts("bopDance", bopDance);
+		scriptPack.setScripts("nativelyPlayable", nativelyPlayable);
+		scriptPack.setScripts("globalOffset", globalOffset);
+		scriptPack.setScripts("gameOffset", gameOffset);
+		scriptPack.setScripts("camOffset", camOffset);
+		scriptPack.setScripts("charScale", charScale);
+		scriptPack.setScripts("danced", danced);
 
 		if(isPlayer)
 		{
 			flipX = !flipX;
 		}
-		callScript("postCreate");
+		scriptPack.callScripts("postCreate");
 	}
 
 	public function parseDataFile()
@@ -85,7 +81,7 @@ class Character extends FlxSprite
 		#if debug trace('PARSING CHARACTER: ' + curCharacter); #end
 		
 		var data:CharacterData = cast Paths.loadJSON('characters/$curCharacter');
-		callScript("onParseFile", [data]);
+		scriptPack.callScripts("onParseFile", [data]);
 
 		bopDance = data.bopper == null ? false : data.bopper;
 
@@ -146,12 +142,12 @@ class Character extends FlxSprite
 		camOffset = data.camOffset == null ? [0,0] : data.camOffset;
 
 		playAnim(bopDance ? 'danceRight' : 'idle');
-		callScript("postParseFile", [data]);
+		scriptPack.callScripts("postParseFile", [data]);
 	}
 
 	override function update(elapsed:Float)
 	{
-		callScript("update", [elapsed]);
+		scriptPack.callScripts("update", [elapsed]);
 		super.update(elapsed);
 		if (animation == null)
 		{
@@ -181,7 +177,7 @@ class Character extends FlxSprite
 		if (bopDance && animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
 			playAnim('danceRight');
 
-		callScript("postUpdate", [elapsed]);
+		scriptPack.callScripts("postUpdate", [elapsed]);
 	}
 
 	/**
@@ -189,7 +185,7 @@ class Character extends FlxSprite
 	 */
 	public function dance()
 	{
-		callScript("onDance", [canDance]);
+		scriptPack.callScripts("onDance", [canDance]);
 		if (canDance)
 		{
 			if (bopDance)
@@ -204,14 +200,14 @@ class Character extends FlxSprite
 			else
 				playAnim('idle', true);
 		}
-		callScript("postDance", [danced]);
+		scriptPack.callScripts("postDance", [danced]);
 	}
 
 	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
 		if (animation.getByName(AnimName) == null || AnimName.toLowerCase().startsWith('idle') && !canDance)
 			return;
-		callScript("onPlayAnim", [AnimName, Force, Reversed, Frame]);
+		scriptPack.callScripts("onPlayAnim", [AnimName, Force, Reversed, Frame]);
 		animation.play(AnimName, Force, Reversed, Frame);
 	
 		// offset crud
@@ -266,33 +262,13 @@ class Character extends FlxSprite
 				danced = !danced;
 			}
 		}
-		callScript("postPlayAnim", [AnimName, Force, Reversed, Frame]);
+		scriptPack.callScripts("postPlayAnim", [AnimName, Force, Reversed, Frame]);
 	}
 
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)
 	{
-		callScript("addOffset", [name, x, y]);
+		scriptPack.callScripts("addOffset", [name, x, y]);
 		animOffsets[name] = [x, y];
-	}
-	// sorry doida
-	public function callScript(fun:String, ?args:Array<Dynamic>)
-	{
-		if(script != null) {
-			@:privateAccess {
-				var ny: Dynamic = script.interp.variables.get(fun);
-				try {
-					if(ny != null && Reflect.isFunction(ny))
-						script.call(fun, args);
-				} catch(e) {
-					trace('error parsing script: ' + e);
-				}
-			}
-		}
-	}
-	public function setScript(name:String, value:Dynamic, allowOverride:Bool = true)
-	{
-		if(script != null)
-			script.set(name, value, allowOverride);
 	}
 }
 
