@@ -19,7 +19,7 @@ class Stage extends FlxGroup {
     public function new(name:String, ?offsets:Bool = true) {
         super();
 
-        scriptPack = new HScriptPack([Paths.file('datas/stages/${name}.hx'), Paths.file('datas/stages/${name}.hxc')]);
+        scriptPack = new HScriptPack([Paths.file('data/stages/${name}.hx'), Paths.file('data/stages/${name}.hxc')]);
 
 		scriptPack.callScripts("create");
         generateStage(name);

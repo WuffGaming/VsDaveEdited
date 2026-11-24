@@ -133,42 +133,52 @@ class Paths
 		for(folder in ["scripts", 'songs/ingame', 'songs/ingame/$song', 'songs/ingame/$song/scripts', "data/scripts"])
 		{
 			for(file in readDir(folder, [".hx", ".hxc"], false))
-				arr.push('$folder/$file');
+				arr.push('assets/$file');
 		}
 		#if debug trace('got script array: ', arr); #end
 		return arr;
 	}
 
-	// this is also taken from doida engine
+	// aaaahhh
 	public static function readDir(dir:String, ?typeArr:Array<String>, ?removeType:Bool = true, ?library:String):Array<String>
 	{
+		var assets:Array<String> = Assets.list();
 		var swagList:Array<String> = [];
-		
-		try {
-			#if desktop
-			var rawList = sys.FileSystem.readDirectory(getPath(dir, null, library));
-			for(i in 0...rawList.length)
+		var returnList:Array<String> = [];
+
+		for (asset in assets) {
+			trace(asset);
+			if (asset.startsWith('mods')) {
+				assets.remove(asset);
+				continue;
+			}
+			if (asset.startsWith('assets/$dir')) {
+				swagList.push(asset); 
+			}
+		}
+		for(swag in swagList) {
+			var rawAsset = getPath(swag.replace('assets/', ''), null, library);
+			if(typeArr?.length > 0)
 			{
-				if(typeArr?.length > 0)
-				{
-					for(type in typeArr) {
-						if(rawList[i].endsWith(type)) {
-							// cleans it
-							if(removeType)
-								rawList[i] = rawList[i].replace(type, "");
-							swagList.push(rawList[i]);
-						}
+				for(type in typeArr) {
+					if(rawAsset.endsWith(type)) {
+						if(removeType)
+							rawAsset = rawAsset.replace(type, "");
+						returnList.push(rawAsset);
 					}
 				}
-				else
-					swagList.push(rawList[i]);
 			}
-			#end
-		} catch(e) {}
-		
-		return swagList;
-	}
+			else
+				returnList.push(rawAsset);
+		}
 
+		#if debug
+		trace(dir);
+		trace(swagList);
+		trace(returnList);
+		#end
+		return returnList;
+	}
 	
 
 	static public function loadJSON(key:String, ?library:String):Dynamic

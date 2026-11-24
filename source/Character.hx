@@ -43,7 +43,7 @@ class Character extends FlxSprite
 
 		antialiasing = true;
 
-		scriptPack = new HScriptPack([Paths.file('datas/characters/${curCharacter}.hx'), Paths.file('datas/characters/${curCharacter}.hxc')]);
+		scriptPack = new HScriptPack([Paths.file('data/characters/${curCharacter}.hx'), Paths.file('data/characters/${curCharacter}.hxc')]);
 		scriptPack.callScripts("create");
 
 		parseDataFile();

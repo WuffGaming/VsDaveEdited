@@ -36,10 +36,6 @@ class HScriptPack extends FlxGroup {
 				try {
 					if(ny != null && Reflect.isFunction(ny))
 						script.call(fun, args);
-					#if debug
-                    else
-                         trace('not a function', ny, script); 
-					#end
 				} catch(e) {
 					trace('error parsing script: ' + e);
 				}

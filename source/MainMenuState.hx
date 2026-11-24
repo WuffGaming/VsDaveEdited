@@ -45,20 +45,12 @@ class MainMenuState extends MusicBeatState
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
-	public static var bgPaths:Array<String> = getBackgrounds();
+	public static var bgPaths:Array<String>;
 
 	public static function getBackgrounds():Array<String> 
 	{
-		var shit:Array<String> = [];
-		var bgs = FileSystem.readDirectory('assets/images/backgrounds/');
-
-		for (bg in bgs)
-		{
-			if (bg.endsWith('.png'))
-			{
-				shit.push(bg.replace('.png', ''));
-			}
-		}
+		var shit:Array<String> = Paths.readDir('images/backgrounds/', ['.png'], false);
+		#if debug trace(shit); #end
 		return shit;
 	}
 
@@ -264,7 +256,8 @@ class MainMenuState extends MusicBeatState
 	}
 	public static function randomizeBG():flixel.system.FlxAssets.FlxGraphicAsset
 	{
+		bgPaths = getBackgrounds();
 		var chance:Int = FlxG.random.int(0, bgPaths.length - 1);
-		return Paths.image('backgrounds/' + bgPaths[chance]);
+		return bgPaths[chance];
 	}
 }
