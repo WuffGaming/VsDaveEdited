@@ -3,46 +3,8 @@
     "props": [
         {
             "name": "sky",
-            "path": "stages/dave/sky",
-            "position": [-700,0],
-            "scroll": [0.9,0.7]
-        },
-        {
-            "name": "hills",
-            "path": "stages/farm/orangey hills",
-            "position": [-250,200],
-            "scroll": [0.9,0.7]
-        },
-        {
-            "name": "farm",
-            "path": "stages/farm/funfarmhouse",
-            "position": [150,250],
-            "scroll": [1.1,0.9]
-        },
-        {
-            "name": "foreground",
-            "path": "stages/farm/grass lands",
-            "position": [-400,600]
-        },
-        {
-            "name": "cornSet1",
-            "path": "stages/farm/Cornys",
-            "position": [-350,325]
-        },
-        {
-            "name": "cornSet2",
-            "path": "stages/farm/Cornys",
-            "position": [1050,325]
-        },
-        {
-            "name": "fence",
-            "path": "stages/farm/crazy fences",
-            "position": [-350,450]
-        },
-        {
-            "name": "sign",
-            "path": "stages/farm/Sign",
-            "position": [0,500]
+            "path": "stages/void/scarybg",
+            "position": [-600,-200]
         }
     ]
 }

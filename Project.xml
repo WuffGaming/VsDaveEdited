@@ -114,7 +114,6 @@
         <!-- Akways enable Null Object Reference check for crash dialog -->
 	<haxedef name="HXCPP_CHECK_POINTER" if="release" unless="debug" />
 	<haxedef name="HXCPP_STACK_LINE" if="release" unless="debug" /> 
-	// thix funk mix for da code 
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->

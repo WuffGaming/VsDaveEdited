@@ -105,6 +105,10 @@ class Paths
 		return getPath('songs/${song.toLowerCase()}.txt', TEXT, library);
 	}
 
+	inline static public function shader(key:String, ?library:String)
+	{
+		return getPath('shaders/$key', TEXT, library);
+	}
 
 	inline static public function externmusic(song:String, ?library:String)
 	{

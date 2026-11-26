@@ -46,6 +46,7 @@ class HScript extends Script {
 		set('FlxEase', flixel.tweens.FlxEase);
 		set('FlxColor', CustomFlxColor);
 		set('PlayState', PlayState);
+		set('CoolUtil', CoolUtil);
 		set('Paths', Paths);
 		set('Conductor', Conductor);
 		set('Character', Character);
