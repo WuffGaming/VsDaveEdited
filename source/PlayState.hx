@@ -295,20 +295,6 @@ class PlayState extends MusicBeatState
 		for (char in [gf, dad,boyfriend]) {
 			add(char);
 		}
-		scriptPack.setScripts("boyfriend", boyfriend);
-		scriptPack.setScripts("gf", gf);
-		scriptPack.setScripts("dad", dad);
-		scriptPack.setScripts("formoverride", formoverride);
-		scriptPack.setScripts("backgroundSprites", backgroundSprites);
-		scriptPack.setScripts("defaultCamZoom", defaultCamZoom);
-		scriptPack.setScripts("camZooming", camZooming);
-
-		scriptPack.setScripts("ZoomCam", ZoomCam);
-
-		scriptPack.setScripts("switchDad", switchDad);
-		scriptPack.setScripts("switchGf", switchGf);
-		scriptPack.setScripts("switchBf", switchBf);
-
 		scriptPack.callScripts("create");
 
 		var doof:DialogueBox = new DialogueBox(false, dialogue);
@@ -1180,7 +1166,6 @@ class PlayState extends MusicBeatState
 
 	public function switchDad(char:String, x:Float = 100, y:Float = 100, reposition:Bool = true)
 	{
-		scriptPack.callScripts("switchDad", [char, x, y, reposition]);
 		if (dad != null)
 			remove(dad);
 		dad = new Character(x, y, char, false);
@@ -1190,12 +1175,10 @@ class PlayState extends MusicBeatState
 			dad.y += dad.gameOffset[1];
 		}
 		add(dad);
-		scriptPack.callScripts("postSwitchDad", [dad]);
 	}
 
 	public function switchBf(char:String, x:Float = 100, y:Float = 100, reposition:Bool = true)
 	{
-		scriptPack.callScripts("switchBf", [char, x, y, reposition]);
 		if (boyfriend != null)
 			remove(boyfriend);
 		boyfriend = new Boyfriend(x, y, char);
@@ -1205,12 +1188,10 @@ class PlayState extends MusicBeatState
 			boyfriend.y += boyfriend.gameOffset[1];
 		}
 		add(boyfriend);
-		scriptPack.callScripts("postSwitchBf", [boyfriend]);
 	}
 
 	public function switchGf(char:String, x:Float = 100, y:Float = 100, reposition:Bool = true)
 	{
-		scriptPack.callScripts("switchGf", [char, x, y, reposition]);
 		if (gf != null)
 			remove(gf);
 		gf = new Character(x, y, char, false);
@@ -1220,7 +1201,6 @@ class PlayState extends MusicBeatState
 			gf.y += gf.gameOffset[1];
 		}
 		add(gf);
-		scriptPack.callScripts("postSwitchGf", [gf]);
 	}
 
 	public function ZoomCam(focusondad:Bool):Void

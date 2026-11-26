@@ -41,6 +41,9 @@ class Character extends FlxSprite
 		curCharacter = character;
 		this.isPlayer = isPlayer;
 
+		if (!Assets.exists(Paths.json('characters/${curCharacter}')))
+			curCharacter = 'bf';
+
 		antialiasing = true;
 
 		scriptPack = new HScriptPack([Paths.file('data/characters/${curCharacter}.hx'), Paths.file('data/characters/${curCharacter}.hxc')]);
@@ -75,9 +78,6 @@ class Character extends FlxSprite
 
 	public function parseDataFile()
 	{
-		if (!Assets.exists(Paths.json('characters/${curCharacter}')))
-			curCharacter = 'bf';
-
 		#if debug trace('PARSING CHARACTER: ' + curCharacter); #end
 		
 		var data:CharacterData = cast Paths.loadJSON('characters/$curCharacter');
