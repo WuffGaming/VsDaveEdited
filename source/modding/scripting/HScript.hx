@@ -3,16 +3,24 @@ package modding.scripting;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 
-import insanity.Config;
 import insanity.Script;
+import insanity.Config;
 import insanity.Environment;
+import insanity.tools.Printer;
+import insanity.backend.Expr;
+import insanity.backend.Interp;
+import insanity.backend.Exception;
+import insanity.backend.types.Abstract;
 
+@:access(insanity.backend.Parser)
+@:access(insanity.backend.Interp)
 class HScript extends Script {
     public function new(string:String, name:String = 'hscript', ?environment:Environment) {
+		Config.interpClass = DaveInterp;
         super(string, name, environment);
     }
 
-	public function safeExecute() {
+	public function run() {
 		try {
 			start();
 		}
@@ -60,6 +68,15 @@ class HScript extends Script {
 
 		set('game', FlxG.state);
     }
+}
+
+class DaveInterp extends Interp {
+	public function new(?environment:Environment, ?parent:Dynamic) {
+		super(environment, parent);
+
+		argumentOverflow = false;
+		safeFunctions = true;
+	}
 }
 
 // taken from psych engine

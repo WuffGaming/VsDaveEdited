@@ -26,7 +26,7 @@ class HScriptPack extends FlxGroup {
 
     public function runScripts() {
         for (script in loadedScripts) {
-            script.safeExecute();
+            script.run();
         }
     }
 
@@ -38,8 +38,10 @@ class HScriptPack extends FlxGroup {
 				try {
 					if(ny != null && Reflect.isFunction(ny))
 						script.call(fun, args);
-				} catch(e) {
-					trace('error parsing script: ' + e);
+				} catch(e:haxe.Exception) {
+					trace('error parsing ' + script.name + ': ' + e);
+					trace('\n' + e.details());
+					loadedScripts.remove(script);
 				}
 			}
 		}
