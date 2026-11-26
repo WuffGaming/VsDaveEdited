@@ -2,8 +2,7 @@
 
 var daveExpressionSplitathon:Character;
 
-var thing:FlxSprite = new FlxSprite(0, 250);
-var splitathonExpressionAdded:Bool = false;
+var thing:FlxSprite;
 
 var BAMBICUTSCENEICONHURHURHUR:HealthIcon;
 
@@ -19,6 +18,7 @@ var nightColor = 0xFF878787;
 function postCreate() {
     daveExpressionSplitathon = new Character(-100, 260, 'dave-splitathon');
     add(daveExpressionSplitathon);
+    daveExpressionSplitathon.canDance = false;
     daveExpressionSplitathon.visible = false;
 }
 
@@ -26,8 +26,8 @@ function stepHit(curStep:Int) {
     switch (curStep)
     {
         case 4750:
-            dad.canDance = false;
-            dad.playAnim('scared', true);
+            PlayState.dad.canDance = false;
+            PlayState.dad.playAnim('scared', true);
             camHUD.shake(0.015, (Conductor.stepCrochet / 1000) * 50);
         case 4800:
             FlxG.camera.flash(FlxColor.WHITE, 1);
@@ -74,13 +74,14 @@ function splitathonExpression(expression:String, x:Float, y:Float):Void
     daveExpressionSplitathon.visible = false;
     if (expression != 'lookup')
     {
-        camFollow.setPosition(dad.getGraphicMidpoint().x + 100, boyfriend.getGraphicMidpoint().y + 150);
+        PlayState.instance.camFollow.setPosition(PlayState.dad.getGraphicMidpoint().x + 100, PlayState.boyfriend.getGraphicMidpoint().y + 150);
     }
+    if (thing != null) 
+        remove(thing);
+    thing = new FlxSprite(x, y);
+    add(thing);
     thing.color = nightColor;
-    thing.x = x;
-    thing.y = y;
     thing.visible = true;
-    remove(dad);
 
     switch (expression)
     {
@@ -93,11 +94,6 @@ function splitathonExpression(expression:String, x:Float, y:Float):Void
             thing.animation.addByPrefix('justGonnaChillHereEatinCorn', 'cool', 24);
             thing.animation.play('justGonnaChillHereEatinCorn');
     }
-    if (!splitathonExpressionAdded)
-    {
-        splitathonExpressionAdded = true;
-        add(thing);
-    }
     thing.antialiasing = true;
 }
 
@@ -108,9 +104,7 @@ function splitterThonDave(expression:String):Void
 {
     thing.visible = false;
     daveExpressionSplitathon.visible = true;
-    
     daveExpressionSplitathon.color = nightColor;
-    daveExpressionSplitathon.canDance = false;
     daveExpressionSplitathon.playAnim(expression, true);
 }
 
