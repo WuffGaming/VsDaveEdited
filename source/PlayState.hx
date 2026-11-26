@@ -367,7 +367,6 @@ class PlayState extends MusicBeatState
 		add(healthBar);
 
 		var credits:String = '';
-		var randomThingy:Int = FlxG.random.int(0, 2);
 		var engineName:String = 'Dav:E';
 		var creditsText:Bool = credits != '';
 		var textYPos:Float = healthBarBG.y + 50;
@@ -443,7 +442,9 @@ class PlayState extends MusicBeatState
 		scriptPack.setScripts("creditsWatermark", creditsWatermark);
 		scriptPack.setScripts("healthBarBG", healthBarBG);
 		scriptPack.setScripts("healthBar", healthBar);
-		scriptPack.callScripts("postCreate");
+
+		for (i in [scriptPack, backgroundSprites.scriptPack])
+			i.callScripts("postCreate");
 	}
 
 	function startDialogue(?dialogueBox:DialogueBox, isStart:Bool = true):Void

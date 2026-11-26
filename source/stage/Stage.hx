@@ -34,7 +34,6 @@ class Stage extends FlxGroup {
         scriptPack.setScripts("propNames", propNames);
         scriptPack.setScripts("getProp", getProp);
         scriptPack.setScripts("addProp", addProp);
-        scriptPack.callScripts("postCreate");
     }
 
     override function update(elapsed:Float) {

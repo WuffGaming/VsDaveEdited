@@ -1,4 +1,4 @@
-function postUpdate() {
+function postCreate() {
     for (i in [PlayState.boyfriend, PlayState.gf, PlayState.dad, hills, farm, foreground, cornSet1, cornSet2, fence, sign])
         i.color = 0xFF878787;
 }
