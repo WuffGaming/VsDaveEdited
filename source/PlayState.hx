@@ -76,8 +76,6 @@ class PlayState extends MusicBeatState
 
 	public var elapsedtime:Float = 0;
 
-	public var focusOnDadGlobal:Bool = true;
-
 	public var storyDifficultyText:String = "";
 	public var iconRPC:String = "";
 	public var detailsText:String = "";
@@ -91,7 +89,7 @@ class PlayState extends MusicBeatState
 	public static var gf:Character;
 	public static var boyfriend:Boyfriend;
 
-	public static var instance:PlayState = null; // Current PlayState, allows other objects to access static values.
+	public static var instance:PlayState = null; // Current PlayState, allows other objects to access certain values.
 
 	public var notes:FlxTypedGroup<Note>;
 	public var unspawnNotes:Array<Note> = [];
@@ -109,9 +107,16 @@ class PlayState extends MusicBeatState
 	public var dadStrums:FlxTypedGroup<StrumNote>;
 
 	public var camZooming:Bool = false;
-	private var curSong:String = "";
+	public var focusOnDadGlobal:Bool = true;
+	public var autoZoomCam:Bool = true;
+	public var curSong:String = "";
 
-	public var gfSpeed:Int = 1;
+	public var gfDanceBeat:Int = 1;
+	public var dadDanceBeat:Int = 2;
+	public var bfDanceBeat:Int = 2;
+	public var iconDanceBeat:Int = 4;
+	public var camDanceBeat:Int = 4;
+
 	public var health:Float = 1;
 	public var combo:Int = 0;
 
@@ -128,7 +133,6 @@ class PlayState extends MusicBeatState
 	public static var healthBar:FlxBar;
 
 	public var generatedMusic:Bool = false;
-	public var shakeCam:Bool = false;
 	public var startingSong:Bool = false;
 
 	public var iconP1:HealthIcon;
@@ -254,7 +258,8 @@ class PlayState extends MusicBeatState
 		if (Assets.exists(Paths.songJson(defaultDialoguePath)))
 			dialogue = defaultDialoguePath;
 
-		backgroundSprites = new Stage(SONG.stage);
+		curStage = SONG.stage;
+		backgroundSprites = new Stage(curStage);
 		defaultCamZoom = backgroundSprites.cameraZoom;
 		add(backgroundSprites);
 
@@ -346,8 +351,7 @@ class PlayState extends MusicBeatState
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
 
-		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
-			'health', 0, 2);
+		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this, 'health', 0, 2);
 		healthBar.scrollFactor.set();
 		healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		add(healthBar);
@@ -670,10 +674,6 @@ class PlayState extends MusicBeatState
 				{
 					swagNote.x += FlxG.width / 2; // general offset
 				}
-				else
-				{
-				}
-
 			}
 			daBeats += 1;
 		}
@@ -1091,6 +1091,8 @@ class PlayState extends MusicBeatState
 								fuckingDumbassBullshitFuckYou = 'LEFT';
 						}
 					}
+					scriptPack.callScripts('onDadHit', [daNote]);
+					scriptPack.callScripts('onNoteHit', [daNote]);
 					dad.playAnim('sing' + fuckingDumbassBullshitFuckYou + altAnim, true);
 					dadStrums.forEach(function(sprite:StrumNote) {
 					if (Math.abs(Math.round(Math.abs(daNote.noteData)) % 4) == sprite.ID)
@@ -1222,12 +1224,12 @@ class PlayState extends MusicBeatState
 		}
 		if (focusondad)
 		{
-			camFollow.setPosition(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
+			camFollow.setPosition(dad.getMidpoint().x + 150 + dad.camOffset[0], dad.getMidpoint().y - 100 + dad.camOffset[1]);
 		}
 
 		if (!focusondad)
 		{
-			camFollow.setPosition(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
+			camFollow.setPosition(boyfriend.getMidpoint().x - 100 + boyfriend.camOffset[0], boyfriend.getMidpoint().y - 100 + boyfriend.camOffset[1]);
 		}
 		scriptPack.callScripts("postZoomCam", [focusondad]);
 	}
@@ -1762,7 +1764,8 @@ class PlayState extends MusicBeatState
 	{
 		if (!note.wasGoodHit)
 		{
-			scriptPack.callScripts("onGoodNoteHit", [note]);
+			scriptPack.callScripts("onPlayerHit", [note]);
+			scriptPack.callScripts('onNoteHit', [note]);
 			if (!note.isSustainNote)
 			{
 				popUpScore(note.strumTime, note.noteData);
@@ -1846,16 +1849,13 @@ class PlayState extends MusicBeatState
 		scriptPack.callScripts("postStepHit", [curStep]);
 	}
 
-	var lightningStrikeBeat:Int = 0;
-	var lightningOffset:Int = 8;
-
 	override function beatHit()
 	{
 		super.beatHit();
 		scriptPack.setScripts("curBeat", curBeat);
 		scriptPack.callScripts("beatHit", [curBeat]);
 
-		if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null)
+		if (generatedMusic && autoZoomCam && PlayState.SONG.notes[Std.int(curStep / 16)] != null)
 		{
 			if (!PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection)
 			{
@@ -1884,19 +1884,15 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (dad.animation.finished && dad.holdTimer <= 0 && curBeat % 2 == 0)
+		if (dad.animation.finished && dad.holdTimer <= 0 && curBeat % dadDanceBeat == 0)
 		{
 			dad.dance();
 		}
 
-		if (camZooming && FlxG.camera.zoom < 1.35 && curBeat % 4 == 0)
+		if (camZooming && FlxG.camera.zoom < 1.35 && curBeat % camDanceBeat == 0)
 		{
 			FlxG.camera.zoom += 0.015;
 			camHUD.zoom += 0.03;
-		}
-		if (shakeCam)
-		{
-			gf.playAnim('scared', true);
 		}
 
 		var funny:Float = (healthBar.percent * 0.01) + 0.01;
@@ -1912,15 +1908,12 @@ class PlayState extends MusicBeatState
 			iconP2.updateHitbox();
 		}
 
-		if (curBeat % gfSpeed == 0)
+		if (curBeat % gfDanceBeat == 0)
 		{
-			if (!shakeCam)
-			{
-				gf.dance();
-			}
+			gf.dance();
 		}
 		// hi im taking icon code from gapple:e
-		if (curBeat % 4 == 0)
+		if (curBeat % iconDanceBeat == 0)
 		{
 			if (iconP1.animatedIcon)
 			{
@@ -1940,7 +1933,7 @@ class PlayState extends MusicBeatState
 
 
 		// bf dancing crap is right here
-		if(curBeat % 2 == 0)
+		if(curBeat % bfDanceBeat == 0)
 			if (!boyfriend.animation.curAnim.name.startsWith("sing") && boyfriend.canDance && boyfriend.animation.curAnim != null)
 				boyfriend.dance();
 		scriptPack.callScripts("postBeatHit", [curBeat]);
