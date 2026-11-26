@@ -3,30 +3,30 @@ package modding.scripting;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 
-import crowplexus.iris.Iris;
-import crowplexus.iris.IrisConfig;
-import crowplexus.hscript.Expr.Error;
-import crowplexus.hscript.Printer;
+import insanity.Config;
+import insanity.Script;
+import insanity.Environment;
 
-class HScript extends Iris {
-    public function new(scriptCode: String, ?config: AutoIrisConfig) {
-        super(scriptCode, config);
+class HScript extends Script {
+    public function new(string:String, name:String = 'hscript', ?environment:Environment) {
+        super(string, name, environment);
     }
 
 	public function safeExecute() {
 		try {
-			execute();
+			start();
 		}
-		catch(e:Error) {
-			var pos = this.interp.posInfos();
-			Iris.error(Printer.errorToString(e, false), pos);
-			this.destroy();
+		catch(e:haxe.Exception) {
 			throw e;
 		}
 	}
 
-    override function preset() {
-		super.preset();
+	public function set(name:String, whatItIs:Dynamic) {
+		variables.set(name, whatItIs);
+	}
+
+    override function setDefaults() {
+		super.setDefaults();
         set('Type', Type);
 
 		#if sys
@@ -58,7 +58,6 @@ class HScript extends Iris {
 		set('ShaderFilter', openfl.filters.ShaderFilter);
 		set('StringTools', StringTools);
 
-        set('this', this);
 		set('game', FlxG.state);
     }
 }

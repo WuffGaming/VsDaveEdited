@@ -11,7 +11,7 @@ class HScriptPack extends FlxGroup {
         for(path in paths)
 		{
 			if (Assets.exists(path)) {
-				var newScript:HScript = new HScript(Assets.getText(path), {name: path, autoRun: false, autoPreset: true});
+				var newScript:HScript = new HScript(Assets.getText(path), path);
 				loadedScripts.push(newScript);
 				trace('loaded $path');
 			}
@@ -44,9 +44,9 @@ class HScriptPack extends FlxGroup {
 			}
 		}
 	}
-	public function setScripts(name:String, value:Dynamic, allowOverride:Bool = true)
+	public function setScripts(name:String, value:Dynamic)
 	{
 		for(script in loadedScripts)
-			script.set(name, value, allowOverride);
+			script.set(name, value);
 	}
 }
