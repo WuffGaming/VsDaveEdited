@@ -129,6 +129,8 @@ class PlayState extends MusicBeatState
 
 	public static var eyesoreson = true;
 
+	public static var downscroll:Bool = false;
+
 	public static var healthBarBG:FlxSprite;
 	public static var healthBar:FlxBar;
 
@@ -152,7 +154,6 @@ class PlayState extends MusicBeatState
 	public static var scoreTxt:FlxText;
 
 	public static var kadeEngineWatermark:FlxText;
-	public static var creditsWatermark:FlxText;
 	
 	public static var campaignScore:Int = 0;
 
@@ -181,6 +182,7 @@ class PlayState extends MusicBeatState
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 		eyesoreson = Settings.data.eyesores;
+		downscroll = Settings.data.downscroll;
 
 		sicks = 0;
 		bads = 0;
@@ -312,7 +314,7 @@ class PlayState extends MusicBeatState
 		strumLine = new FlxSprite(0, 50).makeGraphic(FlxG.width, 10);
 		strumLine.scrollFactor.set();
 
-		if (Settings.data.downscroll)
+		if (downscroll)
 			strumLine.y = FlxG.height - 165;
 
 		strumLineNotes = new FlxTypedGroup<FlxSprite>();
@@ -346,7 +348,7 @@ class PlayState extends MusicBeatState
 		FlxG.fixedTimestep = false;
 
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('ui/game/healthBar'));
-		if (Settings.data.downscroll)
+		if (downscroll)
 			healthBarBG.y = 50;
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
@@ -357,30 +359,14 @@ class PlayState extends MusicBeatState
 		healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
 		add(healthBar);
 
-		var credits:String = '';
+		
 		var engineName:String = 'Dav:E';
-		var creditsText:Bool = credits != '';
-		var textYPos:Float = healthBarBG.y + 50;
-		if (creditsText)
-		{
-			textYPos = healthBarBG.y + 30;
-		}
-		// Add Kade Engine watermark
-		kadeEngineWatermark = new FlxText(4, textYPos, 0,
+		kadeEngineWatermark = new FlxText(4, healthBarBG.y + 50, 0,
 		SONG.song + " " + (storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy") + " - " + engineName + " Engine (KE 1.2)", 16);
 		kadeEngineWatermark.setFormat(Paths.font("comic.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		kadeEngineWatermark.scrollFactor.set();
 		kadeEngineWatermark.borderSize = 1.25;
 		add(kadeEngineWatermark);
-		if (creditsText)
-		{
-			creditsWatermark = new FlxText(4, healthBarBG.y + 50, 0, credits, 16);
-			creditsWatermark.setFormat(Paths.font("comic.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			creditsWatermark.scrollFactor.set();
-			creditsWatermark.borderSize = 1.25;
-			add(creditsWatermark);
-			creditsWatermark.cameras = [camHUD];
-		}
 
 		scoreTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 150, healthBarBG.y + 40, 0, "", 20);
 		if (!Settings.data.accuracyDisplay)
@@ -425,12 +411,9 @@ class PlayState extends MusicBeatState
 		}
 		scriptPack.setScripts("scoreTxt", scoreTxt);
 		scriptPack.setScripts("kadeEngineWatermark", kadeEngineWatermark);
-		scriptPack.setScripts("creditsText", creditsText);
-		scriptPack.setScripts("credits", credits);
 		scriptPack.setScripts("iconP1", iconP1);
 		scriptPack.setScripts("iconP2", iconP2);
 		scriptPack.setScripts("isStoryMode", isStoryMode);
-		scriptPack.setScripts("creditsWatermark", creditsWatermark);
 		scriptPack.setScripts("healthBarBG", healthBarBG);
 		scriptPack.setScripts("healthBar", healthBar);
 
@@ -621,6 +604,8 @@ class PlayState extends MusicBeatState
 		var playerCounter:Int = 0;
 
 		var daBeats:Int = 0; // Not exactly representative of 'daBeats' lol, just how much it has looped
+
+		// this handles note creation crap and stuff lol
 		for (section in noteData)
 		{
 
@@ -642,10 +627,11 @@ class PlayState extends MusicBeatState
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 				else
 					oldNote = null;
-
 				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, gottaHitNote, daNoteStyle);
 				swagNote.sustainLength = songNotes[2];
 				swagNote.scrollFactor.set(0, 0);
+
+				scriptPack.callScripts('onNoteCreation', [swagNote, false]);
 
 				var susLength:Float = swagNote.sustainLength;
 
@@ -656,9 +642,10 @@ class PlayState extends MusicBeatState
 				{
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true,
-						gottaHitNote);
+					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, gottaHitNote);
 					sustainNote.scrollFactor.set();
+					scriptPack.callScripts('onNoteCreation', [sustainNote, true]);
+
 					unspawnNotes.push(sustainNote);
 
 					sustainNote.mustPress = gottaHitNote;
@@ -1119,17 +1106,20 @@ class PlayState extends MusicBeatState
 					notes.remove(daNote, true);
 					daNote.destroy();
 				}
-				if (Settings.data.downscroll)
-					daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (-0.45 * FlxMath.roundDecimal(SONG.speed * daNote.LocalScrollSpeed, 2)));
+				var strumliney = daNote.linkedStrumNote != null ? daNote.linkedStrumNote.y : strumLine.y;
+
+				if (downscroll)
+					daNote.y = (strumliney - (Conductor.songPosition - daNote.strumTime) * (-0.45 * FlxMath.roundDecimal(SONG.speed * daNote.scrollSpeed, 2)));
 				else
-					daNote.y = (strumLine.y - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed * daNote.LocalScrollSpeed, 2)));
+					daNote.y = (strumliney - (Conductor.songPosition - daNote.strumTime) * (0.45 * FlxMath.roundDecimal(SONG.speed * daNote.scrollSpeed, 2)));
 				// trace(daNote.y);
 				// WIP interpolation shit? Need to fix the pause issue
 				// daNote.y = (strumLine.y - (songTime - daNote.strumTime) * (0.45 * PlayState.SONG.speed));
 
-				var strumliney = daNote.MyStrum != null ? daNote.MyStrum.y : strumLine.y;
+				//todo: better method?
+				
 
-				if (daNote.y >= strumliney + 106 && Settings.data.downscroll || daNote.y < -daNote.height && (!Settings.data.downscroll))
+				if (daNote.y >= strumliney + 106 && downscroll || daNote.y < -daNote.height && !downscroll)
 				{
 					if (daNote.isSustainNote && daNote.wasGoodHit)
 					{
@@ -1141,8 +1131,8 @@ class PlayState extends MusicBeatState
 					{
 						if(daNote.mustPress && daNote.finishedGenerating)
 							noteMiss(daNote.noteData);
-							health -= 0.075;
-							vocals.volume = 0;
+						health -= 0.075;
+						vocals.volume = 0;
 					}
 
 					daNote.active = false;

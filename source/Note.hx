@@ -24,7 +24,7 @@ class Note extends FlxSprite
 	public var tooLate:Bool = false;
 	public var wasGoodHit:Bool = false;
 	public var prevNote:Note;
-	public var LocalScrollSpeed:Float = 1;
+	public var scrollSpeed:Float = 1;
 
 	public var sustainLength:Float = 0;
 	public var isSustainNote:Bool = false;
@@ -38,13 +38,9 @@ class Note extends FlxSprite
 	public static var BLUE_NOTE:Int = 1;
 	public static var RED_NOTE:Int = 3;
 
-	private var notetolookfor = 0;
+	public var noteID = 0;
 
-	public var MyStrum:FlxSprite;
-
-	private var InPlayState:Bool = false;
-
-	private var CharactersWith3D:Array<String> = ["dave-angey", "bambi-3d", 'dave-annoyed-3d', 'dave-3d-standing-bruh-what', 'bambi-unfair'];
+	public var linkedStrumNote:StrumNote;
 
 	public var rating:String = "shit";
 
@@ -97,49 +93,26 @@ class Note extends FlxSprite
 		{
 			case 0:
 				x += swagWidth * 0;
-				notetolookfor = 0;
+				noteID = 0;
 				animation.play('purpleScroll');
 			case 1:
-				notetolookfor = 1;
+				noteID = 1;
 				x += swagWidth * 1;
 				animation.play('blueScroll');
 			case 2:
-				notetolookfor = 2;
+				noteID = 2;
 				x += swagWidth * 2;
 				animation.play('greenScroll');
 			case 3:
-				notetolookfor = 3;
+				noteID = 3;
 				x += swagWidth * 3;
 				animation.play('redScroll');
 		}
 
-		if (Type.getClassName(Type.getClass(FlxG.state)).contains("PlayState"))
-			{
-				var state:PlayState = cast(FlxG.state,PlayState);
-				InPlayState = true;
-				if (musthit)
-				{
-					state.playerStrums.forEach(function(spr:FlxSprite)
-					{
-						if (spr.ID == notetolookfor)
-						{
-							x = spr.x;
-							MyStrum = spr;
-						}
-					});
-				}
-				else
-				{
-					state.dadStrums.forEach(function(spr:FlxSprite)
-					{
-						if (spr.ID == notetolookfor)
-						{
-								x = spr.x;
-								MyStrum = spr;
-							}
-						});
-				}
-			}
+		if (FlxG.state is PlayState)
+		{
+			getPlayStateStrums();
+		}
 		
 
 		// trace(prevNote);
@@ -198,40 +171,12 @@ class Note extends FlxSprite
 	{
 		super.update(elapsed);
 
+		if (linkedStrumNote == null) {
+			getPlayStateStrums();
+		}
 
-		if (MyStrum != null)
-		{
-			x = MyStrum.x + (isSustainNote ? width : 0);
-		}
-		else
-		{
-			if (InPlayState)
-			{
-				var state:PlayState = cast(FlxG.state,PlayState);
-				if (mustPress)
-					{
-						state.playerStrums.forEach(function(spr:FlxSprite)
-						{
-							if (spr.ID == notetolookfor)
-							{
-								x = spr.x;
-								MyStrum = spr;
-							}
-						});
-					}
-					else
-					{
-						state.dadStrums.forEach(function(spr:FlxSprite)
-							{
-								if (spr.ID == notetolookfor)
-								{
-									x = spr.x;
-									MyStrum = spr;
-								}
-							});
-					}
-			}
-		}
+		x = linkedStrumNote.x + (isSustainNote ? width : 0);
+
 		if (mustPress)
 		{
 			// The * 0.5 is so that it's easier to hit them too late, instead of too early
@@ -257,6 +202,28 @@ class Note extends FlxSprite
 			if (alpha > 0.3)
 				alpha = 0.3;
 			
+		}
+	}
+
+	function getPlayStateStrums() {
+		if (mustPress) {
+			PlayState.instance.playerStrums.forEach(function(spr:StrumNote) {
+				if (spr.ID == noteID)
+				{
+					x = spr.x;
+					linkedStrumNote = spr;
+				}
+			});
+		}
+		else
+		{
+			PlayState.instance.dadStrums.forEach(function(spr:StrumNote) {
+					if (spr.ID == noteID)
+					{
+						x = spr.x;
+						linkedStrumNote = spr;
+					}
+			});
 		}
 	}
 }

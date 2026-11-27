@@ -54,6 +54,7 @@ class HScript extends Script {
 		set('Alphabet', Alphabet);
 		set('Note', Note);
         set('StrumNote', StrumNote);
+		set('Settings', options.Flags.Settings);
 
 		#if (!flash && sys)
 		set('FlxRuntimeShader', flixel.addons.display.FlxRuntimeShader);
