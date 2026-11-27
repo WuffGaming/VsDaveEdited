@@ -911,7 +911,7 @@ class PlayState extends MusicBeatState
 			var chartEditor:Bool = true;
 			scriptPack.callScripts("onChartEditor", [chartEditor]);
 			if (chartEditor) {
-				FlxG.switchState(()->new ChartingState());
+				//FlxG.switchState(()->new ChartingState());
 				#if desktop
 				DiscordClient.changePresence("Chart Editor", null, null, true);
 				#end

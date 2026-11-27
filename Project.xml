@@ -63,7 +63,9 @@
 	<haxedev set='webgl' />
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />
-	<haxelib name="flixel-ui" />
+	<haxelib name="flixel-animate" />
+	<haxelib name="haxeui-core" />
+	<haxelib name="haxeui-flixel" />
 	<haxelib name="actuate" />
 	<haxelib name="hxvlc" if="desktop || android" />
 	<haxelib name="faxe" if='switch'/>
