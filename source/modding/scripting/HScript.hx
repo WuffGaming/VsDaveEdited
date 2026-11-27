@@ -74,7 +74,6 @@ class DaveInterp extends Interp {
 	}
 }
 
-// taken from psych engine
 class CustomFlxColor {
 	public static var TRANSPARENT(default, null):Int = FlxColor.TRANSPARENT;
 	public static var BLACK(default, null):Int = FlxColor.BLACK;
@@ -113,4 +112,19 @@ class CustomFlxColor {
 
 	public static function fromString(str:String):Int
 		return cast FlxColor.fromString(str);
+
+	public static function add(lhs:FlxColor, rhs:FlxColor):Int
+		return cast FlxColor.add(lhs, rhs);
+
+	public static function subtract(lhs:FlxColor, rhs:FlxColor):Int
+		return cast FlxColor.subtract(lhs, rhs);
+
+	public static function multiply(lhs:FlxColor, rhs:FlxColor):Int
+		return cast FlxColor.multiply(lhs, rhs);
+
+	public static function gradient(color1:FlxColor, color2:FlxColor, steps:Int, ?ease:Float->Float):Array<Int> 
+		return cast FlxColor.gradient(color1, color2, steps, ease);
+
+	public static function interpolate(color1:FlxColor, color2:FlxColor, factor:Float = 0.5):Int
+		return cast FlxColor.interpolate(color1, color2, factor);
 }

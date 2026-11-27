@@ -299,6 +299,7 @@ class PlayState extends MusicBeatState
 
 		for (char in [gf, dad,boyfriend]) {
 			add(char);
+			hookToChar(char.curCharacter, char);
 		}
 		scriptPack.callScripts("create");
 
@@ -1177,6 +1178,7 @@ class PlayState extends MusicBeatState
 			dad.y += dad.gameOffset[1];
 		}
 		add(dad);
+		hookToChar(dad.curCharacter, dad);
 	}
 
 	public function switchBf(char:String, x:Float = 100, y:Float = 100, reposition:Bool = true)
@@ -1190,6 +1192,7 @@ class PlayState extends MusicBeatState
 			boyfriend.y += boyfriend.gameOffset[1];
 		}
 		add(boyfriend);
+		hookToChar(boyfriend.curCharacter, boyfriend);
 	}
 
 	public function switchGf(char:String, x:Float = 100, y:Float = 100, reposition:Bool = true)
@@ -1203,6 +1206,7 @@ class PlayState extends MusicBeatState
 			gf.y += gf.gameOffset[1];
 		}
 		add(gf);
+		hookToChar(gf.curCharacter, gf);
 	}
 
 	public function ZoomCam(focusondad:Bool):Void
@@ -1959,5 +1963,15 @@ class PlayState extends MusicBeatState
 		scriptPack.callScripts("onUpdateIcons", [iconP1, iconP2]);
 		iconP1.y = healthBar.y - (iconP1.height / 2);
 		iconP2.y = healthBar.y - (iconP2.height / 2);
+	}
+
+	public function hookToChar(curCharacter:String, character:Character) {
+		#if debug trace('Attempting script pack for ' + curCharacter); #end
+		var charPack:HScriptPack = new HScriptPack([Paths.file('data/characters/${curCharacter}.hx'), Paths.file('data/characters/${curCharacter}.hxc')], false);
+		for (script in charPack.loadedScripts) {
+			scriptPack.loadedScripts.push(script);
+			script.run();
+			script.set('parent', character);
+		}
 	}
 }
