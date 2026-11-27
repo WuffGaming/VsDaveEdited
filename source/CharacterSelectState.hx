@@ -22,16 +22,19 @@ import flixel.util.FlxStringUtil;
 class CharacterInSelect
 {
 	public var names:Array<String>;
-	public var noteMs:Array<Float>;
+	public var noteMs:Array<Array<Float>>;
 	public var polishedNames:Array<String>;
+	public var noteSkin:Array<String>;
 
-	public function new(names:Array<String>, noteMs:Array<Float>, polishedNames:Array<String>)
+	public function new(names:Array<String>, noteMs:Array<Array<Float>>, polishedNames:Array<String>, noteSkin:Array<String>)
 	{
 		this.names = names;
 		this.noteMs = noteMs;
 		this.polishedNames = polishedNames;
+		this.noteSkin = noteSkin;
 	}
 }
+
 class CharacterSelectState extends MusicBeatState
 {
 	public var char:Boyfriend;
@@ -43,6 +46,8 @@ class CharacterSelectState extends MusicBeatState
 	public var funnyIconMan:HealthIcon;
 
 	var strummies:FlxTypedGroup<FlxSprite>;
+
+	var selectList:Array<String> = CoolUtil.coolTextFile(Paths.txt('select/selectList'));
 
 	var notestuffs:Array<String> = ['LEFT', 'DOWN', 'UP', 'RIGHT'];
 
@@ -61,12 +66,8 @@ class CharacterSelectState extends MusicBeatState
 
 	//it goes left,right,up,down
 	
-	public var characters:Array<CharacterInSelect> = 
-	[
-		new CharacterInSelect(['bf'], [1, 1, 1, 1], ["Boyfriend"]),
-		new CharacterInSelect(['dave'], [0.25, 0.25, 2, 2], ["Dave"]),
-		//these are the canon bambis' names according to marcello, dont change them back
-	];
+	public var characters:Array<CharacterInSelect> = [];
+	
 	public function new() 
 	{
 		super();
@@ -84,6 +85,8 @@ class CharacterSelectState extends MusicBeatState
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD);
 
+		parseCharacterData();
+
 		currentSelectedCharacter = characters[current];
 
 		FlxG.sound.playMusic(Paths.music("goodEnding"),1,true);
@@ -94,16 +97,9 @@ class CharacterSelectState extends MusicBeatState
 		FlxG.camera.zoom = 0.75;
 		camHUD.zoom = 0.75;
 
-		char = new Boyfriend(FlxG.width / 2, FlxG.height / 2, "bf");
-		char.screenCenter();
-		char.y = 450;
-		add(char);
-
 		strummies = new FlxTypedGroup<FlxSprite>();
 		strummies.cameras = [camHUD];
 		add(strummies);
-	
-		generateStaticArrows();
 		
 		notemodtext = new FlxText((FlxG.width / 3.5) + 80, 40, 0, "1.00x       1.00x        1.00x       1.00x", 30);
 		notemodtext.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
@@ -136,18 +132,19 @@ class CharacterSelectState extends MusicBeatState
 		tutorialThing.cameras = [camHUD];
 		add(tutorialThing);
 
-		
+		updateBF();
 	}
 
-	private function generateStaticArrows():Void
+	private function generateStaticArrows(noteSkin:String):Void
 	{
-		
+		strummies.killMembers();
+		strummies.clear();
 		for (i in 0...4)
 		{
 			// FlxG.log.add(i);
 			var babyArrow:StrumNote = new StrumNote(0, 0);
 
-			babyArrow.frames = Paths.getSparrowAtlas('ui/game/notes/default');
+			babyArrow.frames = Paths.getSparrowAtlas('ui/game/notes/' + noteSkin);
 			babyArrow.animation.addByPrefix('green', 'arrowUP');
 			babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
 			babyArrow.animation.addByPrefix('purple', 'arrowLEFT');
@@ -185,7 +182,7 @@ class CharacterSelectState extends MusicBeatState
 			babyArrow.x += ((FlxG.width / 3.5));
 			babyArrow.y -= 10;
 			babyArrow.alpha = 0;
-			FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+			FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 0.2, {ease: FlxEase.circOut, startDelay: (0.2 * i)});
 			babyArrow.cameras = [camHUD];
 			strummies.add(babyArrow);
 		}
@@ -254,7 +251,7 @@ class CharacterSelectState extends MusicBeatState
 			current--;
 			if (current < 0)
 				current = characters.length - 1;
-			UpdateBF();
+			updateBF();
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		}
 
@@ -265,7 +262,7 @@ class CharacterSelectState extends MusicBeatState
 			if (current > characters.length - 1)
 				current = 0;
 
-			UpdateBF();
+			updateBF();
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		}
 		if (FlxG.keys.justPressed.DOWN && !selectedCharacter)
@@ -275,7 +272,7 @@ class CharacterSelectState extends MusicBeatState
 			{
 				curForm = characters[current].names.length - 1;
 			}
-			UpdateBF();
+			updateBF();
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		}
 
@@ -286,17 +283,18 @@ class CharacterSelectState extends MusicBeatState
 			{
 				curForm = 0;
 			}
-			UpdateBF();
+			updateBF();
 			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		}
 	}
 
-	public function UpdateBF()
+	public function updateBF()
 	{
 		funnyIconMan.color = FlxColor.WHITE;
 		currentSelectedCharacter = characters[current];
 		characterText.text = currentSelectedCharacter.polishedNames[curForm];
-		char.destroy();
+		if (char != null)
+			char.destroy();
 		char = new Boyfriend(FlxG.width / 2, FlxG.height / 2, currentSelectedCharacter.names[curForm]);
 		char.screenCenter();
 		char.y = 450;
@@ -305,9 +303,12 @@ class CharacterSelectState extends MusicBeatState
 		char.y += char.gameOffset[1];
 		
 		add(char);
+
+		generateStaticArrows(currentSelectedCharacter.noteSkin[curForm]);
+
 		funnyIconMan.animation.play(char.curCharacter);
 		characterText.screenCenter(X);
-		notemodtext.text = FlxStringUtil.formatMoney(currentSelectedCharacter.noteMs[0]) + "x       " + FlxStringUtil.formatMoney(currentSelectedCharacter.noteMs[3]) + "x        " + FlxStringUtil.formatMoney(currentSelectedCharacter.noteMs[2]) + "x       " + FlxStringUtil.formatMoney(currentSelectedCharacter.noteMs[1]) + "x";
+		notemodtext.text = FlxStringUtil.formatMoney(currentSelectedCharacter.noteMs[curForm][0]) + "x       " + FlxStringUtil.formatMoney(currentSelectedCharacter.noteMs[curForm][1]) + "x        " + FlxStringUtil.formatMoney(currentSelectedCharacter.noteMs[curForm][2]) + "x       " + FlxStringUtil.formatMoney(currentSelectedCharacter.noteMs[curForm][3]) + "x";
 	}
 
 	override function beatHit()
@@ -325,8 +326,42 @@ class CharacterSelectState extends MusicBeatState
 		trace("ENDING");
 		PlayState.characteroverride = currentSelectedCharacter.names[0];
 		PlayState.formoverride = currentSelectedCharacter.names[curForm];
-		PlayState.curmult = currentSelectedCharacter.noteMs;
+		PlayState.curmult = currentSelectedCharacter.noteMs[curForm];
 		LoadingState.loadAndSwitchState(new PlayState());
 	}
+
+	function parseCharacterData() {
+		for (characterGroup in selectList) {
+			var group:SelectGroup = cast Paths.loadJSON('select/lists/$characterGroup');
+
+			var names:Array<String> = [];
+			var displayNames:Array<String> = [];
+			var noteMses:Array<Array<Float>> = [];
+			var noteSkins:Array<String> = [];
+
+			for (char in group.characters) {
+				char.name == null ? names.push('bf') : names.push(char.name);
+				char.displayName == null ? displayNames.push('Boyfriend') : displayNames.push(char.displayName);
+				char.noteMs == null ? noteMses.push([1, 1, 1, 1]) : noteMses.push(char.noteMs);
+				char.noteSkin == null ? noteSkins.push('default') : noteSkins.push(char.noteSkin);
+			}
+
+			characters.push(new CharacterInSelect(names, noteMses, displayNames, noteSkins));
+		}
+	}
 	
+}
+
+typedef SelectGroup = {
+	var characters:Array<SelectCharacter>;
+}
+
+typedef SelectCharacter = {
+	var name:String;
+
+	var displayName:String;
+
+	var noteSkin:String;
+
+	var noteMs:Array<Float>;
 }

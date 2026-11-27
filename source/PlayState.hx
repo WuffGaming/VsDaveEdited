@@ -1351,9 +1351,9 @@ class PlayState extends MusicBeatState
 			case 2:
 				score = cast(FlxMath.roundDecimal(cast(score, Float) * curmult[2], 0), Int);
 			case 3:
-				score = cast(FlxMath.roundDecimal(cast(score, Float) * curmult[1], 0), Int);
-			case 1:
 				score = cast(FlxMath.roundDecimal(cast(score, Float) * curmult[3], 0), Int);
+			case 1:
+				score = cast(FlxMath.roundDecimal(cast(score, Float) * curmult[1], 0), Int);
 			case 0:
 				score = cast(FlxMath.roundDecimal(cast(score, Float) * curmult[0], 0), Int);
 		}

@@ -159,25 +159,32 @@ class Character extends FlxSprite
 	 */
 	public function dance()
 	{
-		if (canDance)
-		{
-			playAnim(danceSequence[dancePos], true);
+		// apparantly this is fucking necessary
+		try {
+			if (canDance)
+			{
+				if (animation.exists(danceSequence[dancePos]))
+					playAnim(danceSequence[dancePos], true);
 
-			dancePos++;
+				dancePos++;
 
-			if (dancePos >= danceSequence.length) dancePos = 0;
+				if (dancePos >= danceSequence.length) dancePos = 0;
+			}
+		}
+		catch(e) {
+			trace(e.details());
 		}
 	}
 
-	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
+	public function playAnim(animName:String, force:Bool = false, reversed:Bool = false, frame:Int = 0):Void
 	{
-		if (animation.getByName(AnimName) == null || AnimName.toLowerCase().startsWith('idle') && !canDance)
+		if (!animation.exists(animName) || animName.toLowerCase().startsWith('idle') && !canDance || animName.toLowerCase().startsWith('sing') && !canSing)
 			return;
-		animation.play(AnimName, Force, Reversed, Frame);
+		animation.play(animName, force, reversed, frame);
 	
 		// offset crud
-		var daOffset = animOffsets.get(AnimName);
-		if (animOffsets.exists(AnimName))
+		var daOffset = animOffsets.get(animName);
+		if (animOffsets.exists(animName))
 		{
 			if (isPlayer)
 			{
@@ -206,9 +213,9 @@ class Character extends FlxSprite
 			offset.set(0, 0);
 
 		// loop crud
-		if (animation.exists(AnimName + '-loop') && animation.finished)
+		if (animation.exists(animName + '-loop') && animation.finished)
 		{
-			animation.play(AnimName + '-loop', Force, Reversed, Frame);
+			animation.play(animName + '-loop', force, reversed, frame);
 		}
 	}
 

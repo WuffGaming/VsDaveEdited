@@ -1,3 +1,5 @@
+import stage.Stage;
+
 var pulseEffect:FlxRuntimeShader;
 var elapsedTime:Float = FlxG.random.float(-100000, 100000);
 var shakeCam:Bool = false;
