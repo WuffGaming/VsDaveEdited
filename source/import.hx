@@ -2,7 +2,6 @@ import Paths;
 #if sys
 import sys.FileSystem;
 import sys.io.File;
-import polymod.fs.SysFileSystem;
 #end
 import haxe.Json;
 import haxe.format.JsonParser;

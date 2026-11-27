@@ -55,7 +55,6 @@ class HAssets {
 		if (sys.FileSystem.isDirectory(dir))
 			swagList = sys.FileSystem.readDirectory(dir);
 		for (mod in sys.FileSystem.readDirectory('mods')){
-			trace(mod);
 			if (sys.FileSystem.isDirectory(dir.replace('assets/', 'mods/' + mod + '/'))) {
 				var modFiles:Array<String> = sys.FileSystem.readDirectory(dir.replace('assets/', 'mods/' + mod + '/'));
 				for (file in modFiles) swagList.push(file.replace('mods/' + mod + '/', 'assets/')); //i'm going to hell for this programming bro
