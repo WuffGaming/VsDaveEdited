@@ -1,5 +1,6 @@
 package;
 
+import flixel.math.FlxMath;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSubState;
@@ -14,39 +15,13 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	var stageSuffix:String = "";
 
-	public function new(x:Float, y:Float,char:String)
+	public function new(x:Float, y:Float, char:String)
 	{
-		var daStage = PlayState.curStage;
-		var daBf:String = '';
-		switch (char)
-		{
-			case 'bf-pixel':
-				stageSuffix = '-pixel';
-			default:
-				daBf = 'bf-death';
-		}
-		if (char == "bf-pixel")
-		{
-			char = "bf-pixel-dead";
-		}
-		if (char == "what-lmao")
-		{
-			char = "bambi-bevel";
-		}
-		if (char == "bf-car")
-		{
-			char = "bf-death";
-		}
-
 		super();
 
 		Conductor.songPosition = 0;
 
 		bf = new Boyfriend(x, y, char);
-		if(bf.animation.getByName('firstDeath') == null)
-		{
-			bf = new Boyfriend(x, y, "bf");
-		}
 		add(bf);
 
 		camFollow = new FlxObject(bf.getGraphicMidpoint().x, bf.getGraphicMidpoint().y, 1, 1);
@@ -55,8 +30,6 @@ class GameOverSubstate extends MusicBeatSubstate
 		FlxG.sound.play(Paths.sound('fnf_loss_sfx' + stageSuffix));
 		Conductor.changeBPM(100);
 
-		// FlxG.camera.followLerp = 1;
-		// FlxG.camera.focusOn(FlxPoint.get(FlxG.width / 2, FlxG.height / 2));
 		FlxG.camera.scroll.set();
 		FlxG.camera.target = null;
 
@@ -77,9 +50,9 @@ class GameOverSubstate extends MusicBeatSubstate
 			FlxG.sound.music.stop();
 
 			if (PlayState.isStoryMode)
-				FlxG.switchState(new StoryMenuState());
+				FlxG.switchState(()->new StoryMenuState());
 			else
-				FlxG.switchState(new FreeplayState());
+				FlxG.switchState(()->new FreeplayState());
 		}
 
 		if (bf.animation.curAnim.name == 'firstDeath' && bf.animation.curAnim.curFrame == 12)
@@ -119,7 +92,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			{
 				FlxG.camera.fade(FlxColor.BLACK, 2, false, function()
 				{
-						LoadingState.loadAndSwitchState(new PlayState());
+					LoadingState.loadAndSwitchState(new PlayState());
 				});
 			});
 		}

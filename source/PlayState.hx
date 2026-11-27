@@ -111,9 +111,7 @@ class PlayState extends MusicBeatState
 	public var autoZoomCam:Bool = true;
 	public var curSong:String = "";
 
-	public var gfDanceBeat:Int = 1;
-	public var dadDanceBeat:Int = 2;
-	public var bfDanceBeat:Int = 2;
+
 	public var iconDanceBeat:Int = 4;
 	public var camDanceBeat:Int = 4;
 
@@ -1008,11 +1006,10 @@ class PlayState extends MusicBeatState
 				FlxG.sound.music.stop();
 			}
 
-			openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition()
-				.y, formoverride == "bf" || formoverride == "none" ? SONG.player1 : formoverride));
+			openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y, boyfriend.deadForm));
 
-				#if desktop
-				DiscordClient.changePresence("GAME OVER -- "
+			#if desktop
+			DiscordClient.changePresence("GAME OVER -- "
 				+ SONG.song
 				+ " ("
 				+ storyDifficultyText
@@ -1023,7 +1020,7 @@ class PlayState extends MusicBeatState
 				+ songScore
 				+ " | Misses: "
 				+ misses, iconRPC);
-				#end
+			#end
 		}
 
 		if (unspawnNotes[0] != null)
@@ -1878,7 +1875,7 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		if (dad.animation.finished && dad.holdTimer <= 0 && curBeat % dadDanceBeat == 0)
+		if (dad.animation.finished && dad.holdTimer <= 0 && curBeat % dad.dancingBeat == 0)
 		{
 			dad.dance();
 		}
@@ -1902,7 +1899,7 @@ class PlayState extends MusicBeatState
 			iconP2.updateHitbox();
 		}
 
-		if (curBeat % gfDanceBeat == 0)
+		if (curBeat % gf.dancingBeat == 0)
 		{
 			gf.dance();
 		}
@@ -1927,7 +1924,7 @@ class PlayState extends MusicBeatState
 
 
 		// bf dancing crap is right here
-		if(curBeat % bfDanceBeat == 0)
+		if(curBeat % boyfriend.dancingBeat == 0)
 			if (!boyfriend.animation.curAnim.name.startsWith("sing") && boyfriend.canDance && boyfriend.animation.curAnim != null)
 				boyfriend.dance();
 		scriptPack.callScripts("postBeatHit", [curBeat]);
@@ -1950,9 +1947,12 @@ class PlayState extends MusicBeatState
 
 	public function updateIcons()
 	{
-		scriptPack.callScripts("onUpdateIcons", [iconP1, iconP2]);
-		iconP1.y = healthBar.y - (iconP1.height / 2);
-		iconP2.y = healthBar.y - (iconP2.height / 2);
+		var cancelled:Bool = false;
+		scriptPack.callScripts("onUpdateIcons", [cancelled]);
+		if (!cancelled) {
+			iconP1.y = healthBar.y - (iconP1.height / 2);
+			iconP2.y = healthBar.y - (iconP2.height / 2);
+		}
 	}
 
 	public function hookToChar(curCharacter:String, character:Character) {

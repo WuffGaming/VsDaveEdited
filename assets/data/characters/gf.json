@@ -1,15 +1,22 @@
 {
-  "path": "characters/GF_assets",
+  "path": "characters/GF",
   "globalOffset": [0, 0],
   "gameOffset": [0, 0],
   "camOffset": [0, 0],
   "icon": "gf",
-  "bopper": true,
+  "danceSequence": ["danceLeft", "danceRight"],
+  "dancingBeat": 1,
   "animations": [
     {
       "name": "cheer",
       "prefix": "GF Cheer",
       "offset": [0,0]
+    },
+    {
+      "name": "scared",
+      "prefix": "GF FEAR",
+      "offset": [-2, -17],
+      "looped": true
     },
     {
       "name": "singLEFT",

@@ -1,5 +1,5 @@
 {
-  "path": "characters/BOYFRIEND",
+  "path": "characters/BF",
   "globalOffset": [0, 0],
   "gameOffset": [0, 0],
   "camOffset": [0, 0],
@@ -63,22 +63,6 @@
       "prefix": "BF idle shaking",
       "looped": true,
       "offset": [-4,0]
-    },
-    {
-      "name": "firstDeath",
-      "prefix": "BF Dies",
-      "offset": [37,11]
-    },
-    {
-      "name": "deathLoop",
-      "prefix": "BF Dead Loop",
-      "looped": true,
-      "offset": [37,5]
-    },
-    {
-      "name": "deathConfirm",
-      "prefix": "BF Dead Confirm",
-      "offset": [37,69]
     }
   ]
 }

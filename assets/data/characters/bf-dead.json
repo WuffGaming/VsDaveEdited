@@ -1,0 +1,28 @@
+{
+  "path": "characters/BF-Dead",
+  "globalOffset": [0, 0],
+  "gameOffset": [0, 0],
+  "camOffset": [0, 0],
+  "antialiasing": true,
+  "icon": "bf",
+  "nativelyPlayable": true,
+  "flipX": true,
+  "animations": [
+    {
+      "name": "firstDeath",
+      "prefix": "BF Dies",
+      "offset": [37,11]
+    },
+    {
+      "name": "deathLoop",
+      "prefix": "BF Dead Loop",
+      "looped": true,
+      "offset": [37,5]
+    },
+    {
+      "name": "deathConfirm",
+      "prefix": "BF Dead Confirm",
+      "offset": [37,69]
+    }
+  ]
+}

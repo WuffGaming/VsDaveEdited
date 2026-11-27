@@ -16,10 +16,15 @@ class Character extends FlxSprite
 
 	public var holdTimer:Float = 0;
 	public var canDance:Bool = true;
+	public var canSing:Bool = true;
+
 	public var useVSliceSustains = false;
 	public var deadForm:String = 'bf-dead';
 
-	public var bopDance:Bool = false;
+	public var danceSequence:Array<String> = ['idle'];
+	public var dancePos:Int = 0;
+
+	public var dancingBeat:Int = 2;
 
 	public var nativelyPlayable:Bool = false;
 
@@ -27,8 +32,6 @@ class Character extends FlxSprite
 	public var gameOffset:Array<Float> = [0, 0];
 	public var camOffset:Array<Float> = [0, 0];
 	public var charScale:Float = 1;
-
-	public var danced:Bool = false; // has danced?
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
@@ -57,8 +60,11 @@ class Character extends FlxSprite
 		#if debug trace('PARSING CHARACTER: ' + curCharacter); #end
 		
 		var data:CharacterData = cast Paths.loadJSON('characters/$curCharacter');
+		if (data == null) curCharacter = 'bf'; data = cast Paths.loadJSON('characters/$curCharacter');
 
-		bopDance = data.bopper == null ? false : data.bopper;
+		danceSequence = data.danceSequence == null ? ['idle'] : data.danceSequence;
+
+		dancingBeat = data.dancingBeat == null ? 2 : data.dancingBeat;
 
 		antialiasing = data.antialiasing == null ? true : data.antialiasing;
 
@@ -116,7 +122,7 @@ class Character extends FlxSprite
 		gameOffset = data.gameOffset == null ? globalOffset : data.gameOffset; // we already checked for if globalOffset is null so we can just use that Lol
 		camOffset = data.camOffset == null ? [0,0] : data.camOffset;
 
-		playAnim(bopDance ? 'danceRight' : 'idle');
+		playAnim(danceSequence[0]);
 	}
 
 	override function update(elapsed:Float)
@@ -142,14 +148,10 @@ class Character extends FlxSprite
 			var dadVar:Float = 4;
 			if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
 			{
-				if (canDance)
-					dance();
+				dance();
 				holdTimer = 0;
 			}
 		}
-
-		if (bopDance && animation.curAnim.name == 'hairFall' && animation.curAnim.finished)
-			playAnim('danceRight');
 	}
 
 	/**
@@ -159,17 +161,11 @@ class Character extends FlxSprite
 	{
 		if (canDance)
 		{
-			if (bopDance)
-			{
-				danced = !danced;
+			playAnim(danceSequence[dancePos], true);
 
-				if (danced)
-					playAnim('danceRight', true);
-				else
-					playAnim('danceLeft', true);
-			}
-			else
-				playAnim('idle', true);
+			dancePos++;
+
+			if (dancePos >= danceSequence.length) dancePos = 0;
 		}
 	}
 
@@ -214,23 +210,6 @@ class Character extends FlxSprite
 		{
 			animation.play(AnimName + '-loop', Force, Reversed, Frame);
 		}
-	
-		if (bopDance)
-		{
-			if (AnimName == 'singLEFT')
-			{
-				danced = true;
-			}
-			else if (AnimName == 'singRIGHT')
-			{
-				danced = false;
-			}
-	
-			if (AnimName == 'singUP' || AnimName == 'singDOWN')
-			{
-				danced = !danced;
-			}
-		}
 	}
 
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)
@@ -247,7 +226,9 @@ typedef CharacterData =
 	var gameOffset:Array<Float>; // Proper offset
 	var camOffset:Array<Float>; // Camera offset
 
-	var ?bopper:Bool; // Does the character bop left and right?
+	var ?danceSequence:Array<String>; // The animations that the character does, in order.
+
+	var ?dancingBeat:Int; // When the character dances in the beat.
 
 	var ?nativelyPlayable:Bool; // Can the character be played natively?
 
