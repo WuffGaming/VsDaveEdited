@@ -34,20 +34,6 @@
       "url": "https://github.com/FunkinCrew/flixel-animate"
     },
     {
-      "name": "haxeui-core",
-      "type": "git",
-      "dir": null,
-      "ref": "f32831f5115df46bae4de582f57ae31e45160359",
-      "url": "https://github.com/FunkinCrew/haxeui-core"
-    },
-    {
-      "name": "haxeui-flixel",
-      "type": "git",
-      "dir": null,
-      "ref": "bc9600e8c6a02298daf0403f933b9dc85c01429a",
-      "url": "https://github.com/FunkinCrew/haxeui-flixel"
-    },
-    {
       "name": "hscript-insanity",
       "type": "git",
       "dir": null,

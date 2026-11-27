@@ -64,8 +64,6 @@
 	<haxelib name="flixel" />
 	<haxelib name="flixel-addons" />
 	<haxelib name="flixel-animate" />
-	<haxelib name="haxeui-core" />
-	<haxelib name="haxeui-flixel" />
 	<haxelib name="actuate" />
 	<haxelib name="hxvlc" if="desktop || android" />
 	<haxelib name="faxe" if='switch'/>
@@ -117,9 +115,6 @@
 	<haxedef name="HXCPP_CHECK_POINTER" if="release" unless="debug" />
 	<haxedef name="HXCPP_STACK_LINE" if="release" unless="debug" /> 
 
-	<!-- HaxeUI Stuff -->
-	<haxedef name="haxeui_dont_impose_base_class"/>
-    <haxedef name="haxeui_focus_out_on_click"/>
 	<!-- _________________________________ Custom _______________________________ -->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
