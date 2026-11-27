@@ -1,5 +1,3 @@
-import lime.utils.Assets;
-
 var glitchEffect:FlxRuntimeShader;
 var elapsedTime:Float = 0;
 

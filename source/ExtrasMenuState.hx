@@ -36,10 +36,6 @@ class ExtrasMenuState extends MusicBeatState
 
 	public static var finishedFunnyMove:Bool = false;
 
-	public static var daRealEngineVer:String = 'Dave';
-
-	public static var engineVers:Array<String> = ['Dave', 'Bambi', 'Tristan'];
-
 	public static var kadeEngineVer:String = "DAVE";
 	public static var gameVer:String = "0.2.7.1";
 
@@ -58,8 +54,6 @@ class ExtrasMenuState extends MusicBeatState
 		#if desktop
 		DiscordClient.changePresence("In the Menus", null);
 		#end
-
-		daRealEngineVer = engineVers[FlxG.random.int(0, 2)];
 		
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(MainMenuState.randomizeBG());
 		bg.scrollFactor.set();
@@ -115,7 +109,7 @@ class ExtrasMenuState extends MusicBeatState
 
 		firstStart = false;
 
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, gameVer + " FNF - " + daRealEngineVer + " Engine", 12);
+		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, gameVer + " FNF - " + MainMenuState.daRealEngineVer + " Engine", 12);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);

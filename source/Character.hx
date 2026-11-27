@@ -145,8 +145,8 @@ class Character extends FlxSprite
 				holdTimer += elapsed;
 			}
 
-			var dadVar:Float = 4;
-			if (holdTimer >= Conductor.stepCrochet * dadVar * 0.001)
+			var stepWait:Float = 4;
+			if (holdTimer >= Conductor.stepCrochet * stepWait * 0.001)
 			{
 				dance();
 				holdTimer = 0;

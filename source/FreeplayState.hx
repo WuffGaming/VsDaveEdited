@@ -12,7 +12,6 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
-import lime.utils.Assets;
 #if desktop
 import Discord.DiscordClient;
 #end

@@ -8,7 +8,7 @@ import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.util.FlxTimer;
 
-import openfl.utils.Assets;
+import openfl.utils.Assets as OpenFLAssets;
 import lime.utils.Assets as LimeAssets;
 import lime.utils.AssetLibrary;
 import lime.utils.AssetManifest;
@@ -58,30 +58,30 @@ class LoadingState extends MusicBeatState
 	
 	function checkLoadSong(path:String)
 	{
-		if (!Assets.cache.hasSound(path))
+		if (!OpenFLAssets.cache.hasSound(path))
 		{
-			var library = Assets.getLibrary("songs");
+			var library = OpenFLAssets.getLibrary("songs");
 			final symbolPath = path.split(":").pop();
 			// @:privateAccess
 			// library.types.set(symbolPath, SOUND);
 			// @:privateAccess
 			// library.pathGroups.set(symbolPath, [library.__cacheBreak(symbolPath)]);
 			var callback = callbacks.add("song:" + path);
-			Assets.loadSound(path).onComplete(function (_) { callback(); });
+			OpenFLAssets.loadSound(path).onComplete(function (_) { callback(); });
 		}
 	}
 	
 	function checkLibrary(library:String)
 	{
-		trace(Assets.hasLibrary(library));
-		if (Assets.getLibrary(library) == null)
+		trace(OpenFLAssets.hasLibrary(library));
+		if (OpenFLAssets.getLibrary(library) == null)
 		{
 			@:privateAccess
 			if (!LimeAssets.libraryPaths.exists(library))
 				throw "Missing library: " + library;
 			
 			var callback = callbacks.add("library:" + library);
-			Assets.loadLibrary(library).onComplete(function (_) { callback(); });
+			OpenFLAssets.loadLibrary(library).onComplete(function (_) { callback(); });
 		}
 	}
 	
@@ -142,12 +142,12 @@ class LoadingState extends MusicBeatState
 	#if NO_PRELOAD_ALL
 	static function isSoundLoaded(path:String):Bool
 	{
-		return Assets.cache.hasSound(path);
+		return OpenFLAssets.cache.hasSound(path);
 	}
 	
 	static function isLibraryLoaded(library:String):Bool
 	{
-		return Assets.getLibrary(library) != null;
+		return OpenFLAssets.getLibrary(library) != null;
 	}
 	#end
 	

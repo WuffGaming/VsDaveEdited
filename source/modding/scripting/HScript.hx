@@ -56,6 +56,8 @@ class HScript extends Script {
         set('StrumNote', StrumNote);
 		set('Settings', options.Flags.Settings);
 
+		set('Assets', modding.HAssets);
+
 		#if (!flash && sys)
 		set('FlxRuntimeShader', flixel.addons.display.FlxRuntimeShader);
 		#end
@@ -64,6 +66,11 @@ class HScript extends Script {
 
 		set('game', FlxG.state);
     }
+
+	public static function init() {
+		Config.typeProxy.set('lime.utils.Assets', HAssets);
+		Config.typeProxy.set('openfl.utils.Assets', HAssets);
+	}
 }
 
 class DaveInterp extends Interp {

@@ -1,8 +1,6 @@
-import lime.utils.Assets;
-
 var pulseEffect:FlxRuntimeShader;
 var elapsedTime:Float = FlxG.random.float(-100000, 100000);
-var shakeCam:Bool = true;
+var shakeCam:Bool = false;
 
 function postCreate() {
     pulseEffect = new FlxRuntimeShader(Assets.getText(Paths.shader('pulseEffect.frag')));

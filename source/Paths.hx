@@ -2,8 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
-import lime.utils.AssetType;
-import openfl.utils.Assets as OpenFlAssets;
+import openfl.utils.AssetType;
 
 class Paths
 {
@@ -134,7 +133,7 @@ class Paths
 	public static function getScriptArray(?song:String):Array<String>
 	{
 		var arr:Array<String> = [];
-		for(folder in ["scripts", 'songs/ingame/$song', "data/scripts"])
+		for(folder in ["scripts/", 'songs/ingame/$song/', "data/scripts/", 'songs/ingame/$song/scripts/'])
 		{
 			for(file in readDir(folder, [".hx", ".hxc"], false))
 				arr.push('$file');
@@ -147,41 +146,7 @@ class Paths
 	// note to self: this is recursive
 	public static function readDir(dir:String, ?typeArr:Array<String>, ?removeType:Bool = true, ?library:String):Array<String>
 	{
-		var assets:Array<String> = Assets.list();
-		var swagList:Array<String> = [];
-		var returnList:Array<String> = [];
-
-		for (asset in assets) {
-			if (asset.startsWith('mods')) {
-				assets.remove(asset);
-				continue;
-			}
-			if (asset.startsWith('assets/$dir')) {
-				swagList.push(asset); 
-			}
-		}
-		for(swag in swagList) {
-			var rawAsset = getPath(swag.replace('assets/', ''), null, library);
-			if(typeArr?.length > 0)
-			{
-				for(type in typeArr) {
-					if(rawAsset.endsWith(type)) {
-						if(removeType)
-							rawAsset = rawAsset.replace(type, "");
-						returnList.push(rawAsset);
-					}
-				}
-			}
-			else
-				returnList.push(rawAsset);
-		}
-
-		#if debug
-		trace(dir);
-		trace(swagList);
-		trace(returnList);
-		#end
-		return returnList;
+		return Assets.readDirectory('assets/' + dir, typeArr, removeType, true, library);
 	}
 	
 

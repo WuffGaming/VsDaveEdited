@@ -8,7 +8,7 @@ import haxe.Json;
 import haxe.format.JsonParser;
 import json.JSONData;
 import json.patch.JSONPatch;
-import lime.utils.Assets;
+import modding.HAssets as Assets;
 
 import options.Flags;
 

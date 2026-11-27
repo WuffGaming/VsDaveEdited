@@ -69,6 +69,8 @@ class TitleState extends MusicBeatState
 
 		Highscore.load();
 
+		modding.scripting.HScript.init();
+
 		#if FREEPLAY
 		FlxG.switchState(new FreeplayState());
 		#elseif CHARTING

@@ -38,8 +38,6 @@ class MainMenuState extends MusicBeatState
 
 	public static var daRealEngineVer:String = 'Dave';
 
-	public static var engineVers:Array<String> = ['Dave', 'Bambi', 'Tristan'];
-
 	public static var kadeEngineVer:String = "DAVE";
 	public static var gameVer:String = "0.2.7.1";
 
@@ -67,7 +65,7 @@ class MainMenuState extends MusicBeatState
 		DiscordClient.changePresence("In the Menus", null);
 		#end
 
-		daRealEngineVer = engineVers[FlxG.random.int(0, 2)];
+		daRealEngineVer = 'Dav:E';
 		
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(randomizeBG());
 		bg.scrollFactor.set();
