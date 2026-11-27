@@ -4,7 +4,6 @@ import flixel.tweens.misc.ColorTween;
 import flixel.math.FlxRandom;
 import openfl.net.FileFilter;
 import openfl.filters.BitmapFilter;
-import Shaders.PulseEffect;
 import Section.SwagSection;
 import Song.SwagSong;
 import flixel.FlxBasic;
@@ -168,7 +167,7 @@ class PlayState extends MusicBeatState
 	public static var timeCurrently:Float = 0;
 	public static var timeCurrentlyR:Float = 0;
 
-	public var backgroundSprites:Stage;
+	public var stage:Stage;
 
 	public var scriptPack:HScriptPack;
 
@@ -258,10 +257,11 @@ class PlayState extends MusicBeatState
 		if (Assets.exists(Paths.songJson(defaultDialoguePath)))
 			dialogue = defaultDialoguePath;
 
-		curStage = SONG.stage;
-		backgroundSprites = new Stage(curStage);
-		defaultCamZoom = backgroundSprites.cameraZoom;
-		add(backgroundSprites);
+		
+		stage = new Stage(SONG.stage);
+		curStage = stage.name;
+		defaultCamZoom = stage.cameraZoom;
+		add(stage);
 
 		var gfVersion:String = 'gf';
 
@@ -415,7 +415,7 @@ class PlayState extends MusicBeatState
 		scriptPack.setScripts("healthBarBG", healthBarBG);
 		scriptPack.setScripts("healthBar", healthBar);
 
-		for (i in [scriptPack, backgroundSprites.scriptPack])
+		for (i in [scriptPack, stage.scriptPack])
 			i.callScripts("postCreate");
 	}
 

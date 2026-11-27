@@ -16,9 +16,10 @@ class Stage extends FlxGroup {
 
     public var scriptPack:HScriptPack;
 
+    public var name:String;
+
     public function new(name:String, ?offsets:Bool = true) {
         super();
-
         scriptPack = new HScriptPack([Paths.file('data/stages/${name}.hx'), Paths.file('data/stages/${name}.hxc')]);
         
         scriptPack.setScripts("add", add);
@@ -44,10 +45,14 @@ class Stage extends FlxGroup {
     public function generateStage(name) {
         var data:StageData;
         
-        if (Assets.exists(Paths.json('stages/$name')))
+        if (Assets.exists(Paths.json('stages/$name'))) {
             data = cast Paths.loadJSON('stages/$name');
-        else if (Assets.exists(Paths.json('stages/daveHouse')))
+            this.name = name;
+        }
+        else if (Assets.exists(Paths.json('stages/daveHouse'))) {
             data = cast Paths.loadJSON('stages/daveHouse');
+            this.name = 'daveHouse';
+        }
         else return;
         
         scriptPack.callScripts("onParseFile", [data]);

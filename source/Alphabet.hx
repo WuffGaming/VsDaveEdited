@@ -1,7 +1,6 @@
 package;
 
 import cpp.Lib;
-import Shaders.InvertShader;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -356,14 +355,10 @@ class AlphaCharacter extends FlxSprite
 		y += row * 60;
 	}
 
-	public function createNumber(letter:String, invert:Bool = false):Void
+	public function createNumber(letter:String):Void
 	{
 		animation.addByPrefix(letter, letter, 24);
 		animation.play(letter);
-		if (invert)
-		{
-			this.shader = new InvertShader();
-		}
 
 		updateHitbox();
 	}

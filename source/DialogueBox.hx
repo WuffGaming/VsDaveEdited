@@ -1,7 +1,6 @@
 package;
 
 import flixel.math.FlxPoint;
-import openfl.display.Shader;
 import flixel.tweens.FlxTween;
 import haxe.Log;
 import flixel.input.gamepad.lists.FlxBaseGamepadList;
