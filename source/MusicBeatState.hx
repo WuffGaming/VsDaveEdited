@@ -17,13 +17,7 @@ class MusicBeatState extends FlxTransitionableState
 
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
-
-	override function create()
-	{
-
-		super.create();
-	}
-
+	
 	public function fancyOpenURL(schmancy:String)
 	{
 		#if linux

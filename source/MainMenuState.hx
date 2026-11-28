@@ -163,9 +163,10 @@ class MainMenuState extends MusicBeatState
 			}
 
 			if (controls.BACK)
-			{
 				FlxG.switchState(()->new TitleState());
-			}
+
+			if (FlxG.keys.justPressed.SEVEN)
+				FlxG.switchState(()->new editors.EditorList());
 
 			if (controls.ACCEPT)
 			{
@@ -209,7 +210,6 @@ class MainMenuState extends MusicBeatState
 						});
 					}
 				});
-				
 			}
 		}
 

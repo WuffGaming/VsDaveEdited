@@ -1,4 +1,4 @@
-package;
+package editors;
 
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -9,10 +9,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 
-/**
-	*DEBUG MODE
- */
-class AnimationDebug extends MusicBeatState
+class CharacterEditor extends MusicBeatState
 {
 	var bf:Boyfriend;
 	var dad:Character;
@@ -115,7 +112,7 @@ class AnimationDebug extends MusicBeatState
 
 		if(FlxG.keys.justPressed.ESCAPE)
 		{
-			FlxG.switchState(new MainMenuState());
+			FlxG.switchState(()->new MainMenuState());
 		}
 
 		if(FlxG.keys.justPressed.F)

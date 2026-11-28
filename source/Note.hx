@@ -64,7 +64,7 @@ class Note extends FlxSprite
 
 		this.noteData = noteData;
 
-		var style:String = 'normal';
+		var style:String = 'default';
 		if (PlayState.instance != null)
 			style = musthit ? PlayState.boyfriend.noteStyle : PlayState.dad.noteStyle;
 		var dumbasspath:String = 'ui/game/notes/' + style;
@@ -109,10 +109,7 @@ class Note extends FlxSprite
 				animation.play('redScroll');
 		}
 
-		if (FlxG.state is PlayState)
-		{
-			getPlayStateStrums();
-		}
+		getPlayStateStrums();
 		
 
 		// trace(prevNote);
@@ -171,11 +168,10 @@ class Note extends FlxSprite
 	{
 		super.update(elapsed);
 
-		if (linkedStrumNote == null) {
-			getPlayStateStrums();
-		}
+		getPlayStateStrums();
 
-		x = linkedStrumNote.x + (isSustainNote ? width : 0);
+		if (FlxG.state is PlayState && linkedStrumNote != null) 
+			x = linkedStrumNote.x + (isSustainNote ? width : 0);
 
 		if (mustPress)
 		{
@@ -206,24 +202,26 @@ class Note extends FlxSprite
 	}
 
 	function getPlayStateStrums() {
-		if (mustPress) {
-			PlayState.instance.playerStrums.forEach(function(spr:StrumNote) {
-				if (spr.ID == noteID)
-				{
-					x = spr.x;
-					linkedStrumNote = spr;
-				}
-			});
-		}
-		else
-		{
-			PlayState.instance.dadStrums.forEach(function(spr:StrumNote) {
+		if (FlxG.state is PlayState && linkedStrumNote == null) {
+			if (mustPress) {
+				PlayState.instance.playerStrums.forEach(function(spr:StrumNote) {
 					if (spr.ID == noteID)
 					{
 						x = spr.x;
 						linkedStrumNote = spr;
 					}
-			});
+				});
+			}
+			else
+			{
+				PlayState.instance.dadStrums.forEach(function(spr:StrumNote) {
+						if (spr.ID == noteID)
+						{
+							x = spr.x;
+							linkedStrumNote = spr;
+						}
+				});
+			}
 		}
 	}
 }
