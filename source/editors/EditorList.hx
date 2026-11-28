@@ -1,23 +1,13 @@
 package editors;
 
-import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
-import Controls.KeyboardScheme;
-import Controls.Control;
-import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.addons.display.FlxGridOverlay;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.input.keyboard.FlxKey;
-import flixel.math.FlxMath;
 import flixel.text.FlxText;
-import flixel.util.FlxColor;
+
 #if desktop
 import Discord.DiscordClient;
 #end
-
-import flixel.FlxState;
 
 // copied from options menu lalalala
 class EditorList extends MusicBeatState
@@ -38,7 +28,6 @@ class EditorList extends MusicBeatState
 		DiscordClient.changePresence('In the Editors');
 		#end
 		var menuBG:FlxSprite = new FlxSprite().loadGraphic(MainMenuState.randomizeBG());
-
 		menuBG.color = 0xff1c0e51;
 		menuBG.setGraphicSize(Std.int(menuBG.width * 1.1));
 		menuBG.updateHitbox();

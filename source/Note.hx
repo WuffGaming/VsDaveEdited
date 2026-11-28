@@ -184,6 +184,8 @@ class Note extends FlxSprite
 
 			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
 				tooLate = true;
+			else
+				tooLate = false;
 		}
 		else
 		{
@@ -198,6 +200,13 @@ class Note extends FlxSprite
 			if (alpha > 0.3)
 				alpha = 0.3;
 			
+		}
+		else
+		{
+			if (!isSustainNote) {
+				if (alpha <= 0.3)
+					alpha = 1;
+			}
 		}
 	}
 
